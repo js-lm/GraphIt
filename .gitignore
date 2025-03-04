@@ -1,0 +1,5 @@
+*.exe
+*.dsym
+main
+build
+save-restore-editors.json
