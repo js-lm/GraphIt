@@ -2,18 +2,19 @@
 
 size_t Node::idCounter_{0};
 
-Node::Node(Vector2 position)
+Node::Node(Vector2 position, Color color)
     : x_(position.x), y_(position.y)
     , id_(idCounter_++)
+    , color_(color)
 {}
 
 bool Node::operator==(const Node &other) const{ return id_ == other.id_;}
 
 void Node::draw(bool isHighlighted) const{
     if(isHighlighted){
-        DrawCircleV({x_, y_}, Graph::getNodeRadius() * 1.25f, Graph::getNodeColor());
+        DrawCircleV({x_, y_}, Graph::getNodeRadius() * 1.25f, color_);
     }else{
-        DrawCircleV({x_, y_}, Graph::getNodeRadius(), Graph::getNodeColor());
+        DrawCircleV({x_, y_}, Graph::getNodeRadius(), color_);
     }
 }
 

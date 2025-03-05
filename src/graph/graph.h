@@ -3,7 +3,8 @@
 #include "edge.h"
 
 #include <vector>
-#include <algorithm>
+
+class Canvas;
 
 class Graph{
 public:
@@ -17,8 +18,9 @@ public:
     };
 
 public:
-    Graph();
-    Graph(const std::vector<Node*> &nodes, const std::vector<Edge*> &edges);
+    Graph() = delete;
+    Graph(Canvas *canvas);
+    Graph(Canvas *canvas, const std::vector<Node*> &nodes, const std::vector<Edge*> &edges);
     ~Graph();
 
     void draw() const;
@@ -29,10 +31,12 @@ public:
 
     Mode getMode() const{ return mode_;};
 
-    static Color getNodeColor(){ return defaultNodeColor_;}
-    static Color getEdgeColor(){ return defaultEdgeColor_;}
     static float getNodeRadius(){ return nodeRadius_;}
     static float getEdgeThickness(){ return edgeThickness_;}
+
+    Vector2 getRelativeMousePosition() const;
+
+    void updateCanvasCamera();
 
 private:
     Node *findNode(Vector2 position);
@@ -45,6 +49,7 @@ private:
     void updateConnectMode();
     void updateDeleteNodeMode();
     void updateDeleteEdgeMode();
+    void updateViewMode();
 
     void addNode(Vector2 position);
     void removeNode(Node *node);
@@ -52,6 +57,8 @@ private:
     void removeEdge(Edge *edge);
 
 private:
+    Canvas *canvas_;
+
     std::vector<Node*> nodes_;
     std::vector<Edge*> edges_;
 

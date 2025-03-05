@@ -8,7 +8,7 @@ int main(){
     const int screenHeight{600};
 
     InitWindow(screenWidth, screenHeight, "Graph Test");
-    SetTargetFPS(300);
+    // SetTargetFPS(300);
 
     Canvas canvas;
 

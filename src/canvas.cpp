@@ -2,9 +2,24 @@
 #include "lib/magic_enum.hpp"
 
 #include <functional>
+#include <raymath.h>
+
+Canvas::Canvas()
+    : graph_(new Graph(this))
+    , canvasCamera_({})
+    , isViewing_(false)
+{
+    canvasCamera_.target = {0, 0};
+    canvasCamera_.offset = {0, 0};
+    canvasCamera_.zoom = 1.0f;
+}
+
+Canvas::~Canvas(){
+    delete graph_;
+}
 
 void Canvas::update(){
-    graph_.update();
+    graph_->update();
 }
 
 void Canvas::drawTools(){
@@ -39,25 +54,25 @@ void Canvas::drawTools(){
 
         changeButtonStyleTo(BUTTON, 0xC53030FF, 0xE53E3EFF, 0xFFFFFFFF, 2);
         drawButton("Reset", [&](){ 
-            graph_.reset();
+            graph_->reset();
             switchMode(Graph::Mode::EDIT);
         });
 
         changeButtonStyleTo(BUTTON, 0x00000000, 0x00000000, 0x000000FF, 2);
-        drawButton(magic_enum::enum_name(graph_.getMode()).data(), [&](){
+        drawButton(magic_enum::enum_name(graph_->getMode()).data(), [&](){
             switchMode(Graph::Mode::EDIT);
         });
-    }else{
-        switchMode(Graph::Mode::EDIT);
     }
 }
 
 void Canvas::drawGraph() const{
-    graph_.draw();
+    BeginMode2D(canvasCamera_); {
+        graph_->draw();
+    } EndMode2D();
 }
 
 void Canvas::switchMode(Graph::Mode mode){
-    graph_.switchMode(mode);
+    graph_->switchMode(mode);
 }
 
 void Canvas::changeButtonStyleTo(GuiControl target, int border, int base, int text, int borderWidth){
@@ -104,4 +119,40 @@ Color Canvas::colorFromHex(unsigned int hexValue){
         (unsigned char)((hexValue & 0x0000FF00) >> 8),
         (unsigned char)(hexValue & 0x000000FF)
     }; 
+}
+
+void Canvas::updateCanvasCamera() {
+    if(IsKeyPressed(KEY_R)
+    || IsMouseButtonPressed(MOUSE_MIDDLE_BUTTON)){
+        canvasCamera_.target = {0, 0};
+        canvasCamera_.offset = {0, 0};
+        canvasCamera_.zoom = 1.0f;
+    }
+    
+    float wheel{GetMouseWheelMove()};
+    if(wheel != 0){
+        Vector2 mouseCanvasPosition{GetScreenToWorld2D(GetMousePosition(), canvasCamera_)};
+        
+        canvasCamera_.zoom += wheel * 0.1f * canvasCamera_.zoom;
+        canvasCamera_.zoom = Clamp(canvasCamera_.zoom, 0.5f, 2.0f);
+        
+        Vector2 newMouseCanvasPosition{GetScreenToWorld2D(GetMousePosition(), canvasCamera_)};
+        canvasCamera_.target.x += mouseCanvasPosition.x - newMouseCanvasPosition.x;
+        canvasCamera_.target.y += mouseCanvasPosition.y - newMouseCanvasPosition.y;
+    }
+    
+    if(IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
+        canvasCameraPivot_ = GetMousePosition();
+    }
+    
+    if(IsMouseButtonDown(MOUSE_LEFT_BUTTON)){
+        Vector2 delta{
+            (canvasCameraPivot_.x - GetMousePosition().x) / canvasCamera_.zoom,
+            (canvasCameraPivot_.y - GetMousePosition().y) / canvasCamera_.zoom
+        };
+        
+        canvasCamera_.target.x += delta.x;
+        canvasCamera_.target.y += delta.y;
+        canvasCameraPivot_ = GetMousePosition();
+    }
 }

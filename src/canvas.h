@@ -5,12 +5,17 @@
 
 class Canvas{
 public:
-    Canvas() = default;
+    Canvas();
+    ~Canvas();
 
     void drawTools();
     void drawGraph() const;
 
     void update();
+    
+    void updateCanvasCamera();
+    
+    const Camera2D &getCanvasCamera() const{ return canvasCamera_;}
 
 private:
     void switchMode(Graph::Mode mode);
@@ -18,9 +23,14 @@ private:
     void changeButtonStyleTo(GuiControl target, int border, int base, int text, int borderWidth);
 
     Color colorFromHex(unsigned int hexValue);
-
+    
 private:
-    Graph graph_;
+    Graph *graph_;
 
-    bool isViewing_{false};
+    Camera2D canvasCamera_;
+
+    // for screen dragging
+    Vector2 canvasCameraPivot_;
+    
+    bool isViewing_;
 };

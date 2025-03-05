@@ -7,7 +7,7 @@
 struct Node{
 public:
     Node() = delete;
-    Node(Vector2 position);
+    Node(Vector2 position, Color color);
     ~Node() = default;
 
     bool operator==(const Node &other) const;
@@ -30,8 +30,7 @@ private:
     
     size_t id_;
 
-    float radius_{10};
-    Color color_{220, 144, 169, 255};
+    Color color_;
 
 private:
     static size_t idCounter_;

@@ -5,7 +5,7 @@
 struct Edge{
 public:
     Edge() = delete;
-    Edge(Node *n1, Node *n2);
+    Edge(Node *n1, Node *n2, Color color);
     ~Edge() = default;
 
     void draw(bool isHighlighted = false) const;
@@ -21,10 +21,9 @@ private:
     Node *start_;
     Node *end_;
 
-    float thickness_{10};
-    Color color_{199, 160, 210, 255};
-
     size_t id_;
+
+    Color color_;
 
 private:
     static size_t idCounter_;
