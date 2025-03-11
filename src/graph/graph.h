@@ -20,9 +20,9 @@ public:
     using Edge = GraphNamespace::Edge;
 
 public:
-    static std::unique_ptr<Graph> createGraph();
+    Graph();
+    ~Graph() = default;
 
-public:
     // void draw() const;
 
     size_t addVertex(Vector2 position, std::optional<Color> color = std::nullopt);
@@ -38,9 +38,6 @@ public:
     std::optional<std::pair<size_t, size_t>> checkCollisionEdge(Vector point, float thickness);
 
 private:
-    Graph();
-    ~Graph() = default;
-
     // void drawVertices() const;
     // void drawEdges() const;
 

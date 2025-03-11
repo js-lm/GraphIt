@@ -4,15 +4,7 @@
 #include <utility>
 #include <vector>
 
-class ActionBaseClass{
-public:
-    ActionBaseClass() = default;
-    virtual ~ActionBaseClass() = default;
-    virtual void execute() = 0;
-
-    virtual void undo() = 0;
-    virtual void redo() = 0;
-};
+class ActionBaseClass;
 
 class ActionsCenter{
 public:
@@ -25,10 +17,10 @@ public:
     };
 
 public:
-    static std::unique_ptr<ActionsCenter> createActionsCenter();
+    ActionsCenter() = default;
+    ~ActionsCenter() = default;
 
-public:
-    void addAction(std::unique_ptr<ActionBaseClass> action){ actionsToExecute_.emplace_back(std::move(action));};
+    void addAction(UniqueAction action){ actionsToExecute_.emplace_back(std::move(action));};
 
     // move actions from queue to stack and execute them
     void update();
@@ -40,10 +32,6 @@ public:
     bool canRedo() const{ return currentActionIndex_ + 1 < actionsStack_.size();};
 
     const StackIndex getStackIndex() const{ return {currentActionIndex_, actionsStack_.size()};};
-
-private:
-    ActionsCenter() = default;
-    ~ActionsCenter() = default;
 
 private:
     // actions history

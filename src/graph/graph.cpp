@@ -2,24 +2,15 @@
 #include "graph.h"
 
 #include <raylib.h>
+#include <assert.h>
 
 Graph::Graph()
-    : isDirected(false)
+    : isDirected_(false)
     , defaultVertexColor_(BLACK)
     , defaultEdgeColor_(GREY)
     , vertexRadius_(5.0f)
     , edgeThickness_(10.0f)
 {}
-
-static std::unique_ptr<Graph> Graph::createGraph(){
-    static bool created{false};
-    if(!created){
-        created = true;
-        return std::make_unique<Graph>();
-    }else{
-        return nullptr;
-    }
-}
 
 void Graph::hideVertex(size_t id){
     if(!isValidID(id)) return;

@@ -1,4 +1,7 @@
 #include "actions_center.h"
+#include "action_base_class.h"
+
+#include <assert.h>
 
 void ActionsCenter::update(){
     if(actionsToExecute_.empty()) return;
@@ -11,10 +14,13 @@ void ActionsCenter::update(){
 
     for(const auto &action : actionsToExecute_){
         action->execute();
-        actionsStack_.emplace_back(std::move(action));
+        if(action->shouldSave()){
+            actionsStack_.emplace_back(std::move(action));
+        }
     }
 
     actionsToExecute_.clear();
+    currentActionIndex_ = actionsStack_.size() - 1;
 }
 
 void ActionsCenter::undo(){ 
