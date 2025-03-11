@@ -15,8 +15,8 @@ namespace GraphNamespace{
             , id_(id)
         {};
 
-        void remove(){ isRemoved_ = true;};
-        void restore(){ isRemoved_ = false;};
+        void hide(){ isHidden_ = true;};
+        void show(){ isHidden_ = false;};
 
         void setPosition(Vector2 position){ position_ = position;};
         void setColor(Color color){ color_ = color;};
@@ -29,13 +29,13 @@ namespace GraphNamespace{
         const Vector2 position() const{ return position_;};
         const Color color() const{return color_;};
         const size_t id() const{ return id_;};
-        const bool deleted() const{ return isRemoved_;};
+        const bool isHidden() const{ return isHidden_;};
 
     private:
         Vector2 position_;
         Color color_;
         size_t id_;
-        bool isRemoved_;
+        bool isHidden_;
     };
 
     class Edge{
