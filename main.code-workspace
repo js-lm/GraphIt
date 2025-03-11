@@ -86,7 +86,8 @@
 			"mutex": "cpp",
 			"print": "cpp",
 			"ratio": "cpp",
-			"stack": "cpp"
+			"stack": "cpp",
+			"set": "cpp"
 		},
 		"git.autoRepositoryDetection": false,
 		"git.enabled": true

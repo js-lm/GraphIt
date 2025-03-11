@@ -1,82 +1,50 @@
 #pragma once
 
-#include "edge.h"
-
+#include <memory>
 #include <vector>
+#include <optional>
+#include <pairs>
+#include <unordered_set>
 
-class Canvas;
+namespace GraphNamespace{
+    class Vertex;
+    class Edge;
+}
+
+struct Vector2;
+struct Color;
 
 class Graph{
 public:
-    enum class Mode{
-        EDIT, // default mode
-        ADD,
-        DRAG,
-        CONNECT,
-        DEL_NODE,
-        DEL_EDGE
-    };
+    using Vertex = GraphNamespace::Vertex;
+    using Edge = GraphNamespace::Edge;
 
 public:
-    Graph() = delete;
-    Graph(Canvas *canvas);
-    Graph(Canvas *canvas, const std::vector<Node*> &nodes, const std::vector<Edge*> &edges);
-    ~Graph();
+    static std::unique_ptr<Graph> createGraph();
 
-    void draw() const;
-    void update();
+public:
+    size_t addVertex(Vector2 position, std::optional<Color> color = std::nullopt);
+    bool removeVertex(size_t id);
 
-    void switchMode(Mode mode);
-    void reset();
+    bool connectVertices(size_t startID, size_t endID);
+    bool disconnectVertices(size_t startID, size_t endID);
 
-    Mode getMode() const{ return mode_;};
-
-    static float getNodeRadius(){ return nodeRadius_;}
-    static float getEdgeThickness(){ return edgeThickness_;}
-
-    Vector2 getRelativeMousePosition() const;
-
-    void updateCanvasCamera();
+    std::optional<size_t> checkCollisionVertexPoint(Vector2 point);
+    std::optional<std::pair<size_t, size_t>> checkCollisionEdgePoint(Vector point);
 
 private:
-    Node *findNode(Vector2 position);
-    Edge *findEdge(Vector2 position);
+    Graph();
+    ~Graph() = default;
 
-    void updateHighlightedNodeAndEdge();
+    bool isDirected;
 
-    void updateAddMode();
-    void updateDragMode();
-    void updateConnectMode();
-    void updateDeleteNodeMode();
-    void updateDeleteEdgeMode();
-    void updateViewMode();
+    // pop = delete
+    std::vector<std::unique_ptr<Vertex>> vertices_;
+    std::vector<std::unique_ptr<Edge>> edges_;
+    std::unordered_set<size_t> hiddenVertices_;
 
-    void addNode(Vector2 position);
-    void removeNode(Node *node);
-    bool addEdge(Node *n1, Node *n2);
-    void removeEdge(Edge *edge);
-
-private:
-    Canvas *canvas_;
-
-    std::vector<Node*> nodes_;
-    std::vector<Edge*> edges_;
-
-    bool isDirected_;
-
-    Mode mode_;
-
-    Node *highlightedNode_;
-    Edge *highlightedEdge_;
-
-    // CONNECT mode
-    Node *connectFrom_;
-
-    // DRAG mode
-    Node *draggedNode_;
-
-    static constexpr Color defaultNodeColor_{220, 144, 169, 255};
-    static constexpr Color defaultEdgeColor_{199, 160, 210, 255};
-    static constexpr float nodeRadius_{10};
-    static constexpr float edgeThickness_{10};
+    Color defaultVertexColor_;
+    Color defaultEdgeColor_;
+    float defaultVertexRadius_;
+    float defaultEdgeThickness_;
 };
