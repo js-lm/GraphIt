@@ -2,16 +2,16 @@
 
 class ActionBaseClass{
 public:
-    ActionBaseClass() = default;
+    ActionBaseClass() : shouldRecorded_(false){};
     virtual ~ActionBaseClass() = default;
     virtual void execute() = 0;
 
     virtual void undo() = 0;
     virtual void redo() = 0;
 
-    // should the action be added to history stack
-    const bool shouldSave() const{ return shouldSaveHistory_;};
+    // should the action be recorded
+    const bool shouldSave() const{ return shouldRecorded_;};
 
 protected:
-    bool shouldSave_;
+    bool shouldRecorded_;
 };

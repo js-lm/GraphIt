@@ -1,7 +1,7 @@
 #pragma once
 
-struct Vector2;
-struct Color;
+#include <raylib.h>
+#include <cstddef>
 
 namespace GraphNamespace{
 
@@ -13,6 +13,7 @@ namespace GraphNamespace{
             : position_(position)
             , color_(color)
             , id_(id)
+            , isHidden_(false)
         {};
 
         void hide(){ isHidden_ = true;};

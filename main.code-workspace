@@ -87,7 +87,12 @@
 			"print": "cpp",
 			"ratio": "cpp",
 			"stack": "cpp",
-			"set": "cpp"
+			"set": "cpp",
+			"condition_variable": "cpp",
+			"semaphore": "cpp",
+			"stop_token": "cpp",
+			"thread": "cpp",
+			"__tree": "cpp"
 		},
 		"git.autoRepositoryDetection": false,
 		"git.enabled": true

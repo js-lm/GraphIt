@@ -3,8 +3,12 @@
 class Graph;
 class ActionsCenter;
 class GUI;
+class Canvas;
 
 class Application{
+public:
+    void run();
+    
 public:
     static Application &instance(){
         static Application instance;
@@ -17,14 +21,15 @@ public:
     Graph &graph(){ return *graph_;};
     ActionsCenter &actionCenter(){ return *actionsCenter_;};
     GUI &ui(){ return *ui_;};
-
-    void run();
+    Canvas &canvas(){ return *canvas_;}
 
 private:
     Application();
     ~Application();
 
+private:
     Graph *graph_;
     ActionsCenter *actionsCenter_;
     GUI *ui_;
+    Canvas *canvas_;
 };
