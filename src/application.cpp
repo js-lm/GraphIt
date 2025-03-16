@@ -4,6 +4,9 @@
 #include "gui/gui.h"
 #include "canvas/canvas.h"
 
+#define RAYGUI_IMPLEMENTATION
+#include "lib/raygui.h"
+
 #include <raylib.h>
 
 Application::Application()
@@ -17,16 +20,19 @@ Application::~Application(){
     delete graph_;
     delete actionsCenter_;
     delete ui_;
+    delete canvas_;
 }
 
-void Application::run(){
+int Application::run(){
     const int screenWidth{1000};
     const int screenHeight{720};
 
-    SetConfigFlags(FLAG_WINDOW_RESIZABLE); // | FLAG_WINDOW_TRANSPARENT);
+    // SetConfigFlags(FLAG_WINDOW_RESIZABLE); // | FLAG_WINDOW_TRANSPARENT);
 
-    InitWindow(screenWidth, screenHeight, "Graph Test");
+    InitWindow(screenWidth, screenHeight, "GraphIt!"); //  v0.1.0
     // SetTargetFPS(300);
+
+    // SetExitKey(KEY_NULL);
 
     while(!WindowShouldClose()){
         ui_->update();
@@ -34,8 +40,7 @@ void Application::run(){
         actionsCenter_->update();
 
         BeginDrawing(); {
-            ClearBackground(RAYWHITE);
-            // ClearBackground(BLANK);
+            ClearBackground(RAYWHITE); // BLANK);
 
             canvas_->draw();
             ui_->draw();
@@ -44,4 +49,6 @@ void Application::run(){
     }
 
     CloseWindow();
+
+    return 0;
 }

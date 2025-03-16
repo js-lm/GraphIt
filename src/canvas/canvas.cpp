@@ -6,16 +6,15 @@
 
 Canvas::Canvas()
     : mode_(Mode::VIEW)
-    , isMouseDeactivated_(false)
+    , pivotPoint_({0, 0})
+    , vertexOriginalPosition_({0, 0})
 {
     resetCamera();
 }
 
 void Canvas::update(){
-    if(!isMouseDeactivated_){
-        updateHoveredItem();
-        updateMouseActions();
-    }
+    updateHoveredItem();
+    updateMouseActions();
 }
 
 void Canvas::draw() const{

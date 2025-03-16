@@ -7,7 +7,7 @@ class Canvas;
 
 class Application{
 public:
-    void run();
+    int run();
     
 public:
     static Application &instance(){
@@ -16,7 +16,7 @@ public:
     }
 
     Application(const Application &app) = delete;
-    Application& operator=(const Application &app) = delete;
+    Application &operator=(const Application &app) = delete;
 
     Graph &graph(){ return *graph_;};
     ActionsCenter &actionCenter(){ return *actionsCenter_;};

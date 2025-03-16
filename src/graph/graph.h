@@ -24,12 +24,15 @@ public:
     void draw() const;
 
 public:
-VertexID addVertex(Vector2 position, std::optional<Color> color = std::nullopt);
+    VertexID addVertex(Vector2 position, std::optional<Color> color = std::nullopt);
     bool removeVertex(VertexID id);
     bool restoreRemovedVertex(VertexID id);
 
     bool connectVertices(VertexID startID, VertexID endID, std::optional<Color> color = std::nullopt);
     std::optional<Color> disconnectVertices(VertexID startID, VertexID endID);
+
+    void updateVertexPosition(VertexID id, Vector2 position){ vertices_[id]->setPosition(position);};
+    Vector2 getVertexPosition(VertexID id){ return vertices_[id]->position();};
 
     bool areNeighbors(VertexID startID, VertexID endID);
     std::unordered_set<VertexID> getNeighbors(VertexID id) const;

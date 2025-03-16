@@ -12,7 +12,8 @@ protected:
         ADD_VERTEX,
         REMOVE_VERTEX,
         CONNECT_VERTICES,
-        DISCONNECT_VERTICES
+        DISCONNECT_VERTICES,
+        MOVE_VERTEX
     };
 
 public:

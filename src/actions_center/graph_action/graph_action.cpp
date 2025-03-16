@@ -7,22 +7,26 @@
 
 using namespace Action;
 
-size_t GraphRelated::addVertex(Vector2 position, std::optional<Color> color){
+GraphRelated::VertexID GraphRelated::addVertex(Vector2 position, std::optional<Color> color){
     return Application::instance().graph().addVertex(position, color);
 }
 
-bool GraphRelated::removeVertex(size_t id){
+bool GraphRelated::removeVertex(VertexID id){
     return Application::instance().graph().removeVertex(id);
 }
 
-void GraphRelated::restoreRemovedVertex(size_t id){
+void GraphRelated::restoreRemovedVertex(VertexID id){
     Application::instance().graph().restoreRemovedVertex(id);
 }
 
-bool GraphRelated::connectVertices(size_t startID, size_t endID, std::optional<Color> color){
+bool GraphRelated::connectVertices(VertexID startID, VertexID endID, std::optional<Color> color){
     return Application::instance().graph().connectVertices(startID, endID, color);
 }
     
-std::optional<Color> GraphRelated::disconnectVertices(size_t startID, size_t endID){
+std::optional<Color> GraphRelated::disconnectVertices(VertexID startID, VertexID endID){
     return Application::instance().graph().disconnectVertices(startID, endID);
+}
+
+void GraphRelated::moveVertex(VertexID id, Vector2 to){
+    Application::instance().graph().updateVertexPosition(id, to);
 }

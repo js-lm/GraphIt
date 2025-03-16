@@ -8,6 +8,9 @@
 namespace Action{
 
     class GraphRelated : public ActionBaseClass{
+    protected:
+        using VertexID = size_t;    
+
     public:
         GraphRelated(){ shouldBeRecorded_ = true;};
         virtual ~GraphRelated() = default;
@@ -18,12 +21,14 @@ namespace Action{
         virtual void redo() override = 0;
 
     protected:
-        size_t addVertex(Vector2 position, std::optional<Color> color = std::nullopt);
-        bool removeVertex(size_t id);
-        void restoreRemovedVertex(size_t id);
+        VertexID addVertex(Vector2 position, std::optional<Color> color = std::nullopt);
+        bool removeVertex(VertexID id);
+        void restoreRemovedVertex(VertexID id);
 
-        bool connectVertices(size_t startID, size_t endID, std::optional<Color> color = std::nullopt);
-        std::optional<Color> disconnectVertices(size_t startID, size_t endID);
+        bool connectVertices(VertexID startID, VertexID endID, std::optional<Color> color = std::nullopt);
+        std::optional<Color> disconnectVertices(VertexID startID, VertexID endID);
+
+        void moveVertex(VertexID id, Vector2 to);
     };
 
     class AddVertex : public GraphRelated{
@@ -40,12 +45,12 @@ namespace Action{
     private:
         Vector2 position_;
         Color color_;
-        size_t vertexId_;
+        VertexID vertexId_;
     };
 
     class RemoveVertex : public GraphRelated{
     public:
-        RemoveVertex(size_t id) : vertexID_(id){ identifier_ = ID::REMOVE_VERTEX;};
+        RemoveVertex(VertexID id) : vertexID_(id){ identifier_ = ID::REMOVE_VERTEX;};
         ~RemoveVertex() = default;
 
         void execute() override{ removeVertex(vertexID_);};
@@ -54,12 +59,12 @@ namespace Action{
         void redo() override{ execute();};
 
     private:
-        size_t vertexID_;
+        VertexID vertexID_;
     };
 
     class ConnectVertices : public GraphRelated{
     public:
-        ConnectVertices(size_t startID, size_t endID, std::optional<Color> color = std::nullopt)
+        ConnectVertices(VertexID startID, VertexID endID, std::optional<Color> color = std::nullopt)
             : startID_(startID), endID_(endID)
             , color_(color)
         {
@@ -72,15 +77,15 @@ namespace Action{
         void redo() override{ execute();};
 
     private:
-        size_t startID_;
-        size_t endID_;
+        VertexID startID_;
+        VertexID endID_;
         
         std::optional<Color> color_;
     };
 
     class DisconnectVertices : public GraphRelated{
     public:
-        DisconnectVertices(size_t startID, size_t endID)
+        DisconnectVertices(VertexID startID, VertexID endID)
             : startID_(startID), endID_(endID)
         {
             identifier_ = ID::DISCONNECT_VERTICES;
@@ -92,10 +97,31 @@ namespace Action{
         void redo() override{ disconnectVertices(startID_, endID_);};
 
     private:
-        size_t startID_;
-        size_t endID_;
+        VertexID startID_;
+        VertexID endID_;
         
         std::optional<Color> color_;
+    };
+
+    class MoveVertex : public GraphRelated{
+    public:
+        MoveVertex(VertexID id, Vector2 from, Vector2 to)
+            : id_(id), from_(from), to_(to)
+        {
+            identifier_ = ID::MOVE_VERTEX;
+        }
+        
+        void execute() override{};
+
+        void undo() override{ moveVertex(id_, from_);};
+        void redo() override{ moveVertex(id_, to_);};
+
+    private:
+        VertexID id_;
+        
+        Vector2 from_;
+        Vector2 to_;
+
     };
 
 } // namespace Action

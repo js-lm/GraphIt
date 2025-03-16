@@ -13,8 +13,6 @@ void GUI::draw(){
 }
 
 void GUI::update(){
-    manageCanvasMouseBlocking();
-
     updateKeyboardShortcuts();
 
     updateFile();
@@ -22,13 +20,6 @@ void GUI::update(){
     updateSettings();
     updateConstruction();
     updateControls();
-}
-
-void GUI::manageCanvasMouseBlocking(){
-    Application::instance().canvas().switchMouseActivation(
-        // Top Left: (0, 40)    Bottom Right: (1000, 680)
-        !CheckCollisionPointRec(GetMousePosition(), {0, 40, 1000, 640})
-    );
 }
 
 void switchMode(Canvas::Mode mode){
@@ -39,17 +30,47 @@ void undo(){ Application::instance().actionCenter().undo();}
 void redo(){ Application::instance().actionCenter().redo();}
 
 void GUI::updateKeyboardShortcuts(){
+    auto key{GetKeyPressed()};
+    bool hasPress{false};
+
     if(IsKeyDown(KEY_LEFT_CONTROL)){
         if(IsKeyDown(KEY_LEFT_SHIFT)){
-            if(IsKeyPressed(KEY_Z)) redo();
+            hasPress = updateControlShiftKeys(key);
         }else{
-            if(IsKeyPressed(KEY_Z)) undo();
+            hasPress = updateControlKeys(key);
         }
     }
 
-    if(IsKeyPressed(KEY_P)) switchMode(Canvas::Mode::PEN);
-    if(IsKeyPressed(KEY_L)) switchMode(Canvas::Mode::LINK);
-    if(IsKeyPressed(KEY_E)) switchMode(Canvas::Mode::ERASER);
+    if(!hasPress) updateKeys(key);
+}
+
+bool GUI::updateKeys(int key){
+    // No Modifier Keys
+    switch(key){
+    case KEY_P: switchMode(Canvas::Mode::PEN);    return true;
+    case KEY_L: switchMode(Canvas::Mode::LINK);   return true;
+    case KEY_E: switchMode(Canvas::Mode::ERASER); return true;
+    default: break;
+    }
+    return false;
+}
+
+bool GUI::updateControlKeys(int key){
+    // Control
+    switch(key){
+    case KEY_Z: undo(); return true;
+    default: break;
+    }
+    return false;
+}
+
+bool GUI::updateControlShiftKeys(int key){
+    // Control + Shift
+    switch(key){
+    case KEY_Z: redo(); return true;
+    default: break;
+    }
+    return false;
 }
 
 void GUI::updateFile(){

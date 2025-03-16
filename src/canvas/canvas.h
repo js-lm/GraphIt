@@ -46,8 +46,6 @@ public:
 
     void switchMode(Mode mode);
     const Mode getMode() const{ return mode_;};
-
-    void switchMouseActivation(bool activate){ isMouseDeactivated_ = activate;};
     
     const std::optional<VertexID> &getHoveredVertexID() const{ return hoveredVertexID_;};
     const std::optional<EdgeID> &getHoveredEdgeIDs() const{ return hoveredEdgeIDs_;};
@@ -61,12 +59,16 @@ public:
 private:
     void drawGrid() const;
 
+    void drawMouse() const;
     void drawPen() const;
     void drawLink() const;
+    void drawEraser() const;
 
     void updateHoveredItem();
 
 private:
+    bool isCanvasMouseButtonPressed(MouseButton button);
+
     void updateMouseActions();
 
     void resetToolStatus();
@@ -74,13 +76,13 @@ private:
     void updatePen();
     void updateLink();
     void updateEraser();
+    void updateMove();
+    void updateDrag();
 
 private:
     Camera2D canvasCamera_;
 
     Mode mode_;
-
-    bool isMouseDeactivated_;
 
     std::optional<VertexID> hoveredVertexID_;
     std::optional<EdgeID> hoveredEdgeIDs_;
@@ -90,4 +92,11 @@ private:
 
     // link mode
     std::optional<VertexID> linkFrom_;
+
+    // move mode
+    Vector2 pivotPoint_;
+
+    // drag mode
+    std::optional<VertexID> vertexToDrag_;
+    Vector2 vertexOriginalPosition_;
 };

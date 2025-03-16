@@ -11,10 +11,11 @@ public:
     void update();
 
 private:
-    void manageCanvasMouseBlocking();
-    
-private:
     void updateKeyboardShortcuts();
+
+    bool updateKeys(int key);
+    bool updateControlKeys(int key);
+    bool updateControlShiftKeys(int key);
 
 private:
     void updateFile();
