@@ -2,7 +2,6 @@
 #include "../application.h"
 
 #include <raylib.h>
-#include <iostream>
 
 Graph::Graph()
     : isDirected_(false)
@@ -90,8 +89,6 @@ bool Graph::isVertexHidden(VertexID id) const{
 
 Graph::VertexID Graph::addVertex(Vector2 position, std::optional<Color> color){
     VertexID id{vertices_.size()};
-
-    std::cout << "Graph::addVertex() called\n";
     
     vertices_.emplace_back(
         std::make_unique<Vertex>(

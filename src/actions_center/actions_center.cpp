@@ -3,11 +3,16 @@
 
 #include <iostream>
 
-void ActionsCenter::update(){
-    if(actionsToExecute_.empty()) return;
+ActionsCenter::ActionsCenter(){
+    actionsStack_.push_back(std::make_unique<Action::DUMMY>());
+}
 
-    std::cout << "Updating ActionsCenter\n";
-    std::cout << "BEFORE: actionsStack_.size(): " << actionsStack_.size() << std::endl;
+void ActionsCenter::update(){
+    moveActionsFromQueueToStack();
+}
+
+void ActionsCenter::moveActionsFromQueueToStack(){
+    if(actionsToExecute_.empty()) return;
 
     if(canRedo()){
         actionsStack_.erase(actionsStack_.begin() + currentActionIndex_ + 1, actionsStack_.end());
@@ -15,25 +20,39 @@ void ActionsCenter::update(){
 
     actionsStack_.reserve(actionsStack_.size() + actionsToExecute_.size());
 
-    for(auto& action : actionsToExecute_){
+    for(auto &action : actionsToExecute_){
         action->execute();
+        std::cout << " [Action] Executing " << action->getName();
         if(action->shouldSave()){
             actionsStack_.push_back(std::move(action));
+            std::cout << " (Recorded)";
         }
+
+        std::cout << std::endl;
     }
 
     actionsToExecute_.clear();
     currentActionIndex_ = actionsStack_.size() - 1;
-
-    std::cout << "AFTER: actionsStack_.size(): " << actionsStack_.size() << std::endl;
 }
 
 void ActionsCenter::undo(){ 
     if(!canUndo()) return;
-    actionsStack_[currentActionIndex_--]->undo();
-};
+    auto &action{actionsStack_[currentActionIndex_--]};
+    std::cout << " [Action] Undoing " << action->getName() << " ";
+    printCurrentIndex();
+    std::cout << std::endl;
+    action->undo();
+}
 
 void ActionsCenter::redo(){ 
     if(!canRedo()) return;
-    actionsStack_[++currentActionIndex_]->redo();
-};
+    auto &action{actionsStack_[++currentActionIndex_]};
+    std::cout << " [Action] Redoing " << action->getName() << " ";
+    printCurrentIndex();
+    std::cout << std::endl;
+    action->redo();
+}
+
+void ActionsCenter::printCurrentIndex() const{
+    std::cout << currentActionIndex_ << "/" << actionsStack_.size() - 1;
+}

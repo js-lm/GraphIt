@@ -1,22 +1,10 @@
 /*******************************************************************************************
-*
-*   Toolbar v0.0.0 - toolbar
-*
 *   MODULE USAGE:
 *       #define GUI_TOOLBAR_IMPLEMENTATION
 *       #include "gui_toolbar.h"
 *
 *       INIT: GuiToolbarState state = InitGuiToolbar();
 *       DRAW: GuiToolbar(&state);
-*
-*   LICENSE: Propietary License
-*
-*   Copyright (c) 2022 xxx. All Rights Reserved.
-*
-*   Unauthorized copying of this file, via any medium is strictly prohibited
-*   This project is proprietary and confidential unless the owner allows
-*   usage in any other form by expresely written permission.
-*
 **********************************************************************************************/
 
 #include "raylib.h"
@@ -35,45 +23,48 @@ typedef struct {
     Vector2 constructionAnchor;
     Vector2 viewAnchor;
     Vector2 generalAnchor;
+    Vector2 settingAnchor;
     
-    bool selectPressed;
-    bool movePressed;
-    bool penPressed;
-    bool connectPressed;
-    bool dragPressed;
-    bool deleteSelectedPressed;
-    bool eraserPressed;
-    bool showGridActive;
-    bool Toggle014Active;
-    bool changeSelectedColorPressed;
-    bool colorPanelButtonPressed;
+    // File
+    bool newFilePressed;
     bool savePressed;
     bool loadPressed;
-    bool newFilePressed;
     bool undoPressed;
     bool redoPressed;
+    bool takeScreenshotPressed;
     bool loadLuaPressed;
 
-    Rectangle layoutRecs[26];
+    // View
+    bool showGridActive;
+    bool snapToGridActive;
 
-    // Custom state variables (depend on development software)
-    // NOTE: This variables should be added manually if required
+    // Settings
+    bool isDirectedChecked;
+    bool isWeightedChecked;
+    bool isShowingLabelsChecked;
+    bool openSettingPressed;
 
+    // Construction
+    bool penPressed;
+    bool penColorPressed;
+    bool linkPressed;
+    bool linkColorPressed;
+    bool dragPressed;
+    bool eraserPressed;
+
+    // Controls
+    bool selectPressed;
+    bool movePressed;
+    bool deleteSelectedPressed;
+    bool changeSelectedColorPressed;
+    bool colorPanelButtonPressed;
+    bool isSelectingVertexChecked;
+    bool isSelectingEdgeChecked;
 } GuiToolbarState;
 
 #ifdef __cplusplus
 extern "C" {            // Prevents name mangling of functions
 #endif
-
-//----------------------------------------------------------------------------------
-// Defines and Macros
-//----------------------------------------------------------------------------------
-//...
-
-//----------------------------------------------------------------------------------
-// Types and Structures Definition
-//----------------------------------------------------------------------------------
-// ...
 
 //----------------------------------------------------------------------------------
 // Module Functions Declaration
@@ -97,105 +88,104 @@ void GuiToolbar(GuiToolbarState *state);
 #include "lib/raygui.h"
 
 //----------------------------------------------------------------------------------
-// Global Variables Definition
-//----------------------------------------------------------------------------------
-//...
-
-//----------------------------------------------------------------------------------
-// Internal Module Functions Definition
-//----------------------------------------------------------------------------------
-//...
-
-//----------------------------------------------------------------------------------
 // Module Functions Definition
 //----------------------------------------------------------------------------------
 GuiToolbarState InitGuiToolbar(void)
 {
     GuiToolbarState state = { 0 };
 
-    state.controlAnchor = (Vector2){ 296, 0 };
+    state.controlAnchor = (Vector2){ 400, 680 };
     state.constructionAnchor = (Vector2){ 0, 680 };
-    state.viewAnchor = (Vector2){ 408, 680 };
+    state.viewAnchor = (Vector2){ 320, 0 };
     state.generalAnchor = (Vector2){ 0, 0 };
+    state.settingAnchor = (Vector2){ 584, 0 };
     
-    state.selectPressed = false;
-    state.movePressed = false;
-    state.penPressed = false;
-    state.connectPressed = false;
-    state.dragPressed = false;
-    state.deleteSelectedPressed = false;
-    state.eraserPressed = false;
-    state.showGridActive = true;
-    state.Toggle014Active = true;
-    state.changeSelectedColorPressed = false;
-    state.colorPanelButtonPressed = false;
+    // File
+    state.newFilePressed = false;
     state.savePressed = false;
     state.loadPressed = false;
-    state.newFilePressed = false;
     state.undoPressed = false;
     state.redoPressed = false;
+    state.takeScreenshotPressed = false;
     state.loadLuaPressed = false;
 
-    state.layoutRecs[0] = (Rectangle){ state.controlAnchor.x + 0, state.controlAnchor.y + 0, 392, 40 };
-    state.layoutRecs[1] = (Rectangle){ state.controlAnchor.x + 16, state.controlAnchor.y + 8, 48, 24 };
-    state.layoutRecs[2] = (Rectangle){ state.controlAnchor.x + 64, state.controlAnchor.y + 8, 72, 24 };
-    state.layoutRecs[3] = (Rectangle){ state.controlAnchor.x + 144, state.controlAnchor.y + 8, 64, 24 };
-    state.layoutRecs[4] = (Rectangle){ state.constructionAnchor.x + 0, state.constructionAnchor.y + 0, 408, 40 };
-    state.layoutRecs[5] = (Rectangle){ state.constructionAnchor.x + 16, state.constructionAnchor.y + 8, 72, 24 };
-    state.layoutRecs[6] = (Rectangle){ state.constructionAnchor.x + 96, state.constructionAnchor.y + 8, 56, 24 };
-    state.layoutRecs[7] = (Rectangle){ state.constructionAnchor.x + 160, state.constructionAnchor.y + 8, 64, 24 };
-    state.layoutRecs[8] = (Rectangle){ state.constructionAnchor.x + 240, state.constructionAnchor.y + 8, 64, 24 };
-    state.layoutRecs[9] = (Rectangle){ state.controlAnchor.x + 224, state.controlAnchor.y + 8, 72, 24 };
-    state.layoutRecs[10] = (Rectangle){ state.constructionAnchor.x + 320, state.constructionAnchor.y + 8, 72, 24 };
-    state.layoutRecs[11] = (Rectangle){ state.viewAnchor.x + 0, state.viewAnchor.y + 0, 264, 40 };
-    state.layoutRecs[12] = (Rectangle){ state.viewAnchor.x + 16, state.viewAnchor.y + 8, 32, 24 };
-    state.layoutRecs[13] = (Rectangle){ state.viewAnchor.x + 48, state.viewAnchor.y + 8, 88, 24 };
-    state.layoutRecs[14] = (Rectangle){ state.viewAnchor.x + 144, state.viewAnchor.y + 8, 104, 24 };
-    state.layoutRecs[15] = (Rectangle){ state.controlAnchor.x + 312, state.controlAnchor.y + 8, 56, 24 };
-    state.layoutRecs[16] = (Rectangle){ state.controlAnchor.x + 364, state.controlAnchor.y + 8, 12, 24 };
-    state.layoutRecs[17] = (Rectangle){ state.generalAnchor.x + 0, state.generalAnchor.y + 0, 296, 40 };
-    state.layoutRecs[18] = (Rectangle){ state.generalAnchor.x + 48, state.generalAnchor.y + 8, 24, 24 };
-    state.layoutRecs[19] = (Rectangle){ state.generalAnchor.x + 80, state.generalAnchor.y + 8, 24, 24 };
-    state.layoutRecs[20] = (Rectangle){ state.generalAnchor.x + 16, state.generalAnchor.y + 8, 24, 24 };
-    state.layoutRecs[21] = (Rectangle){ state.generalAnchor.x + 120, state.generalAnchor.y + 8, 24, 24 };
-    state.layoutRecs[22] = (Rectangle){ state.generalAnchor.x + 152, state.generalAnchor.y + 8, 24, 24 };
-    state.layoutRecs[23] = (Rectangle){ state.generalAnchor.x + 192, state.generalAnchor.y + 8, 88, 24 };
-    state.layoutRecs[24] = (Rectangle){ 688, 40, 312, 40 };
-    state.layoutRecs[25] = (Rectangle){ 672, 720, 328, 40 };
+    // View
+    state.showGridActive = true;
+    state.snapToGridActive = true;
 
-    // Custom variables initialization
+    // Settings
+    state.isDirectedChecked = false;
+    state.isWeightedChecked = false;
+    state.isShowingLabelsChecked = false;
+    state.openSettingPressed = false;
+
+    // Construction
+    state.penPressed = false;
+    state.penColorPressed = false;
+    state.linkPressed = false;
+    state.linkColorPressed = false;
+    state.dragPressed = false;
+    state.eraserPressed = false;
+
+    // Controls
+    state.selectPressed = false;
+    state.movePressed = false;
+    state.deleteSelectedPressed = false;
+    state.changeSelectedColorPressed = false;
+    state.colorPanelButtonPressed = false;
+    state.isSelectingVertexChecked = true;
+    state.isSelectingEdgeChecked = false;
 
     return state;
 }
 
 void GuiToolbar(GuiToolbarState *state)
 {
-    GuiGroupBox(state->layoutRecs[0], NULL);
-    GuiLabel(state->layoutRecs[1], "Control:");
-    state->selectPressed = GuiButton(state->layoutRecs[2], "#021#Select"); 
-    state->movePressed = GuiButton(state->layoutRecs[3], "#019#Move"); 
-    GuiGroupBox(state->layoutRecs[4], NULL);
-    GuiLabel(state->layoutRecs[5], "Construction:");
-    state->penPressed = GuiButton(state->layoutRecs[6], "#022#Pen"); 
-    state->connectPressed = GuiButton(state->layoutRecs[7], "#034#Link"); 
-    state->dragPressed = GuiButton(state->layoutRecs[8], "#144#Drag"); 
-    state->deleteSelectedPressed = GuiButton(state->layoutRecs[9], "#143#Delete"); 
-    state->eraserPressed = GuiButton(state->layoutRecs[10], "#023#Eraser"); 
-    GuiGroupBox(state->layoutRecs[11], NULL);
-    GuiLabel(state->layoutRecs[12], "View:");
-    GuiToggle(state->layoutRecs[13], "#097#Show Grid", &state->showGridActive);
-    GuiToggle(state->layoutRecs[14], "#050#Snap To Grid", &state->Toggle014Active);
-    state->changeSelectedColorPressed = GuiButton(state->layoutRecs[15], "#025#Dye"); 
-    state->colorPanelButtonPressed = GuiButton(state->layoutRecs[16], NULL); 
-    GuiGroupBox(state->layoutRecs[17], NULL);
-    state->savePressed = GuiButton(state->layoutRecs[18], "#006#"); 
-    state->loadPressed = GuiButton(state->layoutRecs[19], "#005#"); 
-    state->newFilePressed = GuiButton(state->layoutRecs[20], "#008#"); 
-    state->undoPressed = GuiButton(state->layoutRecs[21], "#072#"); 
-    state->redoPressed = GuiButton(state->layoutRecs[22], "#073#"); 
-    state->loadLuaPressed = GuiButton(state->layoutRecs[23], "#200#Load Lua"); 
-    GuiPanel(state->layoutRecs[24], NULL);
-    GuiPanel(state->layoutRecs[25], NULL);
+    // File
+    GuiGroupBox((Rectangle){ state->generalAnchor.x + 0, state->generalAnchor.y + 0, 320, 40 }, NULL);
+    state->newFilePressed = GuiButton((Rectangle){ state->generalAnchor.x + 16, state->generalAnchor.y + 8, 24, 24 }, "#008#");
+    state->loadPressed = GuiButton((Rectangle){ state->generalAnchor.x + 44, state->generalAnchor.y + 8, 24, 24 }, "#005#");
+    state->savePressed = GuiButton((Rectangle){ state->generalAnchor.x + 72, state->generalAnchor.y + 8, 24, 24 }, "#006#");
+    state->undoPressed = GuiButton((Rectangle){ state->generalAnchor.x + 112, state->generalAnchor.y + 8, 24, 24 }, "#072#");
+    state->redoPressed = GuiButton((Rectangle){ state->generalAnchor.x + 140, state->generalAnchor.y + 8, 24, 24 }, "#073#");
+    state->takeScreenshotPressed = GuiButton((Rectangle){ state->generalAnchor.x + 180, state->generalAnchor.y + 8, 24, 24 }, "#183#");
+    state->loadLuaPressed = GuiButton((Rectangle){ state->generalAnchor.x + 220, state->generalAnchor.y + 8, 88, 24 }, "#200#Load Lua");
+    
+    // View
+    GuiGroupBox((Rectangle){ state->viewAnchor.x + 0, state->viewAnchor.y + 0, 264, 40 }, NULL);
+    GuiLabel((Rectangle){ state->viewAnchor.x + 16, state->viewAnchor.y + 8, 32, 24 }, "View:");
+    GuiToggle((Rectangle){ state->viewAnchor.x + 48, state->viewAnchor.y + 8, 88, 24 }, "#097#Show Grid", &state->showGridActive);
+    GuiToggle((Rectangle){ state->viewAnchor.x + 140, state->viewAnchor.y + 8, 104, 24 }, "#050#Snap To Grid", &state->snapToGridActive);
+    
+    // Settings
+    GuiGroupBox((Rectangle){ state->settingAnchor.x + 0, state->settingAnchor.y + 0, 416, 40 }, NULL);
+    GuiLabel((Rectangle){ state->settingAnchor.x + 16, state->settingAnchor.y + 8, 48, 24 }, "Settings:");
+    GuiCheckBox((Rectangle){ state->settingAnchor.x + 72, state->settingAnchor.y + 8, 24, 24 }, "Is Directed", &state->isDirectedChecked);
+    GuiCheckBox((Rectangle){ state->settingAnchor.x + 168, state->settingAnchor.y + 8, 24, 24 }, "Is Weighted", &state->isWeightedChecked);
+    GuiCheckBox((Rectangle){ state->settingAnchor.x + 264, state->settingAnchor.y + 8, 24, 24 }, "Show Label", &state->isShowingLabelsChecked);
+    state->openSettingPressed = GuiButton((Rectangle){ state->settingAnchor.x + 376, state->settingAnchor.y + 8, 24, 24 }, "#142#");
+    
+    // Construction
+    GuiGroupBox((Rectangle){ state->constructionAnchor.x + 0, state->constructionAnchor.y + 0, 400, 40 }, NULL);
+    GuiLabel((Rectangle){ state->constructionAnchor.x + 16, state->constructionAnchor.y + 8, 72, 24 }, "Construction:");
+    state->penColorPressed = GuiButton((Rectangle){ state->constructionAnchor.x + 150, state->constructionAnchor.y + 8, 12, 24 }, NULL);
+    state->penPressed = GuiButton((Rectangle){ state->constructionAnchor.x + 96, state->constructionAnchor.y + 8, 56, 24 }, "#022#Pen");
+    state->linkColorPressed = GuiButton((Rectangle){ state->constructionAnchor.x + 220, state->constructionAnchor.y + 8, 12, 24 }, NULL);
+    state->linkPressed = GuiButton((Rectangle){ state->constructionAnchor.x + 167, state->constructionAnchor.y + 8, 56, 24 }, "#034#Link");
+    state->dragPressed = GuiButton((Rectangle){ state->constructionAnchor.x + 248, state->constructionAnchor.y + 8, 64, 24 }, "#144#Drag");
+    state->eraserPressed = GuiButton((Rectangle){ state->constructionAnchor.x + 315, state->constructionAnchor.y + 8, 72, 24 }, "#023#Eraser");
+    
+    // Controls
+    GuiGroupBox((Rectangle){ state->controlAnchor.x + 0, state->controlAnchor.y + 0, 600, 40 }, NULL);
+    GuiLabel((Rectangle){ state->controlAnchor.x + 16, state->controlAnchor.y + 8, 48, 24 }, "Control:");
+    state->selectPressed = GuiButton((Rectangle){ state->controlAnchor.x + 64, state->controlAnchor.y + 8, 72, 24 }, "#021#Select");
+    state->movePressed = GuiButton((Rectangle){ state->controlAnchor.x + 140, state->controlAnchor.y + 8, 64, 24 }, "#019#Move");
+    state->colorPanelButtonPressed = GuiButton((Rectangle){ state->controlAnchor.x + 350, state->controlAnchor.y + 8, 12, 24 }, NULL);
+    state->changeSelectedColorPressed = GuiButton((Rectangle){ state->controlAnchor.x + 296, state->controlAnchor.y + 8, 56, 24 }, "#025#Dye");
+    state->deleteSelectedPressed = GuiButton((Rectangle){ state->controlAnchor.x + 221, state->controlAnchor.y + 8, 72, 24 }, "#143#Delete");
+    GuiLabel((Rectangle){ state->controlAnchor.x + 384, state->controlAnchor.y + 8, 40, 24 }, "Include:");
+    GuiCheckBox((Rectangle){ state->controlAnchor.x + 432, state->controlAnchor.y + 8, 24, 24 }, "Node", &state->isSelectingVertexChecked);
+    GuiCheckBox((Rectangle){ state->controlAnchor.x + 496, state->controlAnchor.y + 8, 24, 24 }, "Edge", &state->isSelectingEdgeChecked);
 }
 
 #endif // GUI_TOOLBAR_IMPLEMENTATION

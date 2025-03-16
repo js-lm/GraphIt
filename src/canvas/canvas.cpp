@@ -3,21 +3,18 @@
 #include "../graph/graph.h"
 
 #include <raylib.h>
-#include <iostream>
 
 Canvas::Canvas()
     : mode_(Mode::VIEW)
+    , isMouseDeactivated_(false)
 {
     resetCamera();
 }
 
 void Canvas::update(){
-    updateKeyboardActions();
-    updateHoveredItem();
-    updateMouseActions();
-
-    if(hoveredVertexID_){
-        std::cout << hoveredVertexID_.value() << std::endl;
+    if(!isMouseDeactivated_){
+        updateHoveredItem();
+        updateMouseActions();
     }
 }
 

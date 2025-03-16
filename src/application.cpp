@@ -20,22 +20,25 @@ Application::~Application(){
 }
 
 void Application::run(){
-    const int screenWidth{800};
-    const int screenHeight{600};
+    const int screenWidth{1000};
+    const int screenHeight{720};
+
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE); // | FLAG_WINDOW_TRANSPARENT);
 
     InitWindow(screenWidth, screenHeight, "Graph Test");
     // SetTargetFPS(300);
 
     while(!WindowShouldClose()){
-
+        ui_->update();
         canvas_->update();
         actionsCenter_->update();
 
         BeginDrawing(); {
             ClearBackground(RAYWHITE);
-            
+            // ClearBackground(BLANK);
+
             canvas_->draw();
-            ui_->drawToolbar();
+            ui_->draw();
             
         } EndDrawing();
     }

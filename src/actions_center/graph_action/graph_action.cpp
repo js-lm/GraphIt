@@ -8,7 +8,6 @@
 using namespace Action;
 
 size_t GraphRelated::addVertex(Vector2 position, std::optional<Color> color){
-    std::cout << "GraphRelated::addVertex() called\n";
     return Application::instance().graph().addVertex(position, color);
 }
 

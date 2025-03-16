@@ -9,7 +9,7 @@ namespace Action{
 
     class GraphRelated : public ActionBaseClass{
     public:
-        GraphRelated(){ shouldRecorded_ = true;};
+        GraphRelated(){ shouldBeRecorded_ = true;};
         virtual ~GraphRelated() = default;
 
         virtual void execute() override = 0;
@@ -29,39 +29,42 @@ namespace Action{
     class AddVertex : public GraphRelated{
     public:
         AddVertex(Vector2 position, Color color)
-            : position_(position), color_(color){};
+            : position_(position), color_(color){ identifier_ = ID::ADD_VERTEX;};
         ~AddVertex() = default;
 
-        void execute() override{ id_ = addVertex(position_, color_);};
+        void execute() override{ vertexId_ = addVertex(position_, color_);};
 
-        void undo() override{ removeVertex(id_);};
-        void redo() override{ restoreRemovedVertex(id_);};
+        void undo() override{ removeVertex(vertexId_);};
+        void redo() override{ restoreRemovedVertex(vertexId_);};
 
     private:
         Vector2 position_;
         Color color_;
-        size_t id_;
+        size_t vertexId_;
     };
 
     class RemoveVertex : public GraphRelated{
     public:
-        RemoveVertex(size_t id) : id_(id){};
+        RemoveVertex(size_t id) : vertexID_(id){ identifier_ = ID::REMOVE_VERTEX;};
         ~RemoveVertex() = default;
 
-        void execute() override{ removeVertex(id_);};
+        void execute() override{ removeVertex(vertexID_);};
 
-        void undo() override{ restoreRemovedVertex(id_);};
+        void undo() override{ restoreRemovedVertex(vertexID_);};
         void redo() override{ execute();};
 
     private:
-        size_t id_;
+        size_t vertexID_;
     };
 
     class ConnectVertices : public GraphRelated{
     public:
         ConnectVertices(size_t startID, size_t endID, std::optional<Color> color = std::nullopt)
             : startID_(startID), endID_(endID)
-            , color_(color){};
+            , color_(color)
+        {
+            identifier_ = ID::CONNECT_VERTICES;
+        };
         
         void execute() override{ connectVertices(startID_, endID_, color_);};
 
@@ -78,7 +81,10 @@ namespace Action{
     class DisconnectVertices : public GraphRelated{
     public:
         DisconnectVertices(size_t startID, size_t endID)
-            : startID_(startID), endID_(endID){}
+            : startID_(startID), endID_(endID)
+        {
+            identifier_ = ID::DISCONNECT_VERTICES;
+        }
         
         void execute() override{ color_ = disconnectVertices(startID_, endID_);};
 

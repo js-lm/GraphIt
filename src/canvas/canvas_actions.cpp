@@ -21,32 +21,6 @@ void Canvas::updateMouseActions(){
     }
 }
 
-void Canvas::updateKeyboardActions(){
-    // this should be moved to GUI instead of canvas
-    if(IsKeyDown(KEY_LEFT_CONTROL)){
-        if(IsKeyDown(KEY_LEFT_SHIFT)){
-            if(IsKeyPressed(KEY_Z)){
-                Application::instance().actionCenter().redo();
-            }
-        }else{
-            if(IsKeyPressed(KEY_Z)){
-                Application::instance().actionCenter().undo();
-            }
-        }
-    }
-
-    auto changeMode{
-        [&](Mode mode){
-            mode_ = mode;
-            std::cout << "Current Mode: " << magic_enum::enum_name(mode_) << std::endl;
-        }
-    };
-
-    if(IsKeyPressed(KEY_P)) changeMode(Mode::PEN);
-    if(IsKeyPressed(KEY_L)) changeMode(Mode::LINK);
-    if(IsKeyPressed(KEY_E)) changeMode(Mode::ERASER);
-}
-
 void Canvas::resetToolStatus(){
     linkFrom_ = std::nullopt;
     hoveredVertexID_ = std::nullopt;
@@ -72,7 +46,7 @@ void Canvas::updateLink(){
         if(!linkFrom_){
             linkFrom_ = hoveredVertexID_;
 
-        }else if(hoveredVertexID_){
+        }else if(hoveredVertexID_ && linkFrom_.value() != hoveredVertexID_.value()){
             Application::instance().actionCenter().addAction(
                 std::make_unique<Action::ConnectVertices>(
                     linkFrom_.value(), 

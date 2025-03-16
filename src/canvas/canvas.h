@@ -46,6 +46,8 @@ public:
 
     void switchMode(Mode mode);
     const Mode getMode() const{ return mode_;};
+
+    void switchMouseActivation(bool activate){ isMouseDeactivated_ = activate;};
     
     const std::optional<VertexID> &getHoveredVertexID() const{ return hoveredVertexID_;};
     const std::optional<EdgeID> &getHoveredEdgeIDs() const{ return hoveredEdgeIDs_;};
@@ -66,7 +68,6 @@ private:
 
 private:
     void updateMouseActions();
-    void updateKeyboardActions();
 
     void resetToolStatus();
 
@@ -78,6 +79,8 @@ private:
     Camera2D canvasCamera_;
 
     Mode mode_;
+
+    bool isMouseDeactivated_;
 
     std::optional<VertexID> hoveredVertexID_;
     std::optional<EdgeID> hoveredEdgeIDs_;

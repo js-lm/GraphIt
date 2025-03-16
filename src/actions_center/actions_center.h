@@ -17,12 +17,11 @@ public:
     };
 
 public:
-    ActionsCenter() = default;
+    ActionsCenter();
     ~ActionsCenter() = default;
 
     void addAction(UniqueAction&& action){ actionsToExecute_.push_back(std::move(action));}
 
-    // move actions from queue to stack and execute them
     void update();
 
     void undo();
@@ -34,6 +33,11 @@ public:
     const StackIndex getStackIndex() const{ return {currentActionIndex_, actionsStack_.size()};}
 
 private:
+    void moveActionsFromQueueToStack();
+
+    void printCurrentIndex() const;
+
+private:
     // actions history
     std::vector<UniqueAction> actionsStack_;
     size_t currentActionIndex_{0};
@@ -41,3 +45,22 @@ private:
     // newly added actions to execute in this frame
     std::vector<UniqueAction> actionsToExecute_;
 };
+
+namespace Action{
+    
+    // the bottom action
+    class DUMMY : public ActionBaseClass{
+    public:
+        DUMMY(){ 
+            shouldBeRecorded_ = true;
+            identifier_ = ID::DUMMY;
+        };
+        ~DUMMY() = default;
+
+        void execute() override{};
+
+        void undo() override{};
+        void redo() override{};
+    };
+
+} // namespace Action
