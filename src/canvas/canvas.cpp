@@ -20,6 +20,7 @@ void Canvas::update(){
 void Canvas::draw() const{
     BeginMode2D(canvasCamera_); {
         drawGrid();
+        drawLink(); // special case
         Application::instance().graph().draw();
     } EndMode2D();
 }

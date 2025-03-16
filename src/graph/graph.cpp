@@ -1,5 +1,6 @@
 #include "graph.h"
 #include "../application.h"
+#include "../canvas/canvas.h"
 
 #include <raylib.h>
 
@@ -17,27 +18,26 @@ void Graph::draw() const{
 }
 
 void Graph::drawVertices() const{
-    // auto &hoveredVertexID{Application::instance().graph()->getHoveredVertexID()};
-    // auto &selectedVertexIDs{Application::instance().graph()->getSelectedVertexIDs()};
+    auto &hoveredVertexID{Application::instance().canvas().getHoveredVertexID()};
+    // auto &selectedVertexIDs{Application::instance().canvas().getSelectedVertexIDs()};
 
     for(const auto &vertex : vertices_){
         if(vertex->isHidden()) continue;
         
         float vertexRadius{vertexRadius_};
-
-        // if(hoveredVertexID == vertex->id()) vertexRadius *= 1.25f;
+        if(hoveredVertexID == vertex->id()) vertexRadius *= 1.5f;
 
         DrawCircleV(vertex->position(), vertexRadius, vertex->color());
 
         // if(selectedVertexIDs.find(vertex->id()) != selectedVertexIDs.end()){ 
-        //     DrawCircleLinesV(vertex->position(), vertexRadius * 1.25f, vertex->color());
+        //     DrawCircleLinesV(vertex->position(), vertexRadius * 1.5f, vertex->color());
         // } 
     }
 }
 
 void Graph::drawEdges() const{
-    // auto &hoveredEdgeIDs{Application::instance().graph()->getHoveredEdgeIDs()};
-    // auto &selectedEdgeIDs{Application::instance().graph()->getSelectedEdgeIDs()};
+    auto &hoveredEdgeIDs{Application::instance().canvas().getHoveredEdgeIDs()};
+    // auto &selectedEdgeIDs{Application::instance().canvas().getSelectedEdgeIDs()};
 
     for(const auto &edge : edges_){
         if(isVertexHidden(edge->startID())
@@ -47,8 +47,9 @@ void Graph::drawEdges() const{
         }
         
         float edgeThickness{edgeThickness_};
-
-        // if(hoveredEdgeIDs == edge->id()) edgeThickness *= 1.25f;
+        if(hoveredEdgeIDs == std::pair{edge->startID(), edge->endID()}){
+            edgeThickness *= 1.25f;
+        }
 
         DrawLineEx(
             vertices_[edge->startID()]->position(), 

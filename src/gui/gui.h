@@ -14,8 +14,8 @@ private:
     void updateKeyboardShortcuts();
 
     bool updateKeys(int key);
-    bool updateControlKeys(int key);
-    bool updateControlShiftKeys(int key);
+    bool updateCommandKeys(int key);
+    bool updateCommandShiftKeys(int key);
 
 private:
     void updateFile();
@@ -23,4 +23,7 @@ private:
     void updateSettings();
     void updateConstruction();
     void updateControls();
+
+private:
+    void takeScreenshot();
 };

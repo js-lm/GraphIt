@@ -27,7 +27,7 @@ int Application::run(){
     const int screenWidth{1000};
     const int screenHeight{720};
 
-    // SetConfigFlags(FLAG_WINDOW_RESIZABLE); // | FLAG_WINDOW_TRANSPARENT);
+    // SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_WINDOW_TRANSPARENT);
 
     InitWindow(screenWidth, screenHeight, "GraphIt!"); //  v0.1.0
     // SetTargetFPS(300);
@@ -44,6 +44,7 @@ int Application::run(){
 
             canvas_->draw();
             ui_->draw();
+            canvas_->drawMouse();
             
         } EndDrawing();
     }

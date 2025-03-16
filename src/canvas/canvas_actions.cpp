@@ -7,14 +7,17 @@
 
 #include <optional>
 #include <iostream>
+#include <raylib.h>
 #include <raymath.h>
 
-bool Canvas::isCanvasMouseButtonPressed(MouseButton button){
+bool Canvas::isCanvasMouseButtonPressed(int key){
     if(!CheckCollisionPointRec(GetMousePosition(), {0, 40, 1000, 640})) return false;
-    return IsMouseButtonPressed(button);
+    return IsMouseButtonPressed(key);
 }
 
 void Canvas::updateMouseActions(){
+    updateCamera();
+
     switch(mode_){
     case Mode::VIEW: break;
     case Mode::SELECT: break;
@@ -52,7 +55,9 @@ void Canvas::updateLink(){
         if(!linkFrom_){
             linkFrom_ = hoveredVertexID_;
 
-        }else if(hoveredVertexID_ && linkFrom_.value() != hoveredVertexID_.value()){
+        }else if(hoveredVertexID_ && linkFrom_.value() != hoveredVertexID_.value()
+             && !Application::instance().graph().areNeighbors(linkFrom_.value(), hoveredVertexID_.value())
+        ){
             Application::instance().actionCenter().addAction(
                 std::make_unique<Action::ConnectVertices>(
                     linkFrom_.value(), 
@@ -85,28 +90,56 @@ void Canvas::updateEraser(){
 }
 
 void Canvas::updateMove(){
-    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+    updateScreenDragging(MOUSE_BUTTON_LEFT);
+}
+
+void Canvas::updateCamera(){
+    updateScreenReset();
+    updateScreenDragging();
+    updateScreenZooming();
+}
+
+void Canvas::updateScreenDragging(int key){
+    // screen dragging
+    if(IsMouseButtonPressed(key)){
         pivotPoint_ = getMousePositionInCanvas();
-    }else if(IsMouseButtonDown(MOUSE_BUTTON_LEFT)){
+    }else if(IsMouseButtonDown(key)){
         Vector2 pivotDelta{Vector2Subtract(pivotPoint_, getMousePositionInCanvas())};
         canvasCamera_.target = Vector2Add(canvasCamera_.target, pivotDelta);
         pivotPoint_ = getMousePositionInCanvas();
     }
+}
 
+void Canvas::updateScreenReset(){
+    // double middle clicks to reset camera
+    if(doubleMiddleClickCD_){
+        if(IsMouseButtonPressed(MOUSE_BUTTON_MIDDLE)){
+            resetCamera();
+            doubleMiddleClickCD_ = std::nullopt;
+        }else{
+            *doubleMiddleClickCD_ -= 1.0f * GetFrameTime();
+
+            if(doubleMiddleClickCD_.value() <= 0) doubleMiddleClickCD_ = std::nullopt;
+        }
+    }else if(IsMouseButtonPressed(MOUSE_BUTTON_MIDDLE)){
+        doubleMiddleClickCD_ = .2f;
+    }
+}
+
+void Canvas::updateScreenZooming(){
+    // zooming
     auto zoom{GetMouseWheelMove()};
     if(zoom){
         Vector2 pivot{getMousePositionInCanvas()};
         canvasCamera_.zoom += .2f * GetMouseWheelMove();
 
-        canvasCamera_.zoom = Clamp(canvasCamera_.zoom, .2f, 3.0f);
+        canvasCamera_.zoom = Clamp(canvasCamera_.zoom, .2f, 2.0f);
 
         canvasCamera_.target = Vector2Add(
             canvasCamera_.target, 
             Vector2Subtract(pivot, getMousePositionInCanvas())
         );
     }
-
-    if(IsMouseButtonPressed(MOUSE_BUTTON_MIDDLE)) resetCamera();
 }
 
 void Canvas::updateDrag(){

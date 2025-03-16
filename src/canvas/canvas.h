@@ -44,6 +44,8 @@ public:
     void draw() const;
     void update();
 
+    void drawMouse() const;
+
     void switchMode(Mode mode);
     const Mode getMode() const{ return mode_;};
     
@@ -59,7 +61,6 @@ public:
 private:
     void drawGrid() const;
 
-    void drawMouse() const;
     void drawPen() const;
     void drawLink() const;
     void drawEraser() const;
@@ -67,7 +68,7 @@ private:
     void updateHoveredItem();
 
 private:
-    bool isCanvasMouseButtonPressed(MouseButton button);
+    bool isCanvasMouseButtonPressed(int key);
 
     void updateMouseActions();
 
@@ -78,6 +79,12 @@ private:
     void updateEraser();
     void updateMove();
     void updateDrag();
+
+private:
+    void updateCamera();
+    void updateScreenDragging(int key = 2);
+    void updateScreenReset();
+    void updateScreenZooming();
 
 private:
     Camera2D canvasCamera_;
@@ -99,4 +106,5 @@ private:
     // drag mode
     std::optional<VertexID> vertexToDrag_;
     Vector2 vertexOriginalPosition_;
+    std::optional<float> doubleMiddleClickCD_;
 };

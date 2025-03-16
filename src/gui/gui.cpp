@@ -6,9 +6,17 @@
 #define GUI_TOOLBAR_IMPLEMENTATION
 #include "gui_toolbar.h"
 
+#if defined(__APPLE__)
+    const int COMMAND_KEY{KEY_LEFT_SUPER};
+#else
+    const int COMMAND_KEY{KEY_LEFT_CONTROL};
+#endif
+
 GuiToolbarState ui{InitGuiToolbar()};
 
 void GUI::draw(){
+    DrawRectangleRec({0, 0, 1000, 40}, Fade(WHITE, .75f));
+    DrawRectangleRec({0, 680, 1000, 40}, Fade(WHITE, .75f));
     GuiToolbar(&ui);
 }
 
@@ -33,11 +41,11 @@ void GUI::updateKeyboardShortcuts(){
     auto key{GetKeyPressed()};
     bool hasPress{false};
 
-    if(IsKeyDown(KEY_LEFT_CONTROL)){
+    if(IsKeyDown(COMMAND_KEY)){
         if(IsKeyDown(KEY_LEFT_SHIFT)){
-            hasPress = updateControlShiftKeys(key);
+            hasPress = updateCommandShiftKeys(key);
         }else{
-            hasPress = updateControlKeys(key);
+            hasPress = updateCommandKeys(key);
         }
     }
 
@@ -55,7 +63,7 @@ bool GUI::updateKeys(int key){
     return false;
 }
 
-bool GUI::updateControlKeys(int key){
+bool GUI::updateCommandKeys(int key){
     // Control
     switch(key){
     case KEY_Z: undo(); return true;
@@ -64,7 +72,7 @@ bool GUI::updateControlKeys(int key){
     return false;
 }
 
-bool GUI::updateControlShiftKeys(int key){
+bool GUI::updateCommandShiftKeys(int key){
     // Control + Shift
     switch(key){
     case KEY_Z: redo(); return true;
@@ -88,10 +96,7 @@ void GUI::updateFile(){
     
     if(ui.undoPressed) undo();
     if(ui.redoPressed) redo();
-    
-    if(ui.takeScreenshotPressed){
-
-    }
+    if(ui.takeScreenshotPressed) takeScreenshot();
     
     if(ui.loadLuaPressed){
 
