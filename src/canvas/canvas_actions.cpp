@@ -4,6 +4,7 @@
 #include "../actions_center/actions_center.h"
 #include "../actions_center/graph_action/graph_action.h"
 #include "lib/magic_enum.hpp"
+#include "../configs/terminal_prefix.h"
 
 #include <optional>
 #include <iostream>
@@ -44,8 +45,8 @@ void Canvas::updatePen(){
     if(isCanvasMouseButtonPressed(MOUSE_BUTTON_LEFT)){
         Application::instance().actionCenter().addAction(
             std::make_unique<Action::AddVertex>(
-                getMousePositionInCanvas(),
-                BLACK
+                getMousePositionInCanvas(isSnapToGridEnabled_),
+                BLACK // TODO: color
             )
         );
     }
@@ -146,14 +147,14 @@ void Canvas::updateScreenZooming(){
 
 void Canvas::updateDrag(){
     if(vertexToDrag_){
-        Application::instance().graph().updateVertexPosition(vertexToDrag_.value(), getMousePositionInCanvas());
+        Application::instance().graph().updateVertexPosition(vertexToDrag_.value(), getMousePositionInCanvas(isSnapToGridEnabled_));
 
         if(IsMouseButtonReleased(MOUSE_BUTTON_LEFT)){
             Application::instance().actionCenter().addAction(
                 std::make_unique<Action::MoveVertex>(
                     vertexToDrag_.value(),
                     vertexOriginalPosition_,
-                    getMousePositionInCanvas()
+                    getMousePositionInCanvas(isSnapToGridEnabled_)
                 )
             );
 
@@ -171,11 +172,41 @@ void Canvas::updateDrag(){
 }
 
 void Canvas::updateSelect(){
-    // I don't know how it took me almost 30 mins to see this issue
-    // if(IsKeyUp(MOUSE_BUTTON_LEFT) && startFrom_){
     if(IsMouseButtonReleased(MOUSE_BUTTON_LEFT) && startFrom_){
-        // std::cout << "Released" << std::endl;
+        // single selection
+        if(selectedVertex_){
+            auto current{Application::instance().graph().findVertex(
+                getMousePositionInCanvas(), 
+                Application::instance().graph().getVertexRadius()
+            )};
 
+            if(selectedVertex_.value() == current.value_or(-1)){
+                if(selectedVertexIDs_.find(selectedVertex_.value()) != selectedVertexIDs_.end()){
+                    selectedVertexIDs_.erase(selectedVertex_.value());
+                }else{
+                    selectedVertexIDs_.emplace(selectedVertex_.value());
+                }
+                startFrom_ = std::nullopt;
+                return;
+            }
+        }else if(selectedEdge_){
+            auto current{Application::instance().graph().findEdge(
+                getMousePositionInCanvas(), 
+                Application::instance().graph().getEdgeThickness() * 2.0f
+            )};
+
+            if(selectedEdge_.value() == current.value_or(std::pair{-1, -1})){
+                if(selectedEdgeIDs_.find(selectedEdge_.value()) != selectedEdgeIDs_.end()){
+                    selectedEdgeIDs_.erase(selectedEdge_.value());
+                }else{
+                    selectedEdgeIDs_.emplace(selectedEdge_.value());
+                }
+                startFrom_ = std::nullopt;
+                return;
+            }
+        }
+
+        // group selection
         auto rectangle{normalizeRectangle(startFrom_.value(), getMousePositionInCanvas())};
 
         auto verticesVector{Application::instance().graph().findVertex({
@@ -186,31 +217,44 @@ void Canvas::updateSelect(){
             rectangle
         })};
 
-        selectedVertexIDs_ = std::unordered_set<VertexID>(verticesVector.begin(), verticesVector.end());
-        selectedEdgeIDs_ = std::unordered_set<EdgeID, PairHash>(edgesVector.begin(), edgesVector.end());
-
-        // std::copy(selectedVertexIDs_.begin(), selectedVertexIDs_.end(), std::ostream_iterator<VertexID>(std::cout, " "));
+        selectedVertexIDs_.insert(verticesVector.begin(), verticesVector.end());
+        selectedEdgeIDs_.insert(edgesVector.begin(), edgesVector.end());
 
         startFrom_ = std::nullopt;
 
-        // std::cout << "End: "
-        //           << mousePosition.x
-        //           << " "
-        //           << mousePosition.y
-        //           << " V.Size "
-        //           << selectedVertexIDs_.size()
-        //           << " E.Size "
-        //           << selectedEdgeIDs_.size()
-        //           << std::endl;
+        printUpdatePrefix();
+        std::cout << "Selected: " << std::endl;
+        std::cout << "\t> Vertices ";
+        for(const auto &vertex : selectedVertexIDs_){
+            std::cout << vertex << " ";
+        }
+        std::cout << std::endl;
+        std::cout << "\t> Edges ";
+        for(const auto &edge : selectedEdgeIDs_){
+            std::cout << "(" << edge.first << "," << edge.second << ") ";
+        }
+        std::cout << std::endl;
     }
 
     if(isCanvasMouseButtonPressed(MOUSE_BUTTON_LEFT)){
         startFrom_ = getMousePositionInCanvas();
-        // std::cout << "Start: "
-        //           << startFrom_.value().x
-        //           << " "
-        //           << startFrom_.value().y
-        //           << std::endl;
+        selectedVertex_ = Application::instance().graph().findVertex(
+            getMousePositionInCanvas(), 
+            Application::instance().graph().getVertexRadius() * 2.0f
+        );
+
+        selectedEdge_ = Application::instance().graph().findEdge(
+            getMousePositionInCanvas(), 
+            Application::instance().graph().getEdgeThickness() * 2.0f
+        );
+
+        if(!(IsKeyDown(KEY_LEFT_SHIFT) 
+        || IsKeyDown(KEY_LEFT_CONTROL) 
+        || IsKeyDown(KEY_LEFT_SUPER))
+        ){
+            selectedVertexIDs_.clear();
+            selectedEdgeIDs_.clear();
+        }
     }
 }
 
@@ -222,6 +266,8 @@ void Canvas::doBulkDeleteVertices(){
             std::vector<VertexID>(selectedVertexIDs_.begin(), selectedVertexIDs_.end())
         )
     );
+
+    resetToolStatus();
 }
 
 void Canvas::doBulkDeleteEdges(){
@@ -232,10 +278,12 @@ void Canvas::doBulkDeleteEdges(){
             std::vector<EdgeID>(selectedEdgeIDs_.begin(), selectedEdgeIDs_.end())
         )
     );
+
+    resetToolStatus();
 }
 
 void Canvas::doBulkDelete(){
-    if(mode_ != Mode::SELECT || selectedEdgeIDs_.empty()) return;
+    if(mode_ != Mode::SELECT || (selectedEdgeIDs_.empty() && selectedVertexIDs_.empty())) return;
 
     Application::instance().actionCenter().addAction(
         std::make_unique<Action::BulkRemove>(
@@ -243,4 +291,6 @@ void Canvas::doBulkDelete(){
             std::vector<EdgeID>(selectedEdgeIDs_.begin(), selectedEdgeIDs_.end())
         )
     );
+
+    resetToolStatus();
 }

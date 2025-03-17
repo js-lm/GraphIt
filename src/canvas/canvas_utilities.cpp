@@ -7,6 +7,7 @@
 #include <raylib.h>
 #include <iostream>
 #include <cmath>
+#include <raymath.h>
 
 void Canvas::resetCamera(){
     canvasCamera_.target = {0.0f, 0.0f};
@@ -16,6 +17,8 @@ void Canvas::resetCamera(){
 }
 
 void Canvas::drawGrid() const{
+    if(!isGridShown_) return;
+
     auto canvasPosition{canvasCamera_.target};
     int lineInterval{(canvasCamera_.zoom < .5f) ? 16 : 8};
     int screenHeight{static_cast<int>(GetScreenHeight() / canvasCamera_.zoom)};
@@ -53,7 +56,7 @@ void Canvas::drawGrid() const{
 void Canvas::drawMouse() const{
     switch(mode_){
     case Mode::VIEW: break;
-    case Mode::SELECT: break; // drawSelect(); // below UI
+    case Mode::SELECT: drawSelect(); break; // drawSelect(); // below UI
     case Mode::MOVE: break;
     case Mode::PEN: drawPen(); break;
     case Mode::LINK: break; // drawLink(); break; // below UI and Vertices
@@ -64,7 +67,11 @@ void Canvas::drawMouse() const{
 }
 
 void Canvas::drawPen() const{
-
+    DrawCircleV(
+        getMousePositionInCanvas(isSnapToGridEnabled_), 
+        Application::instance().graph().getVertexRadius(), 
+        BLACK // TODO: color
+    );
 }
 
 void Canvas::drawLink() const{
@@ -91,11 +98,18 @@ void Canvas::drawSelect() const{
     Rectangle rectangle{normalizeRectangle(startFrom_.value(), getMousePositionInCanvas())};
 
     DrawRectangleRec(rectangle, Fade(BLUE, .5f));
-    DrawRectangleLinesEx(rectangle, 2.0f, BLUE);                     
+    DrawRectangleLinesEx(rectangle, 2.0f, BLUE);
 }
 
-Vector2 Canvas::getMousePositionInCanvas() const{
-    return GetScreenToWorld2D(GetMousePosition(), canvasCamera_);
+Vector2 Canvas::getMousePositionInCanvas(bool snap) const{
+    auto position{GetScreenToWorld2D(GetMousePosition(), canvasCamera_)};
+    return snap ? snapVector(position) : position;
+}
+
+Vector2 Canvas::snapVector(Vector2 vector) const{
+    vector.x = std::round(vector.x / 8.0f) * 8.0f;
+    vector.y = std::round(vector.y / 8.0f) * 8.0f;
+    return vector;
 }
 
 void Canvas::updateHoveredItem(){

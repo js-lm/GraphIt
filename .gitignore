@@ -3,3 +3,4 @@
 main
 build
 save-restore-editors.json
+*.png

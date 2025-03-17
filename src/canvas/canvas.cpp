@@ -8,6 +8,8 @@ Canvas::Canvas()
     : mode_(Mode::VIEW)
     , pivotPoint_({0, 0})
     , vertexOriginalPosition_({0, 0})
+    , isSnapToGridEnabled_(true)
+    , isGridShown_(true)
 {
     resetCamera();
 }
@@ -22,6 +24,6 @@ void Canvas::draw() const{
         drawGrid();
         drawLink();
         Application::instance().graph().draw();
-        drawSelect();
+        drawMouse();
     } EndMode2D();
 }

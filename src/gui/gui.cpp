@@ -77,6 +77,7 @@ bool GUI::updateCommandKeys(int key){
     // Control
     switch(key){
     case KEY_Z: undo(); return true;
+    case KEY_X: bulkDelete(); return true;
     default: break;
     }
     return false;
@@ -114,8 +115,19 @@ void GUI::updateFile(){
 }
 
 void GUI::updateView(){
-    // state.showGridActive = true;
-    // state.snapToGridActive = true;
+    bool isSnapToGridEnabled{Application::instance().canvas().isSnapToGridEnabled()};
+    if((!ui.snapToGridActive && isSnapToGridEnabled)
+    || (ui.snapToGridActive && !isSnapToGridEnabled)
+    ){
+        Application::instance().canvas().toggleSnapToGrid(!isSnapToGridEnabled);
+    }
+
+    bool isGridShown{Application::instance().canvas().isGridShown()};
+    if((!ui.showGridActive && isGridShown)
+    || (ui.showGridActive && !isGridShown)
+    ){
+        Application::instance().canvas().toggleGrid(!isGridShown);
+    }
 }
 
 void GUI::updateSettings(){
