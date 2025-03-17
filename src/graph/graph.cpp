@@ -1,6 +1,4 @@
 #include "graph.h"
-#include "../application.h"
-#include "../canvas/canvas.h"
 
 #include <raylib.h>
 
@@ -11,65 +9,6 @@ Graph::Graph()
     , vertexRadius_(5.0f)
     , edgeThickness_(10.0f)  
 {}
-
-void Graph::draw() const{
-    drawEdges();
-    drawVertices();
-}
-
-void Graph::drawVertices() const{
-    auto &hoveredVertexID{Application::instance().canvas().getHoveredVertexID()};
-    // auto &selectedVertexIDs{Application::instance().canvas().getSelectedVertexIDs()};
-
-    for(const auto &vertex : vertices_){
-        if(vertex->isHidden()) continue;
-        
-        float vertexRadius{vertexRadius_};
-        if(hoveredVertexID == vertex->id()) vertexRadius *= 1.5f;
-
-        DrawCircleV(vertex->position(), vertexRadius, vertex->color());
-
-        // if(selectedVertexIDs.find(vertex->id()) != selectedVertexIDs.end()){ 
-        //     DrawCircleLinesV(vertex->position(), vertexRadius * 1.5f, vertex->color());
-        // } 
-    }
-}
-
-void Graph::drawEdges() const{
-    auto &hoveredEdgeIDs{Application::instance().canvas().getHoveredEdgeIDs()};
-    // auto &selectedEdgeIDs{Application::instance().canvas().getSelectedEdgeIDs()};
-
-    for(const auto &edge : edges_){
-        if(isVertexHidden(edge->startID())
-        || isVertexHidden(edge->endID())
-        ){
-            continue;
-        }
-        
-        float edgeThickness{edgeThickness_};
-        if(hoveredEdgeIDs == std::pair{edge->startID(), edge->endID()}){
-            edgeThickness *= 1.25f;
-        }
-
-        DrawLineEx(
-            vertices_[edge->startID()]->position(), 
-            vertices_[edge->endID()]->position(), 
-            edgeThickness, 
-            edge->color()
-        );
-        
-        // for(const auto &[startID, endID] : selectedEdgeIDs){
-        //     if(isTheSameEdge(edge->startID(), edge->endID(), startID, endID)){
-        //         DrawLineEx(
-        //             vertices_[edge->startID()]->position(), 
-        //             vertices_[edge->endID()]->position(), 
-        //             edgeThickness_ / 2, 
-        //             ColorContrast(edge->color(), .5f)
-        //         );
-        //     }
-        // }
-    }
-}
 
 void Graph::hideVertex(VertexID id){
     if(!isValidID(id)) return;
@@ -136,7 +75,7 @@ bool Graph::connectVertices(VertexID startID, VertexID endID, std::optional<Colo
 }
 
 std::optional<Color> Graph::disconnectVertices(VertexID startID, VertexID endID){
-    std::optional<Color> color{std::nullopt};
+    std::optional<Color> color;
 
     if(!areNeighbors(startID, endID)) return color;
 
@@ -224,11 +163,58 @@ std::optional<Graph::EdgeID> Graph::findEdge(Vector2 point, float thickness){
     return std::nullopt;
 }
 
-bool Graph::isTheSameEdge(VertexID start1, VertexID end1, VertexID start2, VertexID end2){
+std::vector<Graph::VertexID> Graph::findVertex(Rectangle area){
+    std::vector<VertexID> verticesFound;
+
+    for(const auto &vertex : vertices_){
+        if(vertex->isHidden()) continue;
+        if(CheckCollisionPointRec(vertex->position(), area)){
+            verticesFound.emplace_back(vertex->id());
+        }
+    }
+
+    return verticesFound;
+}
+
+std::vector<Graph::EdgeID> Graph::findEdge(Rectangle area){
+    std::vector<EdgeID> edgesFound;
+
+    for(const auto &edge : edges_){
+        if((!isVertexHidden(edge->startID()) && !isVertexHidden(edge->endID()))
+        && checkCollisionLineRectangle(
+            vertices_[edge->startID()]->position(),
+            vertices_[edge->endID()]->position(),
+            area
+           )
+        ){
+            edgesFound.emplace_back(std::pair{edge->startID(), edge->endID()});
+        }
+    }
+
+    return edgesFound;
+}
+
+bool Graph::isTheSameEdge(VertexID start1, VertexID end1, VertexID start2, VertexID end2) const{
     return ((start1 == start2
             && end1 == end2)
            || (!isDirected_
             && start1 == end2
             && end1 == start2
            ));
+}
+
+bool Graph::checkCollisionLineRectangle(Vector2 start, Vector2 end, Rectangle rectangle) const{
+    Vector2 topLeft{rectangle.x, rectangle.y};
+    Vector2 topRight{rectangle.x + rectangle.width, rectangle.y};
+    Vector2 bottomLeft{rectangle.x, rectangle.y + rectangle.height};
+    Vector2 bottomRight{rectangle.x + rectangle.width, rectangle.y + rectangle.height};
+
+    Vector2 collisionPoint;
+    
+    return CheckCollisionPointRec(start, rectangle)
+        || CheckCollisionPointRec(end, rectangle)
+        || CheckCollisionLines(start, end, topLeft, topRight, &collisionPoint)
+        || CheckCollisionLines(start, end, topRight, bottomRight, &collisionPoint)
+        || CheckCollisionLines(start, end, bottomRight, bottomLeft, &collisionPoint)
+        || CheckCollisionLines(start, end, bottomLeft, topLeft, &collisionPoint);
 }

@@ -172,14 +172,14 @@ void GuiToolbar(GuiToolbarState *state)
     state->penPressed = GuiButton((Rectangle){ state->constructionAnchor.x + 96, state->constructionAnchor.y + 8, 56, 24 }, "#022#Pen");
     state->linkColorPressed = GuiButton((Rectangle){ state->constructionAnchor.x + 220, state->constructionAnchor.y + 8, 12, 24 }, NULL);
     state->linkPressed = GuiButton((Rectangle){ state->constructionAnchor.x + 167, state->constructionAnchor.y + 8, 56, 24 }, "#034#Link");
-    state->dragPressed = GuiButton((Rectangle){ state->constructionAnchor.x + 248, state->constructionAnchor.y + 8, 64, 24 }, "#144#Drag");
+    state->dragPressed = GuiButton((Rectangle){ state->constructionAnchor.x + 248, state->constructionAnchor.y + 8, 64, 24 }, "#067#Move");
     state->eraserPressed = GuiButton((Rectangle){ state->constructionAnchor.x + 315, state->constructionAnchor.y + 8, 72, 24 }, "#023#Eraser");
     
     // Controls
     GuiGroupBox((Rectangle){ state->controlAnchor.x + 0, state->controlAnchor.y + 0, 600, 40 }, NULL);
     GuiLabel((Rectangle){ state->controlAnchor.x + 16, state->controlAnchor.y + 8, 48, 24 }, "Control:");
     state->selectPressed = GuiButton((Rectangle){ state->controlAnchor.x + 64, state->controlAnchor.y + 8, 72, 24 }, "#021#Select");
-    state->movePressed = GuiButton((Rectangle){ state->controlAnchor.x + 140, state->controlAnchor.y + 8, 64, 24 }, "#019#Move");
+    state->movePressed = GuiButton((Rectangle){ state->controlAnchor.x + 140, state->controlAnchor.y + 8, 64, 24 }, "#019#View");
     state->colorPanelButtonPressed = GuiButton((Rectangle){ state->controlAnchor.x + 350, state->controlAnchor.y + 8, 12, 24 }, NULL);
     state->changeSelectedColorPressed = GuiButton((Rectangle){ state->controlAnchor.x + 296, state->controlAnchor.y + 8, 56, 24 }, "#025#Dye");
     state->deleteSelectedPressed = GuiButton((Rectangle){ state->controlAnchor.x + 221, state->controlAnchor.y + 8, 72, 24 }, "#143#Delete");

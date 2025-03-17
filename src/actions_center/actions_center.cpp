@@ -1,5 +1,6 @@
 #include "actions_center.h"
 #include "action_base_class.h"
+#include "../configs/terminal_prefix.h"
 
 #include <iostream>
 
@@ -22,7 +23,8 @@ void ActionsCenter::moveActionsFromQueueToStack(){
 
     for(auto &action : actionsToExecute_){
         action->execute();
-        std::cout << " [Action] Executing " << action->getName();
+        printActionPrefix();
+        std::cout << "Executing " << action->getName();
         if(action->shouldSave()){
             actionsStack_.push_back(std::move(action));
             std::cout << " (Recorded)";
@@ -38,7 +40,8 @@ void ActionsCenter::moveActionsFromQueueToStack(){
 void ActionsCenter::undo(){ 
     if(!canUndo()) return;
     auto &action{actionsStack_[currentActionIndex_--]};
-    std::cout << " [Action] Undoing " << action->getName() << " ";
+    printActionPrefix();
+    std::cout << "Undoing " << action->getName() << " ";
     printCurrentIndex();
     std::cout << std::endl;
     action->undo();
@@ -47,7 +50,8 @@ void ActionsCenter::undo(){
 void ActionsCenter::redo(){ 
     if(!canRedo()) return;
     auto &action{actionsStack_[++currentActionIndex_]};
-    std::cout << " [Action] Redoing " << action->getName() << " ";
+    printActionPrefix();
+    std::cout << "Redoing " << action->getName() << " ";
     printCurrentIndex();
     std::cout << std::endl;
     action->redo();

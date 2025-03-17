@@ -13,7 +13,10 @@ protected:
         REMOVE_VERTEX,
         CONNECT_VERTICES,
         DISCONNECT_VERTICES,
-        MOVE_VERTEX
+        MOVE_VERTEX,
+        BULK_REMOVE,
+        BULK_REMOVE_VERTICES,
+        BULK_REMOVE_EDGES
     };
 
 public:

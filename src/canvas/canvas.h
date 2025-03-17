@@ -57,13 +57,19 @@ public:
     Vector2 getMousePositionInCanvas() const;
 
     void resetCamera();
-    
+
+public:
+    void doBulkDeleteVertices();
+    void doBulkDeleteEdges();
+    void doBulkDelete();
+
 private:
     void drawGrid() const;
 
     void drawPen() const;
     void drawLink() const;
     void drawEraser() const;
+    void drawSelect() const;
 
     void updateHoveredItem();
 
@@ -79,12 +85,16 @@ private:
     void updateEraser();
     void updateMove();
     void updateDrag();
+    void updateSelect();
 
 private:
     void updateCamera();
     void updateScreenDragging(int key = 2);
     void updateScreenReset();
     void updateScreenZooming();
+
+private:
+    Rectangle normalizeRectangle(Vector2 startingPosition, Vector2 endingPosition) const;
 
 private:
     Camera2D canvasCamera_;
@@ -107,4 +117,7 @@ private:
     std::optional<VertexID> vertexToDrag_;
     Vector2 vertexOriginalPosition_;
     std::optional<float> doubleMiddleClickCD_;
+
+    // select mode
+    std::optional<Vector2> startFrom_;
 };

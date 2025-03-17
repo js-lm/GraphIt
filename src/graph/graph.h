@@ -41,6 +41,9 @@ public:
     std::optional<VertexID> findVertex(Vector2 point, float radius);
     std::optional<EdgeID> findEdge(Vector2 point, float thickness);
 
+    std::vector<VertexID> findVertex(Rectangle area);
+    std::vector<EdgeID> findEdge(Rectangle area);
+
     const float getVertexRadius() const{ return vertexRadius_;};
     const float getEdgeThickness() const{ return edgeThickness_;};
 
@@ -54,7 +57,9 @@ private:
     void hideVertex(VertexID id);
     void showVertex(VertexID id);
 
-    bool isTheSameEdge(VertexID startID1, VertexID endID1, VertexID startID2, VertexID endID2);
+    bool isTheSameEdge(VertexID startID1, VertexID endID1, VertexID startID2, VertexID endID2) const;
+
+    bool checkCollisionLineRectangle(Vector2 start, Vector2 end, Rectangle rectangle) const;
 
 private:
     bool isDirected_;

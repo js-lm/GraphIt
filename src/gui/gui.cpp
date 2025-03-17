@@ -37,6 +37,14 @@ void switchMode(Canvas::Mode mode){
 void undo(){ Application::instance().actionCenter().undo();}
 void redo(){ Application::instance().actionCenter().redo();}
 
+void bulkDeleteVertex(){ Application::instance().canvas().doBulkDeleteVertices();}
+void bulkDeleteEdge(){ Application::instance().canvas().doBulkDeleteEdges();}
+void bulkDelete(){
+    // bulkDeleteEdge();
+    // bulkDeleteVertex();
+    Application::instance().canvas().doBulkDelete();
+}
+
 void GUI::updateKeyboardShortcuts(){
     auto key{GetKeyPressed()};
     bool hasPress{false};
@@ -58,6 +66,8 @@ bool GUI::updateKeys(int key){
     case KEY_P: switchMode(Canvas::Mode::PEN);    return true;
     case KEY_L: switchMode(Canvas::Mode::LINK);   return true;
     case KEY_E: switchMode(Canvas::Mode::ERASER); return true;
+    case KEY_DELETE:
+    case KEY_BACKSPACE: bulkDelete(); return true;
     default: break;
     }
     return false;
@@ -138,10 +148,7 @@ void GUI::updateConstruction(){
 void GUI::updateControls(){
     if(ui.selectPressed) switchMode(Canvas::Mode::SELECT);
     if(ui.movePressed) switchMode(Canvas::Mode::MOVE);
-    
-    if(ui.deleteSelectedPressed){
-
-    }
+    if(ui.deleteSelectedPressed) bulkDelete();
     
     if(ui.changeSelectedColorPressed){
 

@@ -4,12 +4,14 @@
 
 #include <optional>
 #include <raylib.h>
+#include <utility>
 
 namespace Action{
 
     class GraphRelated : public ActionBaseClass{
     protected:
-        using VertexID = size_t;    
+        using VertexID = size_t;
+        using EdgeID = std::pair<VertexID, VertexID>;
 
     public:
         GraphRelated(){ shouldBeRecorded_ = true;};
@@ -29,6 +31,11 @@ namespace Action{
         std::optional<Color> disconnectVertices(VertexID startID, VertexID endID);
 
         void moveVertex(VertexID id, Vector2 to);
+
+        void bulkRemoveVertices(const std::vector<VertexID> &vertices);
+        void bulkRestoreRemovedVertices(const std::vector<VertexID> &vertices);
+        std::vector<std::optional<Color>> bulkRemoveEdges(const std::vector<EdgeID> &edges);
+        void bulkRestoreRemovedEdges(const std::vector<EdgeID> &edges, const std::vector<std::optional<Color>> &colors);
     };
 
     class AddVertex : public GraphRelated{
@@ -124,4 +131,67 @@ namespace Action{
 
     };
 
+    class BulkRemove : public GraphRelated{
+    public:
+        BulkRemove(const std::vector<VertexID> &vertexIDs, const std::vector<EdgeID> &edgeIDs)
+            : vertexIDs_(vertexIDs), edgeIDs_(edgeIDs)
+        {
+            identifier_ = ID::BULK_REMOVE;
+        }
+
+        void execute() override{ 
+            edgeColors_ = bulkRemoveEdges(edgeIDs_);
+            bulkRemoveVertices(vertexIDs_);
+        }
+
+        void undo() override{ 
+            bulkRestoreRemovedVertices(vertexIDs_);
+            bulkRestoreRemovedEdges(edgeIDs_, edgeColors_);
+        }
+        
+        void redo() override{ 
+            bulkRemoveEdges(edgeIDs_);
+            bulkRemoveVertices(vertexIDs_);
+        }
+
+    private:
+        std::vector<VertexID> vertexIDs_;
+        std::vector<EdgeID> edgeIDs_;
+        std::vector<std::optional<Color>> edgeColors_;
+    };
+
+    class BulkRemoveVertices : public GraphRelated{
+    public:
+        BulkRemoveVertices(const std::vector<VertexID> &ids)
+            : ids_(ids)
+        {
+            identifier_ = ID::BULK_REMOVE_VERTICES;
+        }
+
+        void execute() override{ bulkRemoveVertices(ids_);};
+
+        void undo() override{ bulkRestoreRemovedVertices(ids_);};
+        void redo() override{ execute();};
+
+    private:
+        std::vector<VertexID> ids_;
+    };
+
+    class BulkRemoveEdges : public GraphRelated{
+    public:
+        BulkRemoveEdges(const std::vector<EdgeID> &ids)
+            : ids_(ids)
+        {
+            identifier_ = ID::BULK_REMOVE_EDGES;
+        }
+
+        void execute() override{ colors_ = bulkRemoveEdges(ids_);};
+
+        void undo() override{ bulkRestoreRemovedEdges(ids_, colors_);};
+        void redo() override{ bulkRemoveEdges(ids_);};
+
+    private:
+        std::vector<EdgeID> ids_;
+        std::vector<std::optional<Color>> colors_;
+    };
 } // namespace Action

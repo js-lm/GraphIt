@@ -1,9 +1,12 @@
 #include "canvas.h"
 #include "../application.h"
 #include "../graph/graph.h"
+#include "lib/magic_enum.hpp"
+#include "../configs/terminal_prefix.h"
 
 #include <raylib.h>
 #include <iostream>
+#include <cmath>
 
 void Canvas::resetCamera(){
     canvasCamera_.target = {0.0f, 0.0f};
@@ -50,10 +53,10 @@ void Canvas::drawGrid() const{
 void Canvas::drawMouse() const{
     switch(mode_){
     case Mode::VIEW: break;
-    case Mode::SELECT: break;
+    case Mode::SELECT: break; // drawSelect(); // below UI
     case Mode::MOVE: break;
     case Mode::PEN: drawPen(); break;
-    case Mode::LINK: break; // drawLink(); break; // special case  
+    case Mode::LINK: break; // drawLink(); break; // below UI and Vertices
     case Mode::DRAG: break;
     case Mode::ERASER: drawEraser(); break;
     default: break;
@@ -82,6 +85,15 @@ void Canvas::drawEraser() const{
     
 }
 
+void Canvas::drawSelect() const{
+    if(!startFrom_) return;
+
+    Rectangle rectangle{normalizeRectangle(startFrom_.value(), getMousePositionInCanvas())};
+
+    DrawRectangleRec(rectangle, Fade(BLUE, .5f));
+    DrawRectangleLinesEx(rectangle, 2.0f, BLUE);                     
+}
+
 Vector2 Canvas::getMousePositionInCanvas() const{
     return GetScreenToWorld2D(GetMousePosition(), canvasCamera_);
 }
@@ -89,20 +101,19 @@ Vector2 Canvas::getMousePositionInCanvas() const{
 void Canvas::updateHoveredItem(){
     auto currentHoveredVertex{Application::instance().graph().findVertex(
         getMousePositionInCanvas(), 
-        Application::instance().graph().getVertexRadius() * 2.0f
+        Application::instance().graph().getVertexRadius() * 1.5f
     )};
 
     if(currentHoveredVertex && !hoveredVertexID_){
-        hoveredVertexID_ = currentHoveredVertex;
         hoveredEdgeIDs_ = std::nullopt;
-        std::cout << "   > Hovered Vertex: " 
+        printUpdatePrefix();
+        std::cout << "Hovered Vertex: " 
                   << currentHoveredVertex.value()
-                  << std::endl;
-    }else if(!currentHoveredVertex){
-        hoveredVertexID_ = std::nullopt;
+                  << TERMINAL_RESET << std::endl;
     }
 
-    if(currentHoveredVertex) return;
+    hoveredVertexID_ = currentHoveredVertex;
+    if(hoveredVertexID_) return;
 
     auto currentHoveredEdge{Application::instance().graph().findEdge(
         getMousePositionInCanvas(), 
@@ -110,18 +121,31 @@ void Canvas::updateHoveredItem(){
     )};
 
     if(currentHoveredEdge && !hoveredEdgeIDs_){
-        hoveredEdgeIDs_ = currentHoveredEdge;
-        std::cout << "   > Hovered Edge: " 
+        printUpdatePrefix();
+        std::cout << "Hovered Edge: " 
                   << currentHoveredEdge.value().first
                   << " -> " 
                   << currentHoveredEdge.value().second
                   << std::endl;
-    }else if(!currentHoveredEdge){
-        hoveredEdgeIDs_ = std::nullopt;
     }
+
+    hoveredEdgeIDs_ = currentHoveredEdge;
 }
 
 void Canvas::switchMode(Mode mode){ 
     mode_ = mode;
+    printCanvasPrefix();
+    std::cout << "Switching mode to " 
+              << magic_enum::enum_name(mode) 
+              << std::endl;
     resetToolStatus();
+}
+
+Rectangle Canvas::normalizeRectangle(Vector2 startingPosition, Vector2 endingPosition) const{
+    float left{std::min(startingPosition.x, endingPosition.x)};
+    float top{std::min(startingPosition.y, endingPosition.y)};
+    float width{std::abs(startingPosition.x - endingPosition.x)};
+    float height{std::abs(startingPosition.y - endingPosition.y)};
+
+    return {left, top, width, height};
 }

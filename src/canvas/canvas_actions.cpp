@@ -9,6 +9,7 @@
 #include <iostream>
 #include <raylib.h>
 #include <raymath.h>
+#include <iterator>
 
 bool Canvas::isCanvasMouseButtonPressed(int key){
     if(!CheckCollisionPointRec(GetMousePosition(), {0, 40, 1000, 640})) return false;
@@ -16,11 +17,12 @@ bool Canvas::isCanvasMouseButtonPressed(int key){
 }
 
 void Canvas::updateMouseActions(){
+    // if(mode_ != Mode::SELECT) updateCamera();
     updateCamera();
 
     switch(mode_){
     case Mode::VIEW: break;
-    case Mode::SELECT: break;
+    case Mode::SELECT: updateSelect(); break;
     case Mode::MOVE:   updateMove(); break;
     case Mode::PEN:    updatePen(); break;
     case Mode::LINK:   updateLink(); break;  
@@ -166,4 +168,79 @@ void Canvas::updateDrag(){
             vertexOriginalPosition_ = Application::instance().graph().getVertexPosition(vertexToDrag_.value());
         }
     }
+}
+
+void Canvas::updateSelect(){
+    // I don't know how it took me almost 30 mins to see this issue
+    // if(IsKeyUp(MOUSE_BUTTON_LEFT) && startFrom_){
+    if(IsMouseButtonReleased(MOUSE_BUTTON_LEFT) && startFrom_){
+        // std::cout << "Released" << std::endl;
+
+        auto rectangle{normalizeRectangle(startFrom_.value(), getMousePositionInCanvas())};
+
+        auto verticesVector{Application::instance().graph().findVertex({
+            rectangle
+        })};
+
+        auto edgesVector{Application::instance().graph().findEdge({
+            rectangle
+        })};
+
+        selectedVertexIDs_ = std::unordered_set<VertexID>(verticesVector.begin(), verticesVector.end());
+        selectedEdgeIDs_ = std::unordered_set<EdgeID, PairHash>(edgesVector.begin(), edgesVector.end());
+
+        // std::copy(selectedVertexIDs_.begin(), selectedVertexIDs_.end(), std::ostream_iterator<VertexID>(std::cout, " "));
+
+        startFrom_ = std::nullopt;
+
+        // std::cout << "End: "
+        //           << mousePosition.x
+        //           << " "
+        //           << mousePosition.y
+        //           << " V.Size "
+        //           << selectedVertexIDs_.size()
+        //           << " E.Size "
+        //           << selectedEdgeIDs_.size()
+        //           << std::endl;
+    }
+
+    if(isCanvasMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+        startFrom_ = getMousePositionInCanvas();
+        // std::cout << "Start: "
+        //           << startFrom_.value().x
+        //           << " "
+        //           << startFrom_.value().y
+        //           << std::endl;
+    }
+}
+
+void Canvas::doBulkDeleteVertices(){
+    if(mode_ != Mode::SELECT || selectedVertexIDs_.empty()) return;
+
+    Application::instance().actionCenter().addAction(
+        std::make_unique<Action::BulkRemoveVertices>(
+            std::vector<VertexID>(selectedVertexIDs_.begin(), selectedVertexIDs_.end())
+        )
+    );
+}
+
+void Canvas::doBulkDeleteEdges(){
+    if(mode_ != Mode::SELECT || selectedEdgeIDs_.empty()) return;
+
+    Application::instance().actionCenter().addAction(
+        std::make_unique<Action::BulkRemoveEdges>(
+            std::vector<EdgeID>(selectedEdgeIDs_.begin(), selectedEdgeIDs_.end())
+        )
+    );
+}
+
+void Canvas::doBulkDelete(){
+    if(mode_ != Mode::SELECT || selectedEdgeIDs_.empty()) return;
+
+    Application::instance().actionCenter().addAction(
+        std::make_unique<Action::BulkRemove>(
+            std::vector<VertexID>(selectedVertexIDs_.begin(), selectedVertexIDs_.end()),
+            std::vector<EdgeID>(selectedEdgeIDs_.begin(), selectedEdgeIDs_.end())
+        )
+    );
 }

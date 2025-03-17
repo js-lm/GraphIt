@@ -3,6 +3,7 @@
 #include <iomanip>
 #include <ctime>
 #include <string>
+#include <sstream>
 #include <raylib.h>
 
 void GUI::takeScreenshot(){
