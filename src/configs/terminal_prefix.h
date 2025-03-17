@@ -1,6 +1,12 @@
 #pragma once
 
-#define TERMINAL_RESET "\x1b[0m"
+#if defined(__APPLE__)
+    #define TERMINAL_PRINT_WITH_COLOR false
+    #define TERMINAL_RESET ""
+#else
+    #define TERMINAL_PRINT_WITH_COLOR true
+    #define TERMINAL_RESET "\x1b[0m"
+#endif
 
 #include <iostream>
 
@@ -27,13 +33,25 @@
 */
 
 inline void printActionPrefix(){ // White
-    std::cout << "\x1b[47;30m" << "[Action]" << TERMINAL_RESET << " ";
+    if(TERMINAL_PRINT_WITH_COLOR){
+        std::cout << "\x1b[47;30m" << "[Action]" << TERMINAL_RESET << " ";
+    }else{
+        std::cout << "[Action] ";
+    }
 }
 
 inline void printCanvasPrefix(){ // Yellow
-    std::cout << "\x1b[43;30m" << "[Canvas]" << TERMINAL_RESET << " ";
+    if(TERMINAL_PRINT_WITH_COLOR){
+        std::cout << "\x1b[43;30m" << "[Canvas]" << TERMINAL_RESET << " ";
+    }else{
+        std::cout << "[Canvas] ";
+    }
 }
 
 inline void printUpdatePrefix(){ // Black
-    std::cout << "\x1b[40;37m" << "(update)" << TERMINAL_RESET << " ";
+    if(TERMINAL_PRINT_WITH_COLOR){
+        std::cout << "\x1b[40;37m" << "(update)" << TERMINAL_RESET << " ";
+    }else{
+        std::cout << "(update) ";
+    }
 }

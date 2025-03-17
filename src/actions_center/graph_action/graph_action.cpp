@@ -64,3 +64,19 @@ void GraphRelated::bulkRestoreRemovedEdges(
         connectVertices(edges[i].first, edges[i].second, colors[i].value());
     }
 }
+
+std::vector<Color> GraphRelated::dyeSelectedVertices(const std::vector<VertexID> &ids, Color newColor){
+    return Application::instance().graph().dyeSelectedVertices(ids, newColor);
+}
+
+std::vector<Color> GraphRelated::dyeSelectedEdge(const std::vector<EdgeID> &ids, Color newColor){
+    return Application::instance().graph().dyeSelectedEdge(ids, newColor);
+}
+
+void GraphRelated::dyeSelectedVertices(const std::vector<VertexID> &ids, const std::vector<Color> &newColor){
+    return Application::instance().graph().dyeSelectedVertices(ids, newColor);
+}
+
+void GraphRelated::dyeSelectedEdge(const std::vector<EdgeID> &ids, const std::vector<Color> &newColor){
+    return Application::instance().graph().dyeSelectedEdge(ids, newColor);
+}

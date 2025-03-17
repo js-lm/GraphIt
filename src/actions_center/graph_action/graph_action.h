@@ -36,6 +36,12 @@ namespace Action{
         void bulkRestoreRemovedVertices(const std::vector<VertexID> &vertices);
         std::vector<std::optional<Color>> bulkRemoveEdges(const std::vector<EdgeID> &edges);
         void bulkRestoreRemovedEdges(const std::vector<EdgeID> &edges, const std::vector<std::optional<Color>> &colors);
+
+        std::vector<Color> dyeSelectedVertices(const std::vector<VertexID> &ids, Color newColor);
+        std::vector<Color> dyeSelectedEdge(const std::vector<EdgeID> &ids, Color newColor);
+        
+        void dyeSelectedVertices(const std::vector<VertexID> &ids, const std::vector<Color> &newColor);
+        void dyeSelectedEdge(const std::vector<EdgeID> &ids, const std::vector<Color> &newColor);
     };
 
     class AddVertex : public GraphRelated{
@@ -194,4 +200,45 @@ namespace Action{
         std::vector<EdgeID> ids_;
         std::vector<std::optional<Color>> colors_;
     };
+
+    class DyeVertex : public GraphRelated{
+    public:
+        DyeVertex(
+            const std::vector<VertexID> &ids,
+            Color newColor
+        )
+            : ids_(ids), newColor_(newColor)
+        {}
+
+        void execute() override{ oldColor_ = dyeSelectedVertices(ids_, newColor_);};
+
+        void undo() override{ dyeSelectedVertices(ids_, oldColor_);};
+        void redo() override{ dyeSelectedVertices(ids_, newColor_);};
+
+    private:
+        std::vector<VertexID> ids_;
+        Color newColor_;
+        std::vector<Color> oldColor_;
+    };
+
+    class DyeEdge : public GraphRelated{
+    public:
+        DyeEdge(
+            const std::vector<EdgeID> &ids,
+            Color newColor
+        )
+            : ids_(ids), newColor_(newColor)
+        {}
+
+        void execute() override{ oldColor_ = dyeSelectedEdge(ids_, newColor_);};
+
+        void undo() override{ dyeSelectedEdge(ids_, oldColor_);};
+        void redo() override{ dyeSelectedEdge(ids_, newColor_);};
+
+    private:
+        std::vector<EdgeID> ids_;
+        Color newColor_;
+        std::vector<Color> oldColor_;
+    };
+
 } // namespace Action

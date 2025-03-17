@@ -1,14 +1,27 @@
 #pragma once
 
 class Canvas;
+struct Color;
 
 class GUI{
 public:
-    GUI() = default;
+    enum class ColorPanelMode{
+        NONE,
+        PEN,
+        LINK,
+        DYE
+    };
+
+public:
+    GUI();
     ~GUI() = default;
 
     void draw();
     void update();
+
+private:
+    void drawColorPanel();
+    void switchColorPanel(ColorPanelMode mode);
 
 private:
     void updateKeyboardShortcuts();
@@ -26,4 +39,7 @@ private:
 
 private:
     void takeScreenshot();
+
+private:
+    ColorPanelMode colorPanelMode_;
 };

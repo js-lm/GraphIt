@@ -46,7 +46,7 @@ void Canvas::updatePen(){
         Application::instance().actionCenter().addAction(
             std::make_unique<Action::AddVertex>(
                 getMousePositionInCanvas(isSnapToGridEnabled_),
-                BLACK // TODO: color
+                penColor_
             )
         );
     }
@@ -64,7 +64,8 @@ void Canvas::updateLink(){
             Application::instance().actionCenter().addAction(
                 std::make_unique<Action::ConnectVertices>(
                     linkFrom_.value(), 
-                    hoveredVertexID_.value()
+                    hoveredVertexID_.value(),
+                    linkColor_
                 )
             );
 
@@ -293,4 +294,24 @@ void Canvas::doBulkDelete(){
     );
 
     resetToolStatus();
+}
+
+void Canvas::doDyeVertex(){
+    if(selectedVertexIDs_.empty()) return;
+    Application::instance().actionCenter().addAction(
+        std::make_unique<Action::DyeVertex>(
+            std::vector<VertexID>(selectedVertexIDs_.begin(), selectedVertexIDs_.end()),
+            dyeColor_
+        )
+    );
+}
+
+void Canvas::doDyeEdge(){
+    if(selectedEdgeIDs_.empty()) return;
+    Application::instance().actionCenter().addAction(
+        std::make_unique<Action::DyeEdge>(
+            std::vector<EdgeID>(selectedEdgeIDs_.begin(), selectedEdgeIDs_.end()),
+            dyeColor_
+        )
+    );
 }

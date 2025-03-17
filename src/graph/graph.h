@@ -31,6 +31,12 @@ public:
     bool connectVertices(VertexID startID, VertexID endID, std::optional<Color> color = std::nullopt);
     std::optional<Color> disconnectVertices(VertexID startID, VertexID endID);
 
+    std::vector<Color> dyeSelectedVertices(const std::vector<VertexID> &ids, Color newColor);
+    std::vector<Color> dyeSelectedEdge(const std::vector<EdgeID> &ids, Color newColor);
+
+    void dyeSelectedVertices(const std::vector<VertexID> &ids, const std::vector<Color> &newColor);
+    void dyeSelectedEdge(const std::vector<EdgeID> &ids, const std::vector<Color> &newColor);
+
     void updateVertexPosition(VertexID id, Vector2 position){ vertices_[id]->setPosition(position);};
     Vector2 getVertexPosition(VertexID id){ return vertices_[id]->position();};
 

@@ -14,10 +14,16 @@
 
 GuiToolbarState ui{InitGuiToolbar()};
 
+GUI::GUI()
+    : colorPanelMode_(ColorPanelMode::NONE)
+{}
+
 void GUI::draw(){
     DrawRectangleRec({0, 0, 1000, 40}, Fade(WHITE, .75f));
     DrawRectangleRec({0, 680, 1000, 40}, Fade(WHITE, .75f));
     GuiToolbar(&ui);
+
+    drawColorPanel();
 }
 
 void GUI::update(){
@@ -39,10 +45,13 @@ void redo(){ Application::instance().actionCenter().redo();}
 
 void bulkDeleteVertex(){ Application::instance().canvas().doBulkDeleteVertices();}
 void bulkDeleteEdge(){ Application::instance().canvas().doBulkDeleteEdges();}
-void bulkDelete(){
-    // bulkDeleteEdge();
-    // bulkDeleteVertex();
-    Application::instance().canvas().doBulkDelete();
+void bulkDelete(){ Application::instance().canvas().doBulkDelete();}
+
+void dyeVertex(){ Application::instance().canvas().doDyeVertex();}
+void dyeEdge(){ Application::instance().canvas().doDyeEdge();}
+void dye(){
+    dyeVertex();
+    dyeEdge();
 }
 
 void GUI::updateKeyboardShortcuts(){
@@ -142,17 +151,9 @@ void GUI::updateSettings(){
 
 void GUI::updateConstruction(){
     if(ui.penPressed) switchMode(Canvas::Mode::PEN);
-    
-    if(ui.penColorPressed){
-
-    }
-    
     if(ui.linkPressed) switchMode(Canvas::Mode::LINK);
-    
-    if(ui.linkColorPressed){
-
-    }
-    
+    if(ui.penColorPressed) switchColorPanel(ColorPanelMode::PEN);
+    if(ui.linkColorPressed) switchColorPanel(ColorPanelMode::LINK);
     if(ui.dragPressed) switchMode(Canvas::Mode::DRAG);
     if(ui.eraserPressed) switchMode(Canvas::Mode::ERASER);
 }
@@ -161,14 +162,8 @@ void GUI::updateControls(){
     if(ui.selectPressed) switchMode(Canvas::Mode::SELECT);
     if(ui.movePressed) switchMode(Canvas::Mode::MOVE);
     if(ui.deleteSelectedPressed) bulkDelete();
-    
-    if(ui.changeSelectedColorPressed){
-
-    }
-    
-    if(ui.colorPanelButtonPressed){
-
-    }
+    if(ui.changeSelectedColorPressed) dye();
+    if(ui.colorPanelButtonPressed) switchColorPanel(ColorPanelMode::DYE);
 
     // state.isSelectingVertexChecked = false;
     // state.isSelectingEdgeChecked = false;

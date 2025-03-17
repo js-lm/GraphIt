@@ -70,7 +70,7 @@ void Canvas::drawPen() const{
     DrawCircleV(
         getMousePositionInCanvas(isSnapToGridEnabled_), 
         Application::instance().graph().getVertexRadius(), 
-        BLACK // TODO: color
+        penColor_
     );
 }
 
@@ -82,9 +82,9 @@ void Canvas::drawLink() const{
             startingPosition,
             getMousePositionInCanvas(),
             thickness,
-            GRAY
+            linkColor_
         );
-        DrawCircleV(getMousePositionInCanvas(), thickness / 2, GRAY);
+        DrawCircleV(getMousePositionInCanvas(), thickness / 2, linkColor_);
     }
 }
 

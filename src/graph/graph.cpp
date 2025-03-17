@@ -218,3 +218,46 @@ bool Graph::checkCollisionLineRectangle(Vector2 start, Vector2 end, Rectangle re
         || CheckCollisionLines(start, end, bottomRight, bottomLeft, &collisionPoint)
         || CheckCollisionLines(start, end, bottomLeft, topLeft, &collisionPoint);
 }
+
+std::vector<Color> Graph::dyeSelectedVertices(const std::vector<VertexID> &ids, Color newColor){
+    std::vector<Color> colors;
+
+    for(const auto &id : ids){
+        if(isVertexHidden(id)) continue;
+        colors.emplace_back(vertices_[id]->color());
+        vertices_[id]->setColor(newColor);
+    }
+
+    return colors;
+}
+
+std::vector<Color> Graph::dyeSelectedEdge(const std::vector<EdgeID> &ids, Color newColor){
+    std::vector<Color> colors;
+    for(const auto &id : ids){
+        for(const auto &edge : edges_){
+            if(isTheSameEdge(id.first, id.second, edge->startID(), edge->endID())){
+                colors.emplace_back(edge->color());
+                edge->setColor(newColor);
+                continue;
+            }
+        }
+    }
+    return colors;
+}
+
+void Graph::dyeSelectedVertices(const std::vector<VertexID> &ids, const std::vector<Color> &newColor){
+    for(size_t i{0}; i < ids.size(); i++){
+        vertices_[ids[i]]->setColor(newColor[i]);
+    }
+}
+
+void Graph::dyeSelectedEdge(const std::vector<EdgeID> &ids, const std::vector<Color> &newColor){
+    for(size_t i{0}; i < ids.size(); i++){
+        for(const auto &edge : edges_){
+            if(isTheSameEdge(ids[i].first, ids[i].second, edge->startID(), edge->endID())){
+                edge->setColor(newColor[i]);
+                continue;
+            }
+        }
+    }
+}

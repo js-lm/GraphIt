@@ -6,6 +6,9 @@
 
 Canvas::Canvas()
     : mode_(Mode::VIEW)
+    , penColor_(BLACK)
+    , linkColor_(GRAY)
+    , dyeColor_(GREEN)
     , pivotPoint_({0, 0})
     , vertexOriginalPosition_({0, 0})
     , isSnapToGridEnabled_(true)

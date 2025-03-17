@@ -63,6 +63,9 @@ public:
     void doBulkDeleteEdges();
     void doBulkDelete();
 
+    void doDyeVertex();
+    void doDyeEdge();
+
 public:
     const bool isSnapToGridEnabled() const{ return isSnapToGridEnabled_;};
     void toggleSnapToGrid(bool snap){ isSnapToGridEnabled_ = snap;};
@@ -71,6 +74,10 @@ public:
 
     const bool isGridShown() const{ return isGridShown_;};
     void toggleGrid(bool show){ isGridShown_ = show;};
+
+    Color &getPenColorReference(){ return penColor_;};
+    Color &getLinkColorReference(){ return linkColor_;};
+    Color &getDyeColorReference(){ return dyeColor_;};
 
 private:
     void drawGrid() const;
@@ -115,6 +122,10 @@ private:
 
     SelectedVertices selectedVertexIDs_;
     SelectedEdges selectedEdgeIDs_;
+
+    Color penColor_;
+    Color linkColor_;
+    Color dyeColor_;
 
     // link mode
     std::optional<VertexID> linkFrom_;
