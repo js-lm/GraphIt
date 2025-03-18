@@ -57,10 +57,10 @@ void Canvas::drawMouse() const{
     switch(mode_){
     case Mode::VIEW: break;
     case Mode::SELECT: drawSelect(); break; // drawSelect(); // below UI
-    case Mode::MOVE: break;
+    case Mode::PAN: break;
     case Mode::PEN: drawPen(); break;
     case Mode::LINK: break; // drawLink(); break; // below UI and Vertices
-    case Mode::DRAG: break;
+    case Mode::MOVE: break;
     case Mode::ERASER: drawEraser(); break;
     default: break;
     }

@@ -44,8 +44,8 @@ public:
     std::unordered_set<VertexID> getNeighbors(VertexID id) const;
 
 public:
-    std::optional<VertexID> findVertex(Vector2 point, float radius);
-    std::optional<EdgeID> findEdge(Vector2 point, float thickness);
+    std::optional<VertexID> findVertex(Vector2 point, std::optional<float> radius = std::nullopt);
+    std::optional<EdgeID> findEdge(Vector2 point, std::optional<float> thickness = std::nullopt);
 
     std::vector<VertexID> findVertex(Rectangle area);
     std::vector<EdgeID> findEdge(Rectangle area);

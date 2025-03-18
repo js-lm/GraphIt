@@ -9,6 +9,7 @@
 #endif
 
 #include <iostream>
+#include <string>
 
 /*
     ANSI Escape Sequences - @fnky
@@ -31,6 +32,17 @@
     \x1b[2;37;41mWorld
 
 */
+
+inline void printInitMessage(const std::string &version = ""){
+    if(!version.empty()){
+        if(TERMINAL_PRINT_WITH_COLOR){
+            std::cout << "\x1b[47;30m" << "GraphIt! v" << version << TERMINAL_RESET << std::endl;
+        }else{
+            std::cout << "GraphIt! v" << version << std::endl;
+        }
+    }
+    std::cout << "============================================================" << std::endl;
+}
 
 inline void printActionPrefix(){ // White
     if(TERMINAL_PRINT_WITH_COLOR){

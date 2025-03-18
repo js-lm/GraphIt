@@ -16,7 +16,10 @@ protected:
         MOVE_VERTEX,
         BULK_REMOVE,
         BULK_REMOVE_VERTICES,
-        BULK_REMOVE_EDGES
+        BULK_REMOVE_EDGES,
+        DYE_VERTEX,
+        DYE_EDGE,
+        DYE
     };
 
 public:

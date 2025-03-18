@@ -1,13 +1,17 @@
+#define VERSION "0.1.2"
+
 #include "application.h"
 #include "graph/graph.h"
 #include "actions_center/actions_center.h"
 #include "gui/gui.h"
 #include "canvas/canvas.h"
+#include "configs/terminal_prefix.h"
 
 #define RAYGUI_IMPLEMENTATION
 #include "lib/raygui.h"
 
 #include <raylib.h>
+#include <iostream>
 
 Application::Application()
     : graph_(new Graph())
@@ -24,13 +28,17 @@ Application::~Application(){
 }
 
 int Application::run(){
+    printInitMessage(VERSION);
+    
     const int screenWidth{1000};
     const int screenHeight{720};
 
     // SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_WINDOW_TRANSPARENT);
 
-    InitWindow(screenWidth, screenHeight, "GraphIt! v0.1.1");
+    InitWindow(screenWidth, screenHeight, "GraphIt! v" VERSION);
     // SetTargetFPS(300);
+
+    printInitMessage();
 
     // SetExitKey(KEY_NULL);
 

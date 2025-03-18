@@ -26,6 +26,7 @@
 #include "lib/raygui.h"
 
 #include <string.h>     // Required for: strcpy()
+#include <stdio.h>
 
 #ifndef GUI_COLORPANEL_H
 #define GUI_COLORPANEL_H

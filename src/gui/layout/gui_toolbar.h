@@ -60,6 +60,12 @@ typedef struct {
     bool colorPanelButtonPressed;
     bool isSelectingVertexChecked;
     bool isSelectingEdgeChecked;
+
+    // Others
+    int currentSelectedTool;
+    bool canUndo;
+    bool canRedo;
+
 } GuiToolbarState;
 
 #ifdef __cplusplus
@@ -136,6 +142,11 @@ GuiToolbarState InitGuiToolbar(void)
     state.isSelectingVertexChecked = true;
     state.isSelectingEdgeChecked = false;
 
+    // Others
+    state.currentSelectedTool = 0;
+    state.canUndo = false;
+    state.canRedo = false;
+
     return state;
 }
 
@@ -143,11 +154,15 @@ void GuiToolbar(GuiToolbarState *state)
 {
     // File
     GuiGroupBox((Rectangle){ state->generalAnchor.x + 0, state->generalAnchor.y + 0, 320, 40 }, NULL);
+    if(!state->canUndo) GuiDisable();
+    state->undoPressed = GuiButton((Rectangle){ state->generalAnchor.x + 112, state->generalAnchor.y + 8, 24, 24 }, "#072#");
+    GuiEnable();
+    if(!state->canRedo) GuiDisable();
+    state->redoPressed = GuiButton((Rectangle){ state->generalAnchor.x + 140, state->generalAnchor.y + 8, 24, 24 }, "#073#");
+    GuiEnable();
     state->newFilePressed = GuiButton((Rectangle){ state->generalAnchor.x + 16, state->generalAnchor.y + 8, 24, 24 }, "#008#");
     state->loadPressed = GuiButton((Rectangle){ state->generalAnchor.x + 44, state->generalAnchor.y + 8, 24, 24 }, "#005#");
     state->savePressed = GuiButton((Rectangle){ state->generalAnchor.x + 72, state->generalAnchor.y + 8, 24, 24 }, "#006#");
-    state->undoPressed = GuiButton((Rectangle){ state->generalAnchor.x + 112, state->generalAnchor.y + 8, 24, 24 }, "#072#");
-    state->redoPressed = GuiButton((Rectangle){ state->generalAnchor.x + 140, state->generalAnchor.y + 8, 24, 24 }, "#073#");
     state->takeScreenshotPressed = GuiButton((Rectangle){ state->generalAnchor.x + 180, state->generalAnchor.y + 8, 24, 24 }, "#183#");
     state->loadLuaPressed = GuiButton((Rectangle){ state->generalAnchor.x + 220, state->generalAnchor.y + 8, 88, 24 }, "#200#Load Lua");
     
@@ -168,22 +183,35 @@ void GuiToolbar(GuiToolbarState *state)
     // Construction
     GuiGroupBox((Rectangle){ state->constructionAnchor.x + 0, state->constructionAnchor.y + 0, 400, 40 }, NULL);
     GuiLabel((Rectangle){ state->constructionAnchor.x + 16, state->constructionAnchor.y + 8, 72, 24 }, "Construction:");
-    state->penColorPressed = GuiButton((Rectangle){ state->constructionAnchor.x + 150, state->constructionAnchor.y + 8, 12, 24 }, NULL);
+    if(state->currentSelectedTool == 3) GuiDisable();
     state->penPressed = GuiButton((Rectangle){ state->constructionAnchor.x + 96, state->constructionAnchor.y + 8, 56, 24 }, "#022#Pen");
-    state->linkColorPressed = GuiButton((Rectangle){ state->constructionAnchor.x + 220, state->constructionAnchor.y + 8, 12, 24 }, NULL);
+    GuiEnable();
+    if(state->currentSelectedTool == 4) GuiDisable();
     state->linkPressed = GuiButton((Rectangle){ state->constructionAnchor.x + 167, state->constructionAnchor.y + 8, 56, 24 }, "#034#Link");
+    GuiEnable();
+    if(state->currentSelectedTool == 5) GuiDisable();
     state->dragPressed = GuiButton((Rectangle){ state->constructionAnchor.x + 248, state->constructionAnchor.y + 8, 64, 24 }, "#067#Move");
+    GuiEnable();
+    if(state->currentSelectedTool == 6) GuiDisable();
     state->eraserPressed = GuiButton((Rectangle){ state->constructionAnchor.x + 315, state->constructionAnchor.y + 8, 72, 24 }, "#023#Eraser");
+    GuiEnable();
+    state->penColorPressed = GuiButton((Rectangle){ state->constructionAnchor.x + 150, state->constructionAnchor.y + 8, 12, 24 }, NULL);
+    state->linkColorPressed = GuiButton((Rectangle){ state->constructionAnchor.x + 220, state->constructionAnchor.y + 8, 12, 24 }, NULL);
+    
     
     // Controls
     GuiGroupBox((Rectangle){ state->controlAnchor.x + 0, state->controlAnchor.y + 0, 600, 40 }, NULL);
     GuiLabel((Rectangle){ state->controlAnchor.x + 16, state->controlAnchor.y + 8, 48, 24 }, "Control:");
+    if(state->currentSelectedTool == 1) GuiDisable();
     state->selectPressed = GuiButton((Rectangle){ state->controlAnchor.x + 64, state->controlAnchor.y + 8, 72, 24 }, "#021#Select");
+    GuiEnable();
+    if(state->currentSelectedTool == 2) GuiDisable();
     state->movePressed = GuiButton((Rectangle){ state->controlAnchor.x + 140, state->controlAnchor.y + 8, 64, 24 }, "#019#View");
+    GuiEnable();
     state->colorPanelButtonPressed = GuiButton((Rectangle){ state->controlAnchor.x + 350, state->controlAnchor.y + 8, 12, 24 }, NULL);
     state->changeSelectedColorPressed = GuiButton((Rectangle){ state->controlAnchor.x + 296, state->controlAnchor.y + 8, 56, 24 }, "#025#Dye");
     state->deleteSelectedPressed = GuiButton((Rectangle){ state->controlAnchor.x + 221, state->controlAnchor.y + 8, 72, 24 }, "#143#Delete");
-    GuiLabel((Rectangle){ state->controlAnchor.x + 384, state->controlAnchor.y + 8, 40, 24 }, "Include:");
+    GuiLabel((Rectangle){ state->controlAnchor.x + 384, state->controlAnchor.y + 8, 50, 24 }, "Include:");
     GuiCheckBox((Rectangle){ state->controlAnchor.x + 432, state->controlAnchor.y + 8, 24, 24 }, "Node", &state->isSelectingVertexChecked);
     GuiCheckBox((Rectangle){ state->controlAnchor.x + 496, state->controlAnchor.y + 8, 24, 24 }, "Edge", &state->isSelectingEdgeChecked);
 }

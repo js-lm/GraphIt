@@ -3,9 +3,30 @@
 #include "../canvas/canvas.h"
 
 #define GUI_COLORPANEL_IMPLEMENTATION
-#include "gui_color_panel.h"
+#include "layout/gui_color_panel.h"
 
 GuiColorPanelState colorPanelGUI{InitGuiColorPanel()};
+
+bool GUI::isMouseInsidePanel() const{
+    switch(colorPanelMode_){
+    case ColorPanelMode::PEN:
+        return CheckCollisionPointRec(
+            GetMousePosition(),
+            {150, 525, 136, 152}
+        );
+    case ColorPanelMode::LINK:
+        return CheckCollisionPointRec(
+            GetMousePosition(),
+            {220, 525, 136, 152}
+        );
+    case ColorPanelMode::DYE:
+        return CheckCollisionPointRec(
+            GetMousePosition(),
+            {750, 525, 136, 152}
+        );
+    case ColorPanelMode::NONE: default: return false;
+    }
+}
 
 void GUI::switchColorPanel(ColorPanelMode mode){
     colorPanelMode_ = mode;

@@ -5,6 +5,7 @@
 #include "../actions_center/graph_action/graph_action.h"
 #include "lib/magic_enum.hpp"
 #include "../configs/terminal_prefix.h"
+#include "../gui/gui.h"
 
 #include <optional>
 #include <iostream>
@@ -14,6 +15,16 @@
 
 bool Canvas::isCanvasMouseButtonPressed(int key){
     if(!CheckCollisionPointRec(GetMousePosition(), {0, 40, 1000, 640})) return false;
+
+    if(Application::instance().ui().isMouseInsidePanel()){
+        return false;
+    }else if(Application::instance().ui().isShowingPanel() 
+          && IsMouseButtonPressed(key)
+    ){
+        Application::instance().ui().closePanel();
+        return true;
+    }
+
     return IsMouseButtonPressed(key);
 }
 
@@ -24,10 +35,10 @@ void Canvas::updateMouseActions(){
     switch(mode_){
     case Mode::VIEW: break;
     case Mode::SELECT: updateSelect(); break;
-    case Mode::MOVE:   updateMove(); break;
+    case Mode::PAN:   updateMove(); break;
     case Mode::PEN:    updatePen(); break;
     case Mode::LINK:   updateLink(); break;  
-    case Mode::DRAG:   updateDrag(); break;
+    case Mode::MOVE:   updateDrag(); break;
     case Mode::ERASER: updateEraser(); break;
     default: break;
     }
@@ -42,7 +53,9 @@ void Canvas::resetToolStatus(){
 }
 
 void Canvas::updatePen(){
-    if(isCanvasMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+    if(isCanvasMouseButtonPressed(MOUSE_BUTTON_LEFT)
+    && !Application::instance().graph().findVertex(getMousePositionInCanvas())
+    ){
         Application::instance().actionCenter().addAction(
             std::make_unique<Action::AddVertex>(
                 getMousePositionInCanvas(isSnapToGridEnabled_),
@@ -176,12 +189,7 @@ void Canvas::updateSelect(){
     if(IsMouseButtonReleased(MOUSE_BUTTON_LEFT) && startFrom_){
         // single selection
         if(selectedVertex_){
-            auto current{Application::instance().graph().findVertex(
-                getMousePositionInCanvas(), 
-                Application::instance().graph().getVertexRadius()
-            )};
-
-            if(selectedVertex_.value() == current.value_or(-1)){
+            if(hoveredVertexID_ && selectedVertex_.value() == hoveredVertexID_.value()){
                 if(selectedVertexIDs_.find(selectedVertex_.value()) != selectedVertexIDs_.end()){
                     selectedVertexIDs_.erase(selectedVertex_.value());
                 }else{
@@ -191,12 +199,7 @@ void Canvas::updateSelect(){
                 return;
             }
         }else if(selectedEdge_){
-            auto current{Application::instance().graph().findEdge(
-                getMousePositionInCanvas(), 
-                Application::instance().graph().getEdgeThickness() * 2.0f
-            )};
-
-            if(selectedEdge_.value() == current.value_or(std::pair{-1, -1})){
+            if(hoveredEdgeIDs_ && selectedEdge_.value() == hoveredEdgeIDs_.value()){
                 if(selectedEdgeIDs_.find(selectedEdge_.value()) != selectedEdgeIDs_.end()){
                     selectedEdgeIDs_.erase(selectedEdge_.value());
                 }else{
@@ -210,13 +213,8 @@ void Canvas::updateSelect(){
         // group selection
         auto rectangle{normalizeRectangle(startFrom_.value(), getMousePositionInCanvas())};
 
-        auto verticesVector{Application::instance().graph().findVertex({
-            rectangle
-        })};
-
-        auto edgesVector{Application::instance().graph().findEdge({
-            rectangle
-        })};
+        auto verticesVector{Application::instance().graph().findVertex(rectangle)};
+        auto edgesVector{Application::instance().graph().findEdge(rectangle)};
 
         selectedVertexIDs_.insert(verticesVector.begin(), verticesVector.end());
         selectedEdgeIDs_.insert(edgesVector.begin(), edgesVector.end());
@@ -239,20 +237,13 @@ void Canvas::updateSelect(){
 
     if(isCanvasMouseButtonPressed(MOUSE_BUTTON_LEFT)){
         startFrom_ = getMousePositionInCanvas();
-        selectedVertex_ = Application::instance().graph().findVertex(
-            getMousePositionInCanvas(), 
-            Application::instance().graph().getVertexRadius() * 2.0f
-        );
-
-        selectedEdge_ = Application::instance().graph().findEdge(
-            getMousePositionInCanvas(), 
-            Application::instance().graph().getEdgeThickness() * 2.0f
-        );
+        selectedVertex_ = hoveredVertexID_;
+        selectedEdge_ = hoveredEdgeIDs_;
 
         if(!(IsKeyDown(KEY_LEFT_SHIFT) 
-        || IsKeyDown(KEY_LEFT_CONTROL) 
-        || IsKeyDown(KEY_LEFT_SUPER))
-        ){
+         || IsKeyDown(KEY_LEFT_CONTROL) 
+         || IsKeyDown(KEY_LEFT_SUPER)
+        )){
             selectedVertexIDs_.clear();
             selectedEdgeIDs_.clear();
         }
@@ -310,6 +301,17 @@ void Canvas::doDyeEdge(){
     if(selectedEdgeIDs_.empty()) return;
     Application::instance().actionCenter().addAction(
         std::make_unique<Action::DyeEdge>(
+            std::vector<EdgeID>(selectedEdgeIDs_.begin(), selectedEdgeIDs_.end()),
+            dyeColor_
+        )
+    );
+}
+
+void Canvas::doDye(){
+    if(selectedVertexIDs_.empty() && selectedEdgeIDs_.empty()) return;
+    Application::instance().actionCenter().addAction(
+        std::make_unique<Action::Dye>(
+            std::vector<VertexID>(selectedVertexIDs_.begin(), selectedVertexIDs_.end()),
             std::vector<EdgeID>(selectedEdgeIDs_.begin(), selectedEdgeIDs_.end()),
             dyeColor_
         )

@@ -135,28 +135,32 @@ std::unordered_set<Graph::VertexID> Graph::getNeighbors(VertexID id) const{
     return neighbors;
 }
 
-std::optional<Graph::VertexID> Graph::findVertex(Vector2 point, float radius){
-    for(const auto &vertex : vertices_){
-        if(!vertex->isHidden() && CheckCollisionPointCircle(point, vertex->position(), radius)){
-            return vertex->id();
+std::optional<Graph::VertexID> Graph::findVertex(Vector2 point, std::optional<float> radius){
+    if(!radius) radius = vertexRadius_;
+    for(auto i{vertices_.size()}; i--> 0;){
+        if(!vertices_[i]->isHidden() 
+        && CheckCollisionPointCircle(point, vertices_[i]->position(), radius.value())
+        ){
+            return vertices_[i]->id();
         }
     }
 
     return std::nullopt;
 }
 
-std::optional<Graph::EdgeID> Graph::findEdge(Vector2 point, float thickness){
-    for(const auto &edge : edges_){
-        if(!isVertexHidden(edge->startID())
-        && !isVertexHidden(edge->endID())
+std::optional<Graph::EdgeID> Graph::findEdge(Vector2 point, std::optional<float> thickness){
+    if(!thickness) thickness = edgeThickness_;
+    for(auto i{edges_.size()}; i--> 0;){
+        if(!isVertexHidden(edges_[i]->startID())
+        && !isVertexHidden(edges_[i]->endID())
         && CheckCollisionPointLine(
                 point, 
-                vertices_[edge->startID()]->position(), 
-                vertices_[edge->endID()]->position(),
-                thickness
+                vertices_[edges_[i]->startID()]->position(), 
+                vertices_[edges_[i]->endID()]->position(),
+                thickness.value()
             )
         ){
-            return std::make_pair(edge->startID(), edge->endID());
+            return std::make_pair(edges_[i]->startID(), edges_[i]->endID());
         }
     }
 

@@ -28,13 +28,15 @@ public:
 
 public:
     enum class Mode{
-        VIEW,
-        SELECT,
-        MOVE,
-        PEN,
-        LINK,
-        DRAG,
-        ERASER
+    // remember to also change gui_toolbar.h
+        VIEW   = 0,
+
+        SELECT = 1,
+        PAN    = 2,
+        PEN    = 3,
+        LINK   = 4,
+        MOVE   = 5,
+        ERASER = 6
     };
 
 public:
@@ -65,6 +67,7 @@ public:
 
     void doDyeVertex();
     void doDyeEdge();
+    void doDye();
 
 public:
     const bool isSnapToGridEnabled() const{ return isSnapToGridEnabled_;};

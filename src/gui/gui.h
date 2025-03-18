@@ -19,6 +19,10 @@ public:
     void draw();
     void update();
 
+    bool isShowingPanel() const{ return colorPanelMode_ != ColorPanelMode::NONE;};
+    bool isMouseInsidePanel() const;
+    void closePanel(){ colorPanelMode_ = ColorPanelMode::NONE;};
+
 private:
     void drawColorPanel();
     void switchColorPanel(ColorPanelMode mode);

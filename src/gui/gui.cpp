@@ -4,7 +4,7 @@
 #include "../canvas/canvas.h"
 
 #define GUI_TOOLBAR_IMPLEMENTATION
-#include "gui_toolbar.h"
+#include "layout/gui_toolbar.h"
 
 #if defined(__APPLE__)
     const int COMMAND_KEY{KEY_LEFT_SUPER};
@@ -38,6 +38,7 @@ void GUI::update(){
 
 void switchMode(Canvas::Mode mode){
     Application::instance().canvas().switchMode(mode);
+    ui.currentSelectedTool = static_cast<int>(mode);
 }
 
 void undo(){ Application::instance().actionCenter().undo();}
@@ -45,13 +46,26 @@ void redo(){ Application::instance().actionCenter().redo();}
 
 void bulkDeleteVertex(){ Application::instance().canvas().doBulkDeleteVertices();}
 void bulkDeleteEdge(){ Application::instance().canvas().doBulkDeleteEdges();}
-void bulkDelete(){ Application::instance().canvas().doBulkDelete();}
+void bulkDelete(){ 
+    if(ui.isSelectingVertexChecked && ui.isSelectingEdgeChecked){
+        Application::instance().canvas().doBulkDelete();
+    }else if(ui.isSelectingVertexChecked){
+        bulkDeleteVertex();
+    }else if(ui.isSelectingEdgeChecked){
+        bulkDeleteEdge();
+    }
+}
 
 void dyeVertex(){ Application::instance().canvas().doDyeVertex();}
 void dyeEdge(){ Application::instance().canvas().doDyeEdge();}
-void dye(){
-    dyeVertex();
-    dyeEdge();
+void dye(){ 
+    if(ui.isSelectingVertexChecked && ui.isSelectingEdgeChecked){
+        Application::instance().canvas().doDye();
+    }else if(ui.isSelectingVertexChecked){
+        dyeVertex();
+    }else if(ui.isSelectingEdgeChecked){
+        dyeEdge();
+    }
 }
 
 void GUI::updateKeyboardShortcuts(){
@@ -75,8 +89,17 @@ bool GUI::updateKeys(int key){
     case KEY_P: switchMode(Canvas::Mode::PEN);    return true;
     case KEY_L: switchMode(Canvas::Mode::LINK);   return true;
     case KEY_E: switchMode(Canvas::Mode::ERASER); return true;
+    case KEY_M: switchMode(Canvas::Mode::MOVE);   return true;
+    case KEY_S: switchMode(Canvas::Mode::SELECT); return true;
+    case KEY_Q: switchMode(Canvas::Mode::PAN);    return true;
+
     case KEY_DELETE:
     case KEY_BACKSPACE: bulkDelete(); return true;
+
+    case KEY_R: 
+        Application::instance().canvas().resetCamera();
+        return true;
+    
     default: break;
     }
     return false;
@@ -121,6 +144,10 @@ void GUI::updateFile(){
     if(ui.loadLuaPressed){
 
     }
+
+    // TODO: I don't want this to be continuously update on every frame
+    ui.canUndo = Application::instance().actionCenter().canUndo();
+    ui.canRedo = Application::instance().actionCenter().canRedo();
 }
 
 void GUI::updateView(){
@@ -154,16 +181,16 @@ void GUI::updateConstruction(){
     if(ui.linkPressed) switchMode(Canvas::Mode::LINK);
     if(ui.penColorPressed) switchColorPanel(ColorPanelMode::PEN);
     if(ui.linkColorPressed) switchColorPanel(ColorPanelMode::LINK);
-    if(ui.dragPressed) switchMode(Canvas::Mode::DRAG);
+    if(ui.dragPressed) switchMode(Canvas::Mode::MOVE);
     if(ui.eraserPressed) switchMode(Canvas::Mode::ERASER);
 }
 
 void GUI::updateControls(){
     if(ui.selectPressed) switchMode(Canvas::Mode::SELECT);
-    if(ui.movePressed) switchMode(Canvas::Mode::MOVE);
+    if(ui.movePressed) switchMode(Canvas::Mode::PAN);
+    if(ui.colorPanelButtonPressed) switchColorPanel(ColorPanelMode::DYE);
     if(ui.deleteSelectedPressed) bulkDelete();
     if(ui.changeSelectedColorPressed) dye();
-    if(ui.colorPanelButtonPressed) switchColorPanel(ColorPanelMode::DYE);
 
     // state.isSelectingVertexChecked = false;
     // state.isSelectingEdgeChecked = false;
