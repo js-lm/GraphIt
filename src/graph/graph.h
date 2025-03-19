@@ -39,6 +39,7 @@ public:
 
     void updateVertexPosition(VertexID id, Vector2 position){ vertices_[id]->setPosition(position);};
     Vector2 getVertexPosition(VertexID id){ return vertices_[id]->position();};
+    Color getVertexColor(VertexID id){ return vertices_[id]->color();};
 
     bool areNeighbors(VertexID startID, VertexID endID);
     std::unordered_set<VertexID> getNeighbors(VertexID id) const;
@@ -52,6 +53,10 @@ public:
 
     const float getVertexRadius() const{ return vertexRadius_;};
     const float getEdgeThickness() const{ return edgeThickness_;};
+
+public: // for IO
+    std::vector<VertexID> getAllValidVertexIDs() const;
+    std::vector<std::pair<Graph::EdgeID, Color>> getAllValidEdgeIDsAndColor() const;
 
 private:
     void drawVertices() const;

@@ -10,6 +10,31 @@ Graph::Graph()
     , edgeThickness_(10.0f)  
 {}
 
+std::vector<Graph::VertexID> Graph::getAllValidVertexIDs() const{
+    std::vector<VertexID> ids;
+    for(const auto &vertex : vertices_){
+        if(!vertex->isHidden()){
+            ids.emplace_back(vertex->id());
+        }
+    }
+    return ids;
+}
+
+std::vector<std::pair<Graph::EdgeID, Color>> Graph::getAllValidEdgeIDsAndColor() const{
+    std::vector<std::pair<Graph::EdgeID, Color>> ids;
+    for(const auto &edge : edges_){
+        if(!vertices_[edge->startID()]->isHidden()
+        && !vertices_[edge->endID()]->isHidden()
+        ){
+            ids.emplace_back(std::pair{
+                EdgeID{edge->startID(), edge->endID()},
+                edge->color()        
+            });
+        }
+    }
+    return ids;
+}
+
 void Graph::hideVertex(VertexID id){
     if(!isValidID(id)) return;
     vertices_[id]->hide();
@@ -265,3 +290,4 @@ void Graph::dyeSelectedEdge(const std::vector<EdgeID> &ids, const std::vector<Co
         }
     }
 }
+

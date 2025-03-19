@@ -1,11 +1,11 @@
 #include "canvas.h"
-#include "../application.h"
-#include "../graph/graph.h"
-#include "../actions_center/actions_center.h"
-#include "../actions_center/graph_action/graph_action.h"
+#include "application.h"
+#include "graph/graph.h"
+#include "actions_center/actions_center.h"
+#include "actions_center/graph_action/graph_action.h"
 #include "lib/magic_enum.hpp"
-#include "../configs/terminal_prefix.h"
-#include "../gui/gui.h"
+#include "configs/terminal_prefix.h"
+#include "gui/gui.h"
 
 #include <optional>
 #include <iostream>

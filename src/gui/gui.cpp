@@ -1,7 +1,7 @@
 #include "gui.h"
-#include "../application.h"
-#include "../actions_center/actions_center.h"
-#include "../canvas/canvas.h"
+#include "application.h"
+#include "actions_center/actions_center.h"
+#include "canvas/canvas.h"
 
 #define GUI_TOOLBAR_IMPLEMENTATION
 #include "layout/gui_toolbar.h"
@@ -130,7 +130,7 @@ void GUI::updateFile(){
     }
 
     if(ui.savePressed){
-
+        
     }
 
     if(ui.loadPressed){

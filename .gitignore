@@ -4,3 +4,5 @@ main
 build
 save-restore-editors.json
 *.png
+.DS_Store
+*.grt

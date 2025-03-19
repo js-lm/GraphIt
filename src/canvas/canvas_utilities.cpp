@@ -1,8 +1,8 @@
 #include "canvas.h"
-#include "../application.h"
-#include "../graph/graph.h"
+#include "application.h"
+#include "graph/graph.h"
 #include "lib/magic_enum.hpp"
-#include "../configs/terminal_prefix.h"
+#include "configs/terminal_prefix.h"
 
 #include <raylib.h>
 #include <iostream>

@@ -1,6 +1,6 @@
 #include "gui.h"
-#include "../application.h"
-#include "../canvas/canvas.h"
+#include "application.h"
+#include "canvas/canvas.h"
 
 #define GUI_COLORPANEL_IMPLEMENTATION
 #include "layout/gui_color_panel.h"

@@ -23,7 +23,7 @@
 
 // WARNING: raygui implementation is expected to be defined before including this header
 #undef RAYGUI_IMPLEMENTATION
-#include "lib/raygui.h"
+#include "raygui.h"
 
 #include <string.h>     // Required for: strcpy()
 #include <stdio.h>
@@ -74,7 +74,7 @@ char *ColorToRGBString(Color color);
 ************************************************************************************/
 #if defined(GUI_COLORPANEL_IMPLEMENTATION)
 
-#include "lib/raygui.h"
+#include "raygui.h"
 
 //----------------------------------------------------------------------------------
 // Global Variables Definition

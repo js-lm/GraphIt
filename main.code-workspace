@@ -93,7 +93,17 @@
 			"stop_token": "cpp",
 			"thread": "cpp",
 			"__tree": "cpp",
-			"iomanip": "cpp"
+			"iomanip": "cpp",
+			"any": "cpp",
+			"forward_list": "cpp",
+			"future": "cpp",
+			"shared_mutex": "cpp",
+			"chrono": "cpp",
+			"codecvt": "cpp",
+			"coroutine": "cpp",
+			"expected": "cpp",
+			"ranges": "cpp",
+			"stdfloat": "cpp"
 		},
 		"git.autoRepositoryDetection": false,
 		"git.enabled": true

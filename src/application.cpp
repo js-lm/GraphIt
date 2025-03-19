@@ -1,14 +1,14 @@
-#define VERSION "0.1.2"
-
+#include "configs/version.h"
 #include "application.h"
 #include "graph/graph.h"
 #include "actions_center/actions_center.h"
 #include "gui/gui.h"
 #include "canvas/canvas.h"
 #include "configs/terminal_prefix.h"
+#include "io/io.h"
 
 #define RAYGUI_IMPLEMENTATION
-#include "lib/raygui.h"
+#include "raygui.h"
 
 #include <raylib.h>
 #include <iostream>
@@ -18,6 +18,7 @@ Application::Application()
     , actionsCenter_(new ActionsCenter())
     , ui_(new GUI())
     , canvas_(new Canvas())
+    , serializer_(new Serializer())
 {}
 
 Application::~Application(){
@@ -25,17 +26,18 @@ Application::~Application(){
     delete actionsCenter_;
     delete ui_;
     delete canvas_;
+    delete serializer_;
 }
 
 int Application::run(){
-    printInitMessage(VERSION);
+    printInitMessage(GRAPHIT_VERSION_STRING);
     
     const int screenWidth{1000};
     const int screenHeight{720};
 
     // SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_WINDOW_TRANSPARENT);
 
-    InitWindow(screenWidth, screenHeight, "GraphIt! v" VERSION);
+    InitWindow(screenWidth, screenHeight, "GraphIt! v" GRAPHIT_VERSION_STRING);
     // SetTargetFPS(300);
 
     printInitMessage();
@@ -46,6 +48,13 @@ int Application::run(){
         ui_->update();
         canvas_->update();
         actionsCenter_->update();
+
+
+        if(IsKeyPressed(KEY_S)){
+            serializer_->save("save.grt");
+        }
+
+
 
         BeginDrawing(); {
             ClearBackground(RAYWHITE); // BLANK);

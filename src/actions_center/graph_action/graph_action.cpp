@@ -1,6 +1,6 @@
 #include "graph_action.h"
-#include "../../application.h"
-#include "../../graph/graph.h"
+#include "application.h"
+#include "graph/graph.h"
 
 #include <raylib.h>
 #include <iostream>

@@ -4,6 +4,7 @@ class Graph;
 class ActionsCenter;
 class GUI;
 class Canvas;
+class Serializer;
 
 class Application{
 public:
@@ -21,7 +22,8 @@ public:
     Graph &graph(){ return *graph_;};
     ActionsCenter &actionCenter(){ return *actionsCenter_;};
     GUI &ui(){ return *ui_;};
-    Canvas &canvas(){ return *canvas_;}
+    Canvas &canvas(){ return *canvas_;};
+    Serializer &serializer(){ return *serializer_;};
 
 private:
     Application();
@@ -32,4 +34,5 @@ private:
     ActionsCenter *actionsCenter_;
     GUI *ui_;
     Canvas *canvas_;
+    Serializer *serializer_;
 };
