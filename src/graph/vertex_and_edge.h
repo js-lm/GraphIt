@@ -43,24 +43,27 @@ namespace GraphNamespace{
     public:
         Edge() = delete;
         ~Edge() = default;
-        Edge(size_t startID, size_t endID, Color color)
+        Edge(size_t startID, size_t endID, float weight, Color color)
             : startID_(startID)
             , endID_(endID)
+            , weight_(weight)
             , color_(color)
         {};
 
         void setColor(Color color){ color_ = color;};
+        void setWeight(float weight){ weight_ = weight;};
 
     public:
         const size_t startID() const{ return startID_;};
         const size_t endID() const{ return endID_;};
         const bool contains(size_t id) const{ return startID_ == id || endID_ == id;};
+        const float weight() const{ return weight_;};
         const Color color() const{ return color_;};
 
     private:
         size_t startID_;
         size_t endID_;
-
+        float weight_;
         Color color_;
     };
 

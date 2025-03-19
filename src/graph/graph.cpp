@@ -5,35 +5,11 @@
 Graph::Graph()
     : isDirected_(false)
     , defaultVertexColor_(BLACK)
+    , defaultEdgeWeight_(1.0f)
     , defaultEdgeColor_(GRAY)
     , vertexRadius_(5.0f)
     , edgeThickness_(10.0f)  
 {}
-
-std::vector<Graph::VertexID> Graph::getAllValidVertexIDs() const{
-    std::vector<VertexID> ids;
-    for(const auto &vertex : vertices_){
-        if(!vertex->isHidden()){
-            ids.emplace_back(vertex->id());
-        }
-    }
-    return ids;
-}
-
-std::vector<std::pair<Graph::EdgeID, Color>> Graph::getAllValidEdgeIDsAndColor() const{
-    std::vector<std::pair<Graph::EdgeID, Color>> ids;
-    for(const auto &edge : edges_){
-        if(!vertices_[edge->startID()]->isHidden()
-        && !vertices_[edge->endID()]->isHidden()
-        ){
-            ids.emplace_back(std::pair{
-                EdgeID{edge->startID(), edge->endID()},
-                edge->color()        
-            });
-        }
-    }
-    return ids;
-}
 
 void Graph::hideVertex(VertexID id){
     if(!isValidID(id)) return;
@@ -79,7 +55,11 @@ bool Graph::restoreRemovedVertex(VertexID id){
     return !isVertexHidden(id);
 }
 
-bool Graph::connectVertices(VertexID startID, VertexID endID, std::optional<Color> color){
+
+bool Graph::connectVertices(VertexID startID, VertexID endID, Color color){
+    connectVertices(startID, endID, std::nullopt, color);
+}
+bool Graph::connectVertices(VertexID startID, VertexID endID, std::optional<float> weight, std::optional<Color> color){
     if(!isValidID(startID)
     || !isValidID(endID)
     || startID == endID
@@ -92,6 +72,7 @@ bool Graph::connectVertices(VertexID startID, VertexID endID, std::optional<Colo
         std::make_unique<Edge>(
             startID,
             endID,
+            weight.value_or(defaultEdgeWeight_),
             color.value_or(defaultEdgeColor_)
         )
     );
@@ -99,17 +80,18 @@ bool Graph::connectVertices(VertexID startID, VertexID endID, std::optional<Colo
     return true;
 }
 
-std::optional<Color> Graph::disconnectVertices(VertexID startID, VertexID endID){
-    std::optional<Color> color;
+std::pair<float, Color> Graph::disconnectVertices(VertexID startID, VertexID endID){
+    std::pair<float, Color> properties;
 
-    if(!areNeighbors(startID, endID)) return color;
+    if(!areNeighbors(startID, endID)) return properties;
 
     std::vector<std::unique_ptr<Edge>> newEdges_;
     newEdges_.reserve(edges_.size());
 
     for(auto &edge : edges_){
         if(isTheSameEdge(edge->startID(), edge->endID(), startID, endID)){
-            color = edge->color();
+            properties.first = edge->weight();
+            properties.second = edge->color();
             continue;
         }
 
@@ -118,7 +100,7 @@ std::optional<Color> Graph::disconnectVertices(VertexID startID, VertexID endID)
     
     edges_ = std::move(newEdges_);
 
-    return color;
+    return properties;
 }
 
 bool Graph::areNeighbors(VertexID startID, VertexID endID){

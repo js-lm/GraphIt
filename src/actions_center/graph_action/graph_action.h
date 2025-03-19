@@ -27,15 +27,15 @@ namespace Action{
         bool removeVertex(VertexID id);
         void restoreRemovedVertex(VertexID id);
 
-        bool connectVertices(VertexID startID, VertexID endID, std::optional<Color> color = std::nullopt);
-        std::optional<Color> disconnectVertices(VertexID startID, VertexID endID);
+        bool connectVertices(VertexID startID, VertexID endID, std::optional<float> weight, std::optional<Color> color = std::nullopt);
+        std::pair<float, Color> disconnectVertices(VertexID startID, VertexID endID);
 
         void moveVertex(VertexID id, Vector2 to);
 
         void bulkRemoveVertices(const std::vector<VertexID> &vertices);
         void bulkRestoreRemovedVertices(const std::vector<VertexID> &vertices);
-        std::vector<std::optional<Color>> bulkRemoveEdges(const std::vector<EdgeID> &edges);
-        void bulkRestoreRemovedEdges(const std::vector<EdgeID> &edges, const std::vector<std::optional<Color>> &colors);
+        std::vector<std::pair<float,Color>> bulkRemoveEdges(const std::vector<EdgeID> &edges);
+        void bulkRestoreRemovedEdges(const std::vector<EdgeID> &edges, const std::vector<float> &weight, const std::vector<Color> &colors);
 
         std::vector<Color> dyeSelectedVertices(const std::vector<VertexID> &ids, Color newColor);
         std::vector<Color> dyeSelectedEdge(const std::vector<EdgeID> &ids, Color newColor);
@@ -77,14 +77,15 @@ namespace Action{
 
     class ConnectVertices : public GraphRelated{
     public:
-        ConnectVertices(VertexID startID, VertexID endID, std::optional<Color> color = std::nullopt)
+        ConnectVertices(VertexID startID, VertexID endID, std::optional<float> weight = std::nullopt, std::optional<Color> color = std::nullopt)
             : startID_(startID), endID_(endID)
+            , weight_(weight)
             , color_(color)
         {
             identifier_ = ID::CONNECT_VERTICES;
         };
         
-        void execute() override{ connectVertices(startID_, endID_, color_);};
+        void execute() override{ connectVertices(startID_, endID_, weight_, color_);};
 
         void undo() override{ disconnectVertices(startID_, endID_);};
         void redo() override{ execute();};
@@ -92,7 +93,7 @@ namespace Action{
     private:
         VertexID startID_;
         VertexID endID_;
-        
+        std::optional<float> weight_;
         std::optional<Color> color_;
     };
 
@@ -104,16 +105,20 @@ namespace Action{
             identifier_ = ID::DISCONNECT_VERTICES;
         }
         
-        void execute() override{ color_ = disconnectVertices(startID_, endID_);};
+        void execute() override{ 
+            auto properties{disconnectVertices(startID_, endID_)};
+            weight_ = properties.first;
+            color_ = properties.second;
+        };
 
-        void undo() override{ connectVertices(startID_, endID_, color_);};
+        void undo() override{ connectVertices(startID_, endID_, weight_, color_);};
         void redo() override{ disconnectVertices(startID_, endID_);};
 
     private:
         VertexID startID_;
         VertexID endID_;
-        
-        std::optional<Color> color_;
+        float weight_;
+        Color color_;
     };
 
     class MoveVertex : public GraphRelated{
@@ -146,13 +151,17 @@ namespace Action{
         }
 
         void execute() override{ 
-            edgeColors_ = bulkRemoveEdges(edgeIDs_);
+            auto edgesPropertiesVector{bulkRemoveEdges(edgeIDs_)};
+            for(const auto &properties : edgesPropertiesVector){
+                edgeWeights_.emplace_back(properties.first);
+                edgeColors_.emplace_back(properties.second);
+            }
             bulkRemoveVertices(vertexIDs_);
         }
 
         void undo() override{ 
             bulkRestoreRemovedVertices(vertexIDs_);
-            bulkRestoreRemovedEdges(edgeIDs_, edgeColors_);
+            bulkRestoreRemovedEdges(edgeIDs_, edgeWeights_, edgeColors_);
         }
         
         void redo() override{ 
@@ -163,7 +172,8 @@ namespace Action{
     private:
         std::vector<VertexID> vertexIDs_;
         std::vector<EdgeID> edgeIDs_;
-        std::vector<std::optional<Color>> edgeColors_;
+        std::vector<float> edgeWeights_;
+        std::vector<Color> edgeColors_;
     };
 
     class BulkRemoveVertices : public GraphRelated{
@@ -191,14 +201,21 @@ namespace Action{
             identifier_ = ID::BULK_REMOVE_EDGES;
         }
 
-        void execute() override{ colors_ = bulkRemoveEdges(ids_);};
+        void execute() override{
+            auto propertiesVector{bulkRemoveEdges(ids_)};
+            for(const auto &properties : propertiesVector){
+                weight_.emplace_back(properties.first);
+                colors_.emplace_back(properties.second);
+            }
+        };
 
-        void undo() override{ bulkRestoreRemovedEdges(ids_, colors_);};
+        void undo() override{ bulkRestoreRemovedEdges(ids_, weight_, colors_);};
         void redo() override{ bulkRemoveEdges(ids_);};
 
     private:
         std::vector<EdgeID> ids_;
-        std::vector<std::optional<Color>> colors_;
+        std::vector<float> weight_;
+        std::vector<Color> colors_;
     };
 
     class DyeVertex : public GraphRelated{

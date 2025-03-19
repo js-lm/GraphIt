@@ -78,6 +78,7 @@ void Canvas::updateLink(){
                 std::make_unique<Action::ConnectVertices>(
                     linkFrom_.value(), 
                     hoveredVertexID_.value(),
+                    std::nullopt,
                     linkColor_
                 )
             );

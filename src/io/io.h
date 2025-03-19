@@ -8,15 +8,25 @@
 #include <string>
 #include <queue>
 
-namespace IO{
+namespace Normalized{
 
-    struct NormalizedVertex{
+    struct CameraSettings{
+        Vector2 position;
+        float zoom;
+    };
+
+    struct GraphSettings{
+        bool isDirected;
+        bool isWeighted;
+    };
+
+    struct Vertex{
         size_t id;
         Vector2 position;
         Color color;
     };
 
-    struct NormalizedEdge{
+    struct Edge{
         size_t startID;
         size_t endID;
         float weight;
@@ -24,13 +34,13 @@ namespace IO{
     };
 
     struct SaveData{
-        bool isDirected;
-        bool isWeighted;
-        std::vector<NormalizedVertex> vertices;
-        std::vector<NormalizedEdge> edges;
+        CameraSettings cameraSettings;
+        GraphSettings graphSettings;
+        std::vector<Vertex> vertices;
+        std::vector<Edge> edges;
     };
 
-} // namespace IO
+} // namespace Normalized
 
 class Serializer{
 public:
@@ -41,15 +51,22 @@ public:
     static bool load(const std::string &filename);
 
 private:
-    static IO::SaveData normalizeData();
+    static Normalized::SaveData normalizeData();
 
     static std::vector<std::string> parseData(
-        const std::string &line,
+        std::string line,
         std::queue<std::string> lineTemplate
     );
 
-    static std::vector<IO::NormalizedVertex> parseVertexData(const std::vector<std::string> &data);
+    static Normalized::CameraSettings parseCameraSettings(const std::string &data);
+    static Normalized::GraphSettings parseGraphSettings(const std::string &data);
+    static std::pair<size_t, size_t> parseMetaData(const std::string &data);
+    
+    static std::vector<Normalized::Vertex> parseVertexData(const std::vector<std::string> &data);
+    static std::vector<Normalized::Edge> parseEdgeData(const std::vector<std::string> &data);
 
 private:
-    static constexpr std::queue<std::string> VERTEX_DATA_FORMAT;
+    static std::queue<std::string> getDataFormat(const std::vector<std::string> &format);
+
+    static std::vector<std::string> splitLines(std::ifstream &file);
 };

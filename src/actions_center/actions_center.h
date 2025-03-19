@@ -32,6 +32,8 @@ public:
 
     const StackIndex getStackIndex() const{ return {currentActionIndex_, actionsStack_.size()};}
 
+    void clearHistory();
+
 private:
     void moveActionsFromQueueToStack();
 

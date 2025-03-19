@@ -60,3 +60,10 @@ void ActionsCenter::redo(){
 void ActionsCenter::printCurrentIndex() const{
     std::cout << currentActionIndex_ << "/" << actionsStack_.size() - 1;
 }
+
+void ActionsCenter::clearHistory(){
+    actionsStack_.clear();
+    currentActionIndex_ = 0;
+    actionsToExecute_.clear();
+    actionsStack_.push_back(std::make_unique<Action::DUMMY>());
+}

@@ -19,11 +19,11 @@ void GraphRelated::restoreRemovedVertex(VertexID id){
     Application::instance().graph().restoreRemovedVertex(id);
 }
 
-bool GraphRelated::connectVertices(VertexID startID, VertexID endID, std::optional<Color> color){
-    return Application::instance().graph().connectVertices(startID, endID, color);
+bool GraphRelated::connectVertices(VertexID startID, VertexID endID, std::optional<float> weight, std::optional<Color> color){
+    return Application::instance().graph().connectVertices(startID, endID, weight, color);
 }
     
-std::optional<Color> GraphRelated::disconnectVertices(VertexID startID, VertexID endID){
+std::pair<float, Color> GraphRelated::disconnectVertices(VertexID startID, VertexID endID){
     return Application::instance().graph().disconnectVertices(startID, endID);
 }
 
@@ -43,25 +43,26 @@ void GraphRelated::bulkRestoreRemovedVertices(const std::vector<VertexID> &verti
     }
 }
 
-std::vector<std::optional<Color>> GraphRelated::bulkRemoveEdges(
+std::vector<std::pair<float,Color>> GraphRelated::bulkRemoveEdges(
     const std::vector<EdgeID> &edges
 ){
-    std::vector<std::optional<Color>> colors;
+    std::vector<std::pair<float, Color>> propertiesVector;
     for(const auto &edge : edges){
-        // auto color{disconnectVertices(edge.first, edge.second)};
-        colors.emplace_back(disconnectVertices(edge.first, edge.second));
+        auto properties{disconnectVertices(edge.first, edge.second)};
+        propertiesVector.emplace_back(properties);
     }
-    return colors;
+    return propertiesVector;
 }
 
 void GraphRelated::bulkRestoreRemovedEdges(
     const std::vector<EdgeID> &edges, 
-    const std::vector<std::optional<Color>> &colors
+    const std::vector<float> &weight,
+    const std::vector<Color> &colors
 ){
     if(edges.size() != colors.size()) throw;
 
     for(size_t i{0}; i < edges.size(); i++){
-        connectVertices(edges[i].first, edges[i].second, colors[i].value());
+        connectVertices(edges[i].first, edges[i].second, weight[i], colors[i]);
     }
 }
 

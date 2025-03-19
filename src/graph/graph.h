@@ -1,6 +1,7 @@
 #pragma once
 
 #include "vertex_and_edge.h"
+#include "io/io.h"
 
 #include <raylib.h>
 #include <memory>
@@ -28,8 +29,9 @@ public:
     bool removeVertex(VertexID id);
     bool restoreRemovedVertex(VertexID id);
 
-    bool connectVertices(VertexID startID, VertexID endID, std::optional<Color> color = std::nullopt);
-    std::optional<Color> disconnectVertices(VertexID startID, VertexID endID);
+    bool connectVertices(VertexID startID, VertexID endID, std::optional<float> weight = std::nullopt, std::optional<Color> color = std::nullopt);
+    bool connectVertices(VertexID startID, VertexID endID, Color color);
+    std::pair<float, Color> disconnectVertices(VertexID startID, VertexID endID);
 
     std::vector<Color> dyeSelectedVertices(const std::vector<VertexID> &ids, Color newColor);
     std::vector<Color> dyeSelectedEdge(const std::vector<EdgeID> &ids, Color newColor);
@@ -58,6 +60,13 @@ public: // for IO
     std::vector<VertexID> getAllValidVertexIDs() const;
     std::vector<std::pair<Graph::EdgeID, Color>> getAllValidEdgeIDsAndColor() const;
 
+    void loadNewGraph(const Normalized::SaveData &saveData);
+    void clearGraph();
+
+private:
+    void addVertex(size_t id, Vector2 position, Color color);
+    void connectVertices(VertexID startID, VertexID endID, float weight, Color color);
+
 private:
     void drawVertices() const;
     void drawEdges() const;
@@ -82,6 +91,7 @@ private:
     std::unordered_set<VertexID> hiddenVertices_;
 
     Color defaultVertexColor_;
+    float defaultEdgeWeight_;
     Color defaultEdgeColor_;
 
     float vertexRadius_;

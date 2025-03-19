@@ -41,7 +41,6 @@ inline void printInitMessage(const std::string &version = ""){
             std::cout << "GraphIt! v" << version << std::endl;
         }
     }
-    std::cout << "============================================================" << std::endl;
 }
 
 inline void printActionPrefix(){ // White
@@ -65,5 +64,13 @@ inline void printUpdatePrefix(){ // Black
         std::cout << "\x1b[40;37m" << "(update)" << TERMINAL_RESET << " ";
     }else{
         std::cout << "(update) ";
+    }
+}
+
+inline void printErrorPrefix(){
+    if(TERMINAL_PRINT_WITH_COLOR){
+        std::cerr << "\x1b[41;37m" << "[ERROR]" << TERMINAL_RESET << " ";
+    }else{
+        std::cerr << "[ERROR] ";
     }
 }

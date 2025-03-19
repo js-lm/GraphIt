@@ -50,8 +50,11 @@ int Application::run(){
         actionsCenter_->update();
 
 
-        if(IsKeyPressed(KEY_S)){
+        if(IsKeyPressed(KEY_ONE)){
             serializer_->save("save.grt");
+        }
+        if(IsKeyPressed(KEY_TWO)){
+            serializer_->load("save.grt");
         }
 
 
