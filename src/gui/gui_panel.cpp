@@ -3,6 +3,7 @@
 #include "canvas/canvas.h"
 #include "io/io.h"
 #include "magic_enum.hpp"
+#include "configs/terminal_prefix.h"
 
 #define GUI_COLORPANEL_IMPLEMENTATION
 #include "layout/gui_color_panel.h"
@@ -110,6 +111,8 @@ void GUI::drawLoadPanel(){
 }
 
 void GUI::drawLoadScrollPanel(){
+    if(!loadFromGUI.loadFileDialogActive) return;
+
     Rectangle scrollBounds{ 
         loadFromGUI.anchor.x + 8, 
         loadFromGUI.anchor.y + 64, 
@@ -138,10 +141,10 @@ void GUI::drawLoadScrollPanel(){
                 files.emplace_back(filePath);
             }
         }catch(const fs::filesystem_error &error){
-            std::cout << "Unable to read the directory: " << error.what() << std::endl;
+            std::cerr << "Unable to read the directory: " << error.what() << std::endl;
         }
     }else{
-        std::cout << "Not a valid directory: " << currentPath.string() << std::endl;
+        std::cerr << "Not a valid directory: " << currentPath.string() << std::endl;
         resetLoadDirectory();
         return;
     }
@@ -243,8 +246,6 @@ void GUI::drawDyeColorPanel(Color &color){
 }
 
 void GUI::updateLoadPanel(){
-    updateLoadFileScrollPanel();
-
     if(loadFromGUI.fileCancelPressed) handleLoadFileGuiCancelPressed();
     if(loadFromGUI.fileSelectPressed) handleLoadFileButtonPressed();
     if(loadFromGUI.directoryBackPressed) handleLoadFileDirectoryGoBack();
@@ -257,24 +258,21 @@ void GUI::handleLoadFileDirectoryGoBack(){
     }
 }
 
-void GUI::updateLoadFileScrollPanel(){
-    // scrollPanelText_ = "line1\nline2\nline3333333333333333333\n\n4\n!@#$%^&*()_+";
-}
-
 void GUI::handleLoadFileButtonPressed(){
     loadDirectory_ = fs::directory_entry(fs::path(loadFromGUI.pathText));
     loadFilename_ = loadFromGUI.fileNameText;
 
     checkLoadDirectory();
     if(checkLoadFile()){
-        std::cout << "checkLoadFile()" << std::endl;
+        printGuiPrefix();
+        std::cout << "Opening: \"" << loadDirectory_ 
+                  << "\" \"" << loadFilename_ << "\"" << std::endl;
         Application::instance().serializer().load(getFullLoadPath());
+    }else{
+        printErrorPrefix();
+        std::cerr << "Failed to check load file \"" << loadDirectory_ 
+                  << "\" \"" << loadFilename_ << "\"" << std::endl;
     }
-
-    std::cout << "Load from " << loadDirectory_ << std::endl;
-    std::cout << "Filename " << loadFilename_ << std::endl;
-
-    // loadFromGUI.fileSelectPressed = false;
 }
 
 void GUI::handleLoadFileGuiCancelPressed(){
@@ -291,29 +289,6 @@ bool GUI::checkLoadFile(){
 }
 
 void GUI::checkLoadDirectory(){
-    // if(fs::exists(loadFileDirectory_)){
-    //     if(fs::is_regular_file(loadFileDirectory_)){
-    //         loadFileDirectory_ = fs::directory_entry(loadFileDirectory_.path().parent_path());
-    //     }else if(!fs::is_directory(loadFileDirectory_)){
-    //         // if(loadFileDirectory_.has_parent_path()){
-    //         //     loadFileDirectory_ = loadPath.parent_path();
-    //         // }else{
-    //         //     resetLoadPath();
-    //         // }
-
-    //         while(!fs::exists(loadFileDirectory_)
-    //            || !fs::is_directory(loadFileDirectory_)
-    //         ){
-    //             if(loadFileDirectory_.path() == loadFileDirectory_.path().root_path()){
-    //                 break;
-    //             }
-    //             loadFileDirectory_ = fs::directory_entry(loadFileDirectory_.path().parent_path());
-    //         }
-    //     }
-    // }else{
-    //     resetLoadDirectory();
-    // }
-
     if(!fs::exists(loadDirectory_)
     || !fs::is_directory(loadDirectory_)
     ){

@@ -43,7 +43,6 @@ private:
     void resetLoadDirectory();
     void handleLoadFileButtonPressed();
     void handleLoadFileGuiCancelPressed();
-    void updateLoadFileScrollPanel();
     std::string getFullLoadPath() const{ return (loadDirectory_.path() / loadFilename_).string();}
     void handleLoadFileDirectoryGoBack();
 

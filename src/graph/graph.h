@@ -9,6 +9,7 @@
 #include <optional>
 #include <utility>
 #include <unordered_set>
+#include <string>
 
 class Graph{
 public:
@@ -46,6 +47,8 @@ public:
     bool areNeighbors(VertexID startID, VertexID endID);
     std::unordered_set<VertexID> getNeighbors(VertexID id) const;
 
+    std::string getLabel(VertexID id) const;
+
 public:
     std::optional<VertexID> findVertex(Vector2 point, std::optional<float> radius = std::nullopt);
     std::optional<EdgeID> findEdge(Vector2 point, std::optional<float> thickness = std::nullopt);
@@ -73,6 +76,13 @@ private:
 private:
     void drawVertices() const;
     void drawEdges() const;
+    void drawArrowLine(
+        const Vector2 &startPoint, 
+        const Vector2 &endPoint, 
+        float thickness, 
+        const std::string &label, 
+        Color color
+    ) const;
 
     bool isValidID(VertexID id) const{ return id < vertices_.size();}
     bool isVertexHidden(size_t id) const;
@@ -83,6 +93,8 @@ private:
     bool isTheSameEdge(VertexID startID1, VertexID endID1, VertexID startID2, VertexID endID2) const;
 
     bool checkCollisionLineRectangle(Vector2 start, Vector2 end, Rectangle rectangle) const;
+
+    float calculateBrightness(Color color) const;
 
 private:
     bool isDirected_;

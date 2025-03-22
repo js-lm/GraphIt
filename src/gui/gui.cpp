@@ -2,6 +2,7 @@
 #include "application.h"
 #include "actions_center/actions_center.h"
 #include "canvas/canvas.h"
+#include "io/io.h"
 
 #define GUI_TOOLBAR_IMPLEMENTATION
 #include "layout/gui_toolbar.h"
@@ -134,11 +135,10 @@ void GUI::updateFile(){
     }
 
     if(ui.savePressed){
-        
+        Application::instance().serializer().save("save.grt");
     }
 
     if(ui.loadPressed) switchPanel(Panel::LOAD_FROM);
-    
     if(ui.undoPressed) undo();
     if(ui.redoPressed) redo();
     if(ui.takeScreenshotPressed) takeScreenshot();

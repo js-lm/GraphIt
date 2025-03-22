@@ -67,10 +67,18 @@ inline void printUpdatePrefix(){ // Black
     }
 }
 
-inline void printErrorPrefix(){
+inline void printErrorPrefix(){ // Red
     if(TERMINAL_PRINT_WITH_COLOR){
         std::cerr << "\x1b[41;37m" << "[ERROR]" << TERMINAL_RESET << " ";
     }else{
         std::cerr << "[ERROR] ";
+    }
+}
+
+inline void printGuiPrefix(){ // Blue
+    if(TERMINAL_PRINT_WITH_COLOR){
+        std::cout << "\x1b[44;30m" << "[GUI]" << TERMINAL_RESET << " ";
+    }else{
+        std::cout << "[GUI] ";
     }
 }

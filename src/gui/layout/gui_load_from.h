@@ -149,24 +149,5 @@ void DrawGuiLoadPanel(GuiLoadFromState *state)
     GuiUnlock();
 }
 
-// void DrawGuiLoadScrollPanel(GuiLoadFromState *state, const char *text){
-//     GuiScrollPanel(
-//         (Rectangle){ 
-//             state->anchor.x + 8, 
-//             state->anchor.y + 64, 
-//             464 - state->ScrollPanelBoundsOffset.x, 
-//             160 - state->ScrollPanelBoundsOffset.y 
-//         }, // bounds
-//         NULL, // label (not text inside it)
-//         (Rectangle){ 
-//             state->anchor.x + 8, 
-//             state->anchor.y + 64, 
-//             464, 
-//             160 
-//         }, // content
-//         &state->ScrollPanelScrollOffset, 
-//         &state->ScrollPanelScrollView
-//     );
-// }
 
 #endif // GUI_LOAD_FROM_IMPLEMENTATION

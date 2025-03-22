@@ -55,6 +55,7 @@ int Application::run(){
             canvas_->draw();
             ui_->draw();
             
+            DrawFPS(screenWidth - 50, screenHeight - 20);
         } EndDrawing();
     }
 

@@ -8,8 +8,8 @@ Graph::Graph()
     , defaultVertexColor_(BLACK)
     , defaultEdgeWeight_(1.0f)
     , defaultEdgeColor_(GRAY)
-    , vertexRadius_(5.0f)
-    , edgeThickness_(10.0f)  
+    , vertexRadius_(20.0f)
+    , edgeThickness_(7.0f)  
 {}
 
 void Graph::hideVertex(VertexID id){
@@ -274,3 +274,12 @@ void Graph::dyeSelectedEdge(const std::vector<EdgeID> &ids, const std::vector<Co
     }
 }
 
+std::string Graph::getLabel(VertexID id) const{
+    if(id == 0) return "A";
+    std::string newLabel;
+    while(id > 0){
+        newLabel = static_cast<char>('A' + id % 26) + newLabel;
+        id /= 26;
+    }
+    return newLabel;
+}
