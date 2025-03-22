@@ -49,12 +49,12 @@ public:
     void drawMouse() const;
 
     void switchMode(Mode mode);
-    const Mode getMode() const{ return mode_;};
+    const Mode getMode() const{ return mode_;}
     
-    const std::optional<VertexID> &getHoveredVertexID() const{ return hoveredVertexID_;};
-    const std::optional<EdgeID> &getHoveredEdgeIDs() const{ return hoveredEdgeIDs_;};
-    const std::unordered_set<VertexID> &getSelectedVertexIDs() const{ return selectedVertexIDs_;};
-    const SelectedEdges& getSelectedEdgeIDs() const{ return selectedEdgeIDs_;};
+    const std::optional<VertexID> &getHoveredVertexID() const{ return hoveredVertexID_;}
+    const std::optional<EdgeID> &getHoveredEdgeIDs() const{ return hoveredEdgeIDs_;}
+    const std::unordered_set<VertexID> &getSelectedVertexIDs() const{ return selectedVertexIDs_;}
+    const SelectedEdges& getSelectedEdgeIDs() const{ return selectedEdgeIDs_;}
 
     Vector2 getMousePositionInCanvas(bool snap = false) const;
 
@@ -70,17 +70,23 @@ public:
     void doDye();
 
 public:
-    const bool isSnapToGridEnabled() const{ return isSnapToGridEnabled_;};
-    void toggleSnapToGrid(bool snap){ isSnapToGridEnabled_ = snap;};
+    const bool isSnapToGridEnabled() const{ return isSnapToGridEnabled_;}
+    void toggleSnapToGrid(bool snap){ isSnapToGridEnabled_ = snap;}
 
     Vector2 snapVector(Vector2 vector) const;
 
-    const bool isGridShown() const{ return isGridShown_;};
-    void toggleGrid(bool show){ isGridShown_ = show;};
+    const bool isGridShown() const{ return isGridShown_;}
+    void toggleGrid(bool show){ isGridShown_ = show;}
 
-    Color &getPenColorReference(){ return penColor_;};
-    Color &getLinkColorReference(){ return linkColor_;};
-    Color &getDyeColorReference(){ return dyeColor_;};
+    Color &getPenColorReference(){ return penColor_;}
+    Color &getLinkColorReference(){ return linkColor_;}
+    Color &getDyeColorReference(){ return dyeColor_;}
+
+public:
+    const Vector2 getCameraPosition(){ return canvasCamera_.target;}
+    const float getCameraZoom(){ return canvasCamera_.zoom;}
+    void setCameraPosition(Vector2 position){ canvasCamera_.target = position;}
+    void setCameraZoom(float zoom){ canvasCamera_.zoom = zoom;}
 
 private:
     void drawGrid() const;

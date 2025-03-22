@@ -20,7 +20,7 @@ public:
     ActionsCenter();
     ~ActionsCenter() = default;
 
-    void addAction(UniqueAction&& action){ actionsToExecute_.push_back(std::move(action));}
+    void addAction(UniqueAction&& action){ actionsToExecute_.emplace_back(std::move(action));};
 
     void update();
 

@@ -1,15 +1,23 @@
 #pragma once
 
+#include <filesystem>
+
 class Canvas;
 struct Color;
 
 class GUI{
 public:
-    enum class ColorPanelMode{
+    enum class Panel{
         NONE,
-        PEN,
-        LINK,
-        DYE
+
+        SAVE_TO,
+        LOAD_FROM,
+
+        RESET_CONFIRM,
+
+        COLOR_PANEL_PEN,
+        COLOR_PANEL_LINK,
+        COLOR_PANEL_DYE
     };
 
 public:
@@ -19,13 +27,30 @@ public:
     void draw();
     void update();
 
-    bool isShowingPanel() const{ return colorPanelMode_ != ColorPanelMode::NONE;};
+    bool isShowingPanel() const{ return panel_ != Panel::NONE;}
     bool isMouseInsidePanel() const;
-    void closePanel(){ colorPanelMode_ = ColorPanelMode::NONE;};
+    void closePanel();
 
 private:
-    void drawColorPanel();
-    void switchColorPanel(ColorPanelMode mode);
+    void drawPanels();
+    void switchPanel(Panel panel);
+
+    void drawLoadPanel();
+    void drawLoadScrollPanel();
+    void updateLoadPanel();
+    bool checkLoadFile();
+    void checkLoadDirectory();
+    void resetLoadDirectory();
+    void handleLoadFileButtonPressed();
+    void handleLoadFileGuiCancelPressed();
+    void updateLoadFileScrollPanel();
+    std::string getFullLoadPath() const{ return (loadDirectory_.path() / loadFilename_).string();}
+    void handleLoadFileDirectoryGoBack();
+
+    void drawColorTips(const Color &pen, const Color &link, const Color &dye) const;
+    void drawPenColorPanel(Color &color);
+    void drawLinkColorPanel(Color &color);
+    void drawDyeColorPanel(Color &color);
 
 private:
     void updateKeyboardShortcuts();
@@ -45,5 +70,9 @@ private:
     void takeScreenshot();
 
 private:
-    ColorPanelMode colorPanelMode_;
+    Panel panel_;
+
+    // load panel
+    std::filesystem::directory_entry loadDirectory_;
+    std::string loadFilename_;
 };

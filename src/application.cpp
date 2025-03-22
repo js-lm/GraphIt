@@ -49,16 +49,6 @@ int Application::run(){
         canvas_->update();
         actionsCenter_->update();
 
-
-        if(IsKeyPressed(KEY_ONE)){
-            serializer_->save("save.grt");
-        }
-        if(IsKeyPressed(KEY_TWO)){
-            serializer_->load("save.grt");
-        }
-
-
-
         BeginDrawing(); {
             ClearBackground(RAYWHITE); // BLANK);
 

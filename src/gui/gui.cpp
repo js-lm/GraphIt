@@ -15,15 +15,17 @@
 GuiToolbarState ui{InitGuiToolbar()};
 
 GUI::GUI()
-    : colorPanelMode_(ColorPanelMode::NONE)
-{}
+    : panel_(Panel::NONE)
+{
+    resetLoadDirectory();
+}
 
 void GUI::draw(){
     DrawRectangleRec({0, 0, 1000, 40}, Fade(WHITE, .75f));
     DrawRectangleRec({0, 680, 1000, 40}, Fade(WHITE, .75f));
     GuiToolbar(&ui);
 
-    drawColorPanel();
+    drawPanels();
 }
 
 void GUI::update(){
@@ -34,6 +36,8 @@ void GUI::update(){
     updateSettings();
     updateConstruction();
     updateControls();
+
+    updateLoadPanel();
 }
 
 void switchMode(Canvas::Mode mode){
@@ -133,9 +137,7 @@ void GUI::updateFile(){
         
     }
 
-    if(ui.loadPressed){
-
-    }
+    if(ui.loadPressed) switchPanel(Panel::LOAD_FROM);
     
     if(ui.undoPressed) undo();
     if(ui.redoPressed) redo();
@@ -179,8 +181,8 @@ void GUI::updateSettings(){
 void GUI::updateConstruction(){
     if(ui.penPressed) switchMode(Canvas::Mode::PEN);
     if(ui.linkPressed) switchMode(Canvas::Mode::LINK);
-    if(ui.penColorPressed) switchColorPanel(ColorPanelMode::PEN);
-    if(ui.linkColorPressed) switchColorPanel(ColorPanelMode::LINK);
+    if(ui.penColorPressed) switchPanel(Panel::COLOR_PANEL_PEN);
+    if(ui.linkColorPressed) switchPanel(Panel::COLOR_PANEL_LINK);
     if(ui.dragPressed) switchMode(Canvas::Mode::MOVE);
     if(ui.eraserPressed) switchMode(Canvas::Mode::ERASER);
 }
@@ -188,7 +190,7 @@ void GUI::updateConstruction(){
 void GUI::updateControls(){
     if(ui.selectPressed) switchMode(Canvas::Mode::SELECT);
     if(ui.movePressed) switchMode(Canvas::Mode::PAN);
-    if(ui.colorPanelButtonPressed) switchColorPanel(ColorPanelMode::DYE);
+    if(ui.colorPanelButtonPressed) switchPanel(Panel::COLOR_PANEL_DYE);
     if(ui.deleteSelectedPressed) bulkDelete();
     if(ui.changeSelectedColorPressed) dye();
 

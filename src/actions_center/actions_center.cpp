@@ -5,7 +5,7 @@
 #include <iostream>
 
 ActionsCenter::ActionsCenter(){
-    actionsStack_.push_back(std::make_unique<Action::DUMMY>());
+    actionsStack_.emplace_back(std::make_unique<Action::DUMMY>());
 }
 
 void ActionsCenter::update(){
@@ -26,7 +26,7 @@ void ActionsCenter::moveActionsFromQueueToStack(){
         printActionPrefix();
         std::cout << "Executing " << action->getName();
         if(action->shouldSave()){
-            actionsStack_.push_back(std::move(action));
+            actionsStack_.emplace_back(std::move(action));
             std::cout << " (Recorded)";
         }
 
@@ -65,5 +65,5 @@ void ActionsCenter::clearHistory(){
     actionsStack_.clear();
     currentActionIndex_ = 0;
     actionsToExecute_.clear();
-    actionsStack_.push_back(std::make_unique<Action::DUMMY>());
+    actionsStack_.emplace_back(std::make_unique<Action::DUMMY>());
 }

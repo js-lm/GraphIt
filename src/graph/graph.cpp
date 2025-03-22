@@ -4,6 +4,7 @@
 
 Graph::Graph()
     : isDirected_(false)
+    , isWeighted_(false)
     , defaultVertexColor_(BLACK)
     , defaultEdgeWeight_(1.0f)
     , defaultEdgeColor_(GRAY)
@@ -57,7 +58,7 @@ bool Graph::restoreRemovedVertex(VertexID id){
 
 
 bool Graph::connectVertices(VertexID startID, VertexID endID, Color color){
-    connectVertices(startID, endID, std::nullopt, color);
+    return connectVertices(startID, endID, std::nullopt, color);
 }
 bool Graph::connectVertices(VertexID startID, VertexID endID, std::optional<float> weight, std::optional<Color> color){
     if(!isValidID(startID)

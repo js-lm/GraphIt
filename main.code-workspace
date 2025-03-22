@@ -103,7 +103,8 @@
 			"coroutine": "cpp",
 			"expected": "cpp",
 			"ranges": "cpp",
-			"stdfloat": "cpp"
+			"stdfloat": "cpp",
+			"filesystem": "cpp"
 		},
 		"git.autoRepositoryDetection": false,
 		"git.enabled": true

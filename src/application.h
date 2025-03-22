@@ -19,11 +19,11 @@ public:
     Application(const Application &app) = delete;
     Application &operator=(const Application &app) = delete;
 
-    Graph &graph(){ return *graph_;};
-    ActionsCenter &actionCenter(){ return *actionsCenter_;};
-    GUI &ui(){ return *ui_;};
-    Canvas &canvas(){ return *canvas_;};
-    Serializer &serializer(){ return *serializer_;};
+    Graph &graph(){ return *graph_;}
+    ActionsCenter &actionCenter(){ return *actionsCenter_;}
+    GUI &ui(){ return *ui_;}
+    Canvas &canvas(){ return *canvas_;}
+    Serializer &serializer(){ return *serializer_;}
 
 private:
     Application();

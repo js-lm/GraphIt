@@ -19,7 +19,8 @@ protected:
         BULK_REMOVE_EDGES,
         DYE_VERTEX,
         DYE_EDGE,
-        DYE
+        DYE,
+        OPEN_SAVE_FILE
     };
 
 public:
@@ -30,10 +31,10 @@ public:
     virtual void undo() = 0;
     virtual void redo() = 0;
 
-    std::string getName() const{ return std::string(magic_enum::enum_name(identifier_));};
+    std::string getName() const{ return std::string(magic_enum::enum_name(identifier_));}
 
     // should the action be recorded
-    const bool shouldSave() const{ return shouldBeRecorded_;};
+    const bool shouldSave() const{ return shouldBeRecorded_;}
 
 protected:
     bool shouldBeRecorded_;

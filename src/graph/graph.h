@@ -39,9 +39,9 @@ public:
     void dyeSelectedVertices(const std::vector<VertexID> &ids, const std::vector<Color> &newColor);
     void dyeSelectedEdge(const std::vector<EdgeID> &ids, const std::vector<Color> &newColor);
 
-    void updateVertexPosition(VertexID id, Vector2 position){ vertices_[id]->setPosition(position);};
-    Vector2 getVertexPosition(VertexID id){ return vertices_[id]->position();};
-    Color getVertexColor(VertexID id){ return vertices_[id]->color();};
+    void updateVertexPosition(VertexID id, Vector2 position){ vertices_[id]->setPosition(position);}
+    Vector2 getVertexPosition(VertexID id){ return vertices_[id]->position();}
+    Color getVertexColor(VertexID id){ return vertices_[id]->color();}
 
     bool areNeighbors(VertexID startID, VertexID endID);
     std::unordered_set<VertexID> getNeighbors(VertexID id) const;
@@ -53,8 +53,8 @@ public:
     std::vector<VertexID> findVertex(Rectangle area);
     std::vector<EdgeID> findEdge(Rectangle area);
 
-    const float getVertexRadius() const{ return vertexRadius_;};
-    const float getEdgeThickness() const{ return edgeThickness_;};
+    const float getVertexRadius() const{ return vertexRadius_;}
+    const float getEdgeThickness() const{ return edgeThickness_;}
 
 public: // for IO
     std::vector<VertexID> getAllValidVertexIDs() const;
@@ -62,6 +62,9 @@ public: // for IO
 
     void loadNewGraph(const Normalized::SaveData &saveData);
     void clearGraph();
+
+    const bool isDirected() const{ return isDirected_;}
+    const bool isWeighted() const{ return isWeighted_;}
 
 private:
     void addVertex(size_t id, Vector2 position, Color color);
@@ -71,7 +74,7 @@ private:
     void drawVertices() const;
     void drawEdges() const;
 
-    bool isValidID(VertexID id) const{ return id < vertices_.size();};
+    bool isValidID(VertexID id) const{ return id < vertices_.size();}
     bool isVertexHidden(size_t id) const;
 
     void hideVertex(VertexID id);
@@ -83,6 +86,7 @@ private:
 
 private:
     bool isDirected_;
+    bool isWeighted_;
 
     std::vector<std::unique_ptr<Vertex>> vertices_;
     std::vector<std::unique_ptr<Edge>> edges_;
