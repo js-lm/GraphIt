@@ -45,6 +45,8 @@ void Graph::drawEdges() const{
     auto &hoveredEdgeIDs{Application::instance().canvas().getHoveredEdgeIDs()};
     auto &selectedEdgeIDs{Application::instance().canvas().getSelectedEdgeIDs()};
 
+    const auto &weightTempLabel{Application::instance().canvas().getWeightTempLabel()};
+
     for(const auto &edge : edges_){
         if(isVertexHidden(edge->startID())
         || isVertexHidden(edge->endID())
@@ -60,11 +62,15 @@ void Graph::drawEdges() const{
         const Vector2 &startPoint{vertices_[edge->startID()]->position()};
         const Vector2 &endPoint{vertices_[edge->endID()]->position()};
 
+        bool isSelected{false};
+
         // highlight aura
         if(selectedEdgeIDs.find(
             std::pair{edge->startID(), edge->endID()}
             ) != selectedEdgeIDs.end()
         ){
+            isSelected = true;
+
             DrawLineEx(
                 startPoint, 
                 endPoint, 
@@ -87,7 +93,7 @@ void Graph::drawEdges() const{
             startPoint, 
             endPoint, 
             edgeThickness, 
-            weightLabel.str(), 
+            (!weightTempLabel.empty() && isSelected ? weightTempLabel.c_str() : weightLabel.str()), 
             edge->color()
         );
     }

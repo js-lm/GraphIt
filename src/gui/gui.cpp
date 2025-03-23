@@ -98,8 +98,8 @@ bool GUI::updateKeys(int key){
     case KEY_S: switchMode(Canvas::Mode::SELECT); return true;
     case KEY_Q: switchMode(Canvas::Mode::PAN);    return true;
 
-    case KEY_DELETE:
-    case KEY_BACKSPACE: bulkDelete(); return true;
+    case KEY_DELETE: bulkDelete(); return true;
+    // case KEY_BACKSPACE: 
 
     case KEY_R: 
         Application::instance().canvas().resetCamera();
@@ -142,10 +142,6 @@ void GUI::updateFile(){
     if(ui.undoPressed) undo();
     if(ui.redoPressed) redo();
     if(ui.takeScreenshotPressed) takeScreenshot();
-    
-    if(ui.loadLuaPressed){
-
-    }
 
     // TODO: I don't want this to be continuously update on every frame
     ui.canUndo = Application::instance().actionCenter().canUndo();

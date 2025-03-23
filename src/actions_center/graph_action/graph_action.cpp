@@ -75,9 +75,17 @@ std::vector<Color> GraphRelated::dyeSelectedEdge(const std::vector<EdgeID> &ids,
 }
 
 void GraphRelated::dyeSelectedVertices(const std::vector<VertexID> &ids, const std::vector<Color> &newColor){
-    return Application::instance().graph().dyeSelectedVertices(ids, newColor);
+    Application::instance().graph().dyeSelectedVertices(ids, newColor);
 }
 
 void GraphRelated::dyeSelectedEdge(const std::vector<EdgeID> &ids, const std::vector<Color> &newColor){
-    return Application::instance().graph().dyeSelectedEdge(ids, newColor);
+    Application::instance().graph().dyeSelectedEdge(ids, newColor);
+}
+
+std::vector<float> GraphRelated::reweighSelectedEdge(const std::vector<EdgeID> &ids, float newWeight){
+    return Application::instance().graph().reweighSelectedEdge(ids, newWeight);
+}
+
+void GraphRelated::reweighSelectedEdge(const std::vector<EdgeID> &ids, const std::vector<float> &newWeights){
+    Application::instance().graph().reweighSelectedEdge(ids, newWeights);
 }

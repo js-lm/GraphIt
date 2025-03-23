@@ -41,17 +41,13 @@ Normalized::SaveData Serializer::normalizeData(){
         normalizedGraph.vertices.emplace_back(normalizedVertex);
     }
 
-    std::vector<std::pair<Graph::EdgeID, Color>> edgeIDsAndColors{graph.getAllValidEdgeIDsAndColor()};
+    std::vector<Normalized::Edge> edges{graph.getAllValidEdges()};
 
-    for(const auto &edgeID : edgeIDsAndColors){
-        Normalized::Edge normalizedEdge;
+    for(auto &edge : edges){
+        edge.startID = originalIDs[edge.startID];
+        edge.endID = originalIDs[edge.endID];
 
-        normalizedEdge.startID = originalIDs[edgeID.first.first];
-        normalizedEdge.endID = originalIDs[edgeID.first.second];
-        normalizedEdge.weight = 0;
-        normalizedEdge.color = edgeID.second;
-
-        normalizedGraph.edges.emplace_back(normalizedEdge);
+        normalizedGraph.edges.emplace_back(edge);
     }
 
     return normalizedGraph;

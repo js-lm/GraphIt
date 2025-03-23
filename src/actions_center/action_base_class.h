@@ -2,7 +2,10 @@
 
 #include "lib/magic_enum.hpp"
 
+#include <raylib.h>
 #include <string>
+#include <optional>
+#include <utility>
 
 class ActionBaseClass{
 protected:
@@ -20,7 +23,7 @@ protected:
         DYE_VERTEX,
         DYE_EDGE,
         DYE,
-        OPEN_SAVE_FILE
+        REWEIGH
     };
 
 public:

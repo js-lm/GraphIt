@@ -40,6 +40,9 @@ public:
     void dyeSelectedVertices(const std::vector<VertexID> &ids, const std::vector<Color> &newColor);
     void dyeSelectedEdge(const std::vector<EdgeID> &ids, const std::vector<Color> &newColor);
 
+    std::vector<float> reweighSelectedEdge(const std::vector<EdgeID> &ids, float newWeight);
+    void reweighSelectedEdge(const std::vector<EdgeID> &ids, const std::vector<float> &newWeights);
+
     void updateVertexPosition(VertexID id, Vector2 position){ vertices_[id]->setPosition(position);}
     Vector2 getVertexPosition(VertexID id){ return vertices_[id]->position();}
     Color getVertexColor(VertexID id){ return vertices_[id]->color();}
@@ -61,7 +64,7 @@ public:
 
 public: // for IO
     std::vector<VertexID> getAllValidVertexIDs() const;
-    std::vector<std::pair<Graph::EdgeID, Color>> getAllValidEdgeIDsAndColor() const;
+    std::vector<Normalized::Edge> getAllValidEdges() const;
 
     void loadNewGraph(const Normalized::SaveData &saveData);
     void clearGraph();

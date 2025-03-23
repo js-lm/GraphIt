@@ -2,7 +2,10 @@
 #include "application.h"
 #include "graph/graph.h"
 #include "actions_center/actions_center.h"
-#include "actions_center/graph_action/graph_action.h"
+#include "actions_center/graph_action/general.h"
+#include "actions_center/graph_action/bulk_removal.h"
+#include "actions_center/graph_action/dye.h"
+#include "actions_center/graph_action/reweigh.h"
 #include "lib/magic_enum.hpp"
 #include "configs/terminal_prefix.h"
 #include "gui/gui.h"
@@ -35,7 +38,7 @@ void Canvas::updateMouseActions(){
     switch(mode_){
     case Mode::VIEW: break;
     case Mode::SELECT: updateSelect(); break;
-    case Mode::PAN:   updateMove(); break;
+    case Mode::PAN:    updateMove(); break;
     case Mode::PEN:    updatePen(); break;
     case Mode::LINK:   updateLink(); break;  
     case Mode::MOVE:   updateDrag(); break;
@@ -149,10 +152,10 @@ void Canvas::updateScreenZooming(){
     auto zoom{GetMouseWheelMove()};
     if(zoom){
         Vector2 pivot{getMousePositionInCanvas()};
-        canvasCamera_.zoom += .2f * GetMouseWheelMove();
-
+        float zoomSpeed{.1f * canvasCamera_.zoom};
+        canvasCamera_.zoom += zoomSpeed * GetMouseWheelMove();
         canvasCamera_.zoom = Clamp(canvasCamera_.zoom, .2f, 2.0f);
-
+        
         canvasCamera_.target = Vector2Add(
             canvasCamera_.target, 
             Vector2Subtract(pivot, getMousePositionInCanvas())
@@ -188,67 +191,120 @@ void Canvas::updateDrag(){
 
 void Canvas::updateSelect(){
     if(IsMouseButtonReleased(MOUSE_BUTTON_LEFT) && startFrom_){
-        // single selection
-        if(selectedVertex_){
-            if(hoveredVertexID_ && selectedVertex_.value() == hoveredVertexID_.value()){
-                if(selectedVertexIDs_.find(selectedVertex_.value()) != selectedVertexIDs_.end()){
-                    selectedVertexIDs_.erase(selectedVertex_.value());
-                }else{
-                    selectedVertexIDs_.emplace(selectedVertex_.value());
-                }
-                startFrom_ = std::nullopt;
-                return;
-            }
-        }else if(selectedEdge_){
-            if(hoveredEdgeIDs_ && selectedEdge_.value() == hoveredEdgeIDs_.value()){
-                if(selectedEdgeIDs_.find(selectedEdge_.value()) != selectedEdgeIDs_.end()){
-                    selectedEdgeIDs_.erase(selectedEdge_.value());
-                }else{
-                    selectedEdgeIDs_.emplace(selectedEdge_.value());
-                }
-                startFrom_ = std::nullopt;
-                return;
-            }
-        }
-
-        // group selection
-        auto rectangle{normalizeRectangle(startFrom_.value(), getMousePositionInCanvas())};
-
-        auto verticesVector{Application::instance().graph().findVertex(rectangle)};
-        auto edgesVector{Application::instance().graph().findEdge(rectangle)};
-
-        selectedVertexIDs_.insert(verticesVector.begin(), verticesVector.end());
-        selectedEdgeIDs_.insert(edgesVector.begin(), edgesVector.end());
-
-        startFrom_ = std::nullopt;
-
-        printUpdatePrefix();
-        std::cout << "Selected: " << std::endl;
-        std::cout << "\t> Vertices ";
-        for(const auto &vertex : selectedVertexIDs_){
-            std::cout << vertex << " ";
-        }
-        std::cout << std::endl;
-        std::cout << "\t> Edges ";
-        for(const auto &edge : selectedEdgeIDs_){
-            std::cout << "(" << edge.first << "," << edge.second << ") ";
-        }
-        std::cout << std::endl;
+        if(handleIndividualSelection()) return;
+        handleGroupSelection();
     }
 
     if(isCanvasMouseButtonPressed(MOUSE_BUTTON_LEFT)){
-        startFrom_ = getMousePositionInCanvas();
-        selectedVertex_ = hoveredVertexID_;
-        selectedEdge_ = hoveredEdgeIDs_;
+        handleSelectionStart();
+    }
 
-        if(!(IsKeyDown(KEY_LEFT_SHIFT) 
-         || IsKeyDown(KEY_LEFT_CONTROL) 
-         || IsKeyDown(KEY_LEFT_SUPER)
-        )){
-            selectedVertexIDs_.clear();
-            selectedEdgeIDs_.clear();
+    if(!selectedEdgeIDs_.empty()){
+        handleEdgeWeightInput();
+    }
+}
+
+void Canvas::handleSelectionStart(){
+    startFrom_ = getMousePositionInCanvas();
+    selectedVertex_ = hoveredVertexID_;
+    selectedEdge_ = hoveredEdgeIDs_;
+
+    if(!(IsKeyDown(KEY_LEFT_SHIFT) 
+     || IsKeyDown(KEY_LEFT_CONTROL) 
+     || IsKeyDown(KEY_LEFT_SUPER)
+    )){
+        reweighSelectedEdges();
+        selectedVertexIDs_.clear();
+        selectedEdgeIDs_.clear();
+        weightInputString_.clear();
+    }
+}
+
+bool Canvas::handleIndividualSelection(){
+    if(selectedVertex_){
+        if(hoveredVertexID_ && selectedVertex_.value() == hoveredVertexID_.value()){
+            if(selectedVertexIDs_.find(selectedVertex_.value()) != selectedVertexIDs_.end()){
+                selectedVertexIDs_.erase(selectedVertex_.value());
+            }else{
+                selectedVertexIDs_.emplace(selectedVertex_.value());
+            }
+            startFrom_ = std::nullopt;
+            return true;
+        }
+    }else if(selectedEdge_){
+        if(hoveredEdgeIDs_ && selectedEdge_.value() == hoveredEdgeIDs_.value()){
+            if(selectedEdgeIDs_.find(selectedEdge_.value()) != selectedEdgeIDs_.end()){
+                selectedEdgeIDs_.erase(selectedEdge_.value());
+            }else{
+                selectedEdgeIDs_.emplace(selectedEdge_.value());
+            }
+            startFrom_ = std::nullopt;
+            return true;
         }
     }
+
+    return false;
+}
+
+void Canvas::handleGroupSelection(){
+    auto rectangle{normalizeRectangle(startFrom_.value(), getMousePositionInCanvas())};
+
+    auto verticesVector{Application::instance().graph().findVertex(rectangle)};
+    auto edgesVector{Application::instance().graph().findEdge(rectangle)};
+
+    selectedVertexIDs_.insert(verticesVector.begin(), verticesVector.end());
+    selectedEdgeIDs_.insert(edgesVector.begin(), edgesVector.end());
+
+    startFrom_ = std::nullopt;
+
+    printUpdatePrefix();
+    std::cout << "Selected: " << std::endl;
+    std::cout << "\t> Vertices ";
+    for(const auto &vertex : selectedVertexIDs_){
+        std::cout << vertex << " ";
+    }
+    std::cout << std::endl;
+    std::cout << "\t> Edges ";
+    for(const auto &edge : selectedEdgeIDs_){
+        std::cout << "(" << edge.first << "," << edge.second << ") ";
+    }
+    std::cout << std::endl;
+}
+
+void Canvas::handleEdgeWeightInput(){
+    char key{static_cast<char>(GetCharPressed())};
+
+    if(((key >= '0' && key <= '9') || key == '.')
+    && weightInputString_.size() < 7
+    ){
+        if(key != '.' 
+        || weightInputString_.find(".") == std::string::npos
+        ){
+            weightInputString_ += key;
+        }
+    }else if(IsKeyPressed(KEY_BACKSPACE) && !weightInputString_.empty()){
+        weightInputString_.erase(weightInputString_.end() - 1, weightInputString_.end());
+    }else if(IsKeyPressed(KEY_ENTER)){
+        reweighSelectedEdges();
+    }
+}
+
+void Canvas::reweighSelectedEdges(){
+    if(weightInputString_.empty()
+    || selectedEdgeIDs_.empty()
+    ){
+        return;
+    }
+    float newWeight{std::stof(weightInputString_)};
+    Application::instance().actionCenter().addAction(
+        std::make_unique<Action::Reweigh>(
+            std::vector(selectedEdgeIDs_.begin(), selectedEdgeIDs_.end()),
+            newWeight
+        )
+    );
+    selectedVertexIDs_.clear();
+    selectedEdgeIDs_.clear();
+    weightInputString_.clear();
 }
 
 void Canvas::doBulkDeleteVertices(){

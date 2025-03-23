@@ -32,17 +32,22 @@ typedef struct {
     bool undoPressed;
     bool redoPressed;
     bool takeScreenshotPressed;
-    bool loadLuaPressed;
 
     // View
     bool showGridActive;
     bool snapToGridActive;
 
     // Settings
-    bool isDirectedChecked;
-    bool isWeightedChecked;
-    bool isShowingLabelsChecked;
     bool openSettingPressed;
+    bool algorithmDropdownBoxEditMode;
+    int algorithmDropdownBoxActive;
+    bool runAlgorithmButtonPressed;
+    bool goToPreviousStepPressed;
+    bool goToNextStepPressed;
+    bool autoForwardActive;
+    bool isHoldingUIActive;
+    bool isHiddenUiDecorativeButtonPressed;
+    bool exitAlgorithmPressed;
 
     // Construction
     bool penPressed;
@@ -102,9 +107,9 @@ GuiToolbarState InitGuiToolbar(void)
 
     state.controlAnchor = (Vector2){ 400, 680 };
     state.constructionAnchor = (Vector2){ 0, 680 };
-    state.viewAnchor = (Vector2){ 320, 0 };
+    state.viewAnchor = (Vector2){ 216, 0 };
     state.generalAnchor = (Vector2){ 0, 0 };
-    state.settingAnchor = (Vector2){ 584, 0 };
+    state.settingAnchor = (Vector2){ 480, 0 };
     
     // File
     state.newFilePressed = false;
@@ -113,17 +118,22 @@ GuiToolbarState InitGuiToolbar(void)
     state.undoPressed = false;
     state.redoPressed = false;
     state.takeScreenshotPressed = false;
-    state.loadLuaPressed = false;
 
     // View
     state.showGridActive = true;
     state.snapToGridActive = true;
 
     // Settings
-    state.isDirectedChecked = false;
-    state.isWeightedChecked = false;
-    state.isShowingLabelsChecked = false;
     state.openSettingPressed = false;
+    state.algorithmDropdownBoxEditMode = false;
+    state.algorithmDropdownBoxActive = 0;
+    state.runAlgorithmButtonPressed = false;
+    state.goToPreviousStepPressed = false;
+    state.goToNextStepPressed = false;
+    state.autoForwardActive = true;
+    state.isHoldingUIActive = true;
+    state.isHiddenUiDecorativeButtonPressed = false;
+    state.exitAlgorithmPressed = false;
 
     // Construction
     state.penPressed = false;
@@ -153,7 +163,7 @@ GuiToolbarState InitGuiToolbar(void)
 void GuiToolbar(GuiToolbarState *state)
 {
     // File
-    GuiGroupBox((Rectangle){ state->generalAnchor.x + 0, state->generalAnchor.y + 0, 320, 40 }, NULL);
+    GuiGroupBox((Rectangle){ state->generalAnchor.x + 0, state->generalAnchor.y + 0, 216, 40 }, NULL);
     if(!state->canUndo) GuiDisable();
     state->undoPressed = GuiButton((Rectangle){ state->generalAnchor.x + 112, state->generalAnchor.y + 8, 24, 24 }, "#072#");
     GuiEnable();
@@ -164,7 +174,6 @@ void GuiToolbar(GuiToolbarState *state)
     state->loadPressed = GuiButton((Rectangle){ state->generalAnchor.x + 44, state->generalAnchor.y + 8, 24, 24 }, "#005#");
     state->savePressed = GuiButton((Rectangle){ state->generalAnchor.x + 72, state->generalAnchor.y + 8, 24, 24 }, "#006#");
     state->takeScreenshotPressed = GuiButton((Rectangle){ state->generalAnchor.x + 180, state->generalAnchor.y + 8, 24, 24 }, "#183#");
-    state->loadLuaPressed = GuiButton((Rectangle){ state->generalAnchor.x + 220, state->generalAnchor.y + 8, 88, 24 }, "#200#Load Lua");
     
     // View
     GuiGroupBox((Rectangle){ state->viewAnchor.x + 0, state->viewAnchor.y + 0, 264, 40 }, NULL);
@@ -173,12 +182,17 @@ void GuiToolbar(GuiToolbarState *state)
     GuiToggle((Rectangle){ state->viewAnchor.x + 140, state->viewAnchor.y + 8, 104, 24 }, "#050#Snap To Grid", &state->snapToGridActive);
     
     // Settings
-    GuiGroupBox((Rectangle){ state->settingAnchor.x + 0, state->settingAnchor.y + 0, 416, 40 }, NULL);
-    GuiLabel((Rectangle){ state->settingAnchor.x + 16, state->settingAnchor.y + 8, 48, 24 }, "Settings:");
-    GuiCheckBox((Rectangle){ state->settingAnchor.x + 72, state->settingAnchor.y + 8, 24, 24 }, "Is Directed", &state->isDirectedChecked);
-    GuiCheckBox((Rectangle){ state->settingAnchor.x + 168, state->settingAnchor.y + 8, 24, 24 }, "Is Weighted", &state->isWeightedChecked);
-    GuiCheckBox((Rectangle){ state->settingAnchor.x + 264, state->settingAnchor.y + 8, 24, 24 }, "Show Label", &state->isShowingLabelsChecked);
-    state->openSettingPressed = GuiButton((Rectangle){ state->settingAnchor.x + 376, state->settingAnchor.y + 8, 24, 24 }, "#142#");
+    GuiGroupBox((Rectangle){ state->settingAnchor.x + 0, state->settingAnchor.y + 0, 520, 40 }, NULL);
+    state->openSettingPressed = GuiButton((Rectangle){ state->settingAnchor.x + 480, state->settingAnchor.y + 8, 24, 24 }, "#142#");
+    GuiLabel((Rectangle){ state->settingAnchor.x + 16, state->settingAnchor.y + 8, 64, 24 }, "Algorithms: ");
+    state->runAlgorithmButtonPressed = GuiButton((Rectangle){ state->settingAnchor.x + 284, state->settingAnchor.y + 8, 64, 24 }, "#131#Run"); 
+    state->goToPreviousStepPressed = GuiButton((Rectangle){ state->settingAnchor.x + 256, state->settingAnchor.y + 8, 24, 24 }, "#129#"); 
+    state->goToNextStepPressed = GuiButton((Rectangle){ state->settingAnchor.x + 352, state->settingAnchor.y + 8, 24, 24 }, "#134#"); 
+    GuiToggle((Rectangle){ state->settingAnchor.x + 416, state->settingAnchor.y + 8, 40, 24 }, "Auto", &state->autoForwardActive);
+    GuiToggle((Rectangle){ state->settingAnchor.x + 480, state->settingAnchor.y + 48, 24, 24 }, "#045#", &state->isHoldingUIActive);
+    state->isHiddenUiDecorativeButtonPressed = GuiButton((Rectangle){ 960, 48, 24, 24 }, "#045#"); 
+    state->exitAlgorithmPressed = GuiButton((Rectangle){ state->settingAnchor.x + 380, state->settingAnchor.y + 8, 24, 24 }, "#133#"); 
+    if (GuiDropdownBox((Rectangle){ state->settingAnchor.x + 80, state->settingAnchor.y + 8, 168, 24 }, "Greedy Best-first Search;Prim's Algorithm; BFS", &state->algorithmDropdownBoxActive, state->algorithmDropdownBoxEditMode)) state->algorithmDropdownBoxEditMode = !state->algorithmDropdownBoxEditMode;
     
     // Construction
     GuiGroupBox((Rectangle){ state->constructionAnchor.x + 0, state->constructionAnchor.y + 0, 400, 40 }, NULL);

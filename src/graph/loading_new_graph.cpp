@@ -12,16 +12,20 @@ std::vector<Graph::VertexID> Graph::getAllValidVertexIDs() const{
     return ids;
 }
 
-std::vector<std::pair<Graph::EdgeID, Color>> Graph::getAllValidEdgeIDsAndColor() const{
-    std::vector<std::pair<Graph::EdgeID, Color>> ids;
+std::vector<Normalized::Edge> Graph::getAllValidEdges() const{
+    std::vector<Normalized::Edge> ids;
     for(const auto &edge : edges_){
         if(!vertices_[edge->startID()]->isHidden()
         && !vertices_[edge->endID()]->isHidden()
         ){
-            ids.emplace_back(std::pair{
-                EdgeID{edge->startID(), edge->endID()},
-                edge->color()        
-            });
+            Normalized::Edge normalizedEdge;
+
+            normalizedEdge.startID = edge->startID();
+            normalizedEdge.endID = edge->endID();
+            normalizedEdge.weight = edge->weight();
+            normalizedEdge.color = edge->color();
+
+            ids.emplace_back(normalizedEdge);
         }
     }
     return ids;

@@ -283,3 +283,28 @@ std::string Graph::getLabel(VertexID id) const{
     }
     return newLabel;
 }
+
+std::vector<float> Graph::reweighSelectedEdge(const std::vector<EdgeID> &ids, float newWeight){
+    std::vector<float> weights;
+    for(const auto &id : ids){
+        for(const auto &edge : edges_){
+            if(isTheSameEdge(id.first, id.second, edge->startID(), edge->endID())){
+                weights.emplace_back(edge->weight());
+                edge->setWeight(newWeight);
+                continue;
+            }
+        }
+    }
+    return weights;
+}
+
+void Graph::reweighSelectedEdge(const std::vector<EdgeID> &ids, const std::vector<float> &newWeights){
+    for(size_t i{0}; i < ids.size(); i++){
+        for(const auto &edge : edges_){
+            if(isTheSameEdge(ids[i].first, ids[i].second, edge->startID(), edge->endID())){
+                edge->setWeight(newWeights[i]);
+                continue;
+            }
+        }
+    }
+}

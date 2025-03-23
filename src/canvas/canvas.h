@@ -6,6 +6,7 @@
 #include <unordered_set>
 #include <set>
 #include <functional>
+#include <string>
 
 class Canvas{
 private:
@@ -88,6 +89,8 @@ public:
     void setCameraPosition(Vector2 position){ canvasCamera_.target = position;}
     void setCameraZoom(float zoom){ canvasCamera_.zoom = zoom;}
 
+    const std::string &getWeightTempLabel() const{ return weightInputString_;}
+
 private:
     void drawGrid() const;
 
@@ -113,6 +116,13 @@ private:
     void updateSelect();
 
 private:
+    void handleSelectionStart();
+    bool handleIndividualSelection();
+    void handleGroupSelection();
+    void handleEdgeWeightInput();
+    void reweighSelectedEdges();
+
+private:
     void updateCamera();
     void updateScreenDragging(int key = 2);
     void updateScreenReset();
@@ -131,6 +141,7 @@ private:
 
     SelectedVertices selectedVertexIDs_;
     SelectedEdges selectedEdgeIDs_;
+    std::string weightInputString_;
 
     Color penColor_;
     Color linkColor_;
