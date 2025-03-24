@@ -19,11 +19,11 @@ namespace Action{
         virtual void redo() override = 0;
 
     protected:
-        VertexID addVertex(Vector2 position, std::optional<Color> color = std::nullopt);
+        VertexID addVertex(Vector2 position, Color color);
         bool removeVertex(VertexID id);
         void restoreRemovedVertex(VertexID id);
 
-        bool connectVertices(VertexID startID, VertexID endID, std::optional<float> weight, std::optional<Color> color = std::nullopt);
+        bool connectVertices(VertexID startID, VertexID endID, Color color, float weight);
         std::pair<float, Color> disconnectVertices(VertexID startID, VertexID endID);
 
         void moveVertex(VertexID id, Vector2 to);

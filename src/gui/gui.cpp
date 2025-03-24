@@ -1,5 +1,5 @@
 #include "gui.h"
-#include "application.h"
+#include "system/application.h"
 #include "actions_center/actions_center.h"
 #include "canvas/canvas.h"
 #include "io/io.h"

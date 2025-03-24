@@ -1,9 +1,9 @@
 #include "gui.h"
-#include "application.h"
+#include "system/application.h"
 #include "canvas/canvas.h"
 #include "io/io.h"
 #include "magic_enum.hpp"
-#include "configs/terminal_prefix.h"
+#include "system/terminal_prefix.h"
 
 #define GUI_COLORPANEL_IMPLEMENTATION
 #include "layout/gui_color_panel.h"

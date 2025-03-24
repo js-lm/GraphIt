@@ -1,5 +1,5 @@
 #include "canvas.h"
-#include "application.h"
+#include "system/application.h"
 #include "graph/graph.h"
 
 #include <raylib.h>

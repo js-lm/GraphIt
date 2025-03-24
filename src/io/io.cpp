@@ -1,8 +1,8 @@
 #include "io.h"
-#include "application.h"
+#include "system/application.h"
 #include "graph/graph.h"
-#include "configs/version.h"
-#include "configs/terminal_prefix.h"
+#include "system/version.h"
+#include "system/terminal_prefix.h"
 #include "canvas/canvas.h"
 
 #include <iostream>
@@ -21,8 +21,10 @@ Normalized::SaveData Serializer::normalizeData(){
     normalizedGraph.cameraSettings.position = canvas.getCameraPosition();
     normalizedGraph.cameraSettings.zoom = canvas.getCameraZoom();
 
-    normalizedGraph.graphSettings.isDirected = graph.isDirected();
-    normalizedGraph.graphSettings.isWeighted = graph.isWeighted();
+    normalizedGraph.graphSettings.isDirected 
+        = Application::instance().getData<Setting, bool>(Setting::GRAPH_IS_DIRECTED);
+    normalizedGraph.graphSettings.isWeighted
+        = Application::instance().getData<Setting, bool>(Setting::GRAPH_IS_WEIGHTED);
     
     // index: new ids
     // element: original ids
@@ -104,10 +106,12 @@ bool Serializer::save(const std::string &name){
                        << "}__|" << "\n";
     }
 
+    int weightPrecision{Application::instance().getData<Setting, int>(Setting::GRAPH_WEIGHT_PRECISION)};
+
     for(const auto &edge : graph.edges){
         saveFile << "StartID:" << edge.startID << "__"
                  << "EndID:" << edge.endID << "__"
-                 << std::fixed << std::setprecision(2)
+                 << std::fixed << std::setprecision(weightPrecision)
                  << "Weight:" << edge.weight << "__"
                  << "Color:{R:" << static_cast<int>(edge.color.r)
                        << ",G:" << static_cast<int>(edge.color.g)

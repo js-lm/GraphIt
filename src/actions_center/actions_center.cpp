@@ -1,6 +1,6 @@
 #include "actions_center.h"
 #include "action_base_class.h"
-#include "configs/terminal_prefix.h"
+#include "system/terminal_prefix.h"
 
 #include <iostream>
 

@@ -24,6 +24,12 @@ typedef struct {
     Vector2 viewAnchor;
     Vector2 generalAnchor;
     Vector2 settingAnchor;
+
+    Vector2 settingWindowAnchor;
+    Vector2 graphSettingAnchor;
+    Vector2 colorPreferenceAnchor;
+    Vector2 vertexEdgeSettingAnchor;
+    Vector2 gridSettingsAnchor;
     
     // File
     bool newFilePressed;
@@ -66,7 +72,59 @@ typedef struct {
     bool isSelectingVertexChecked;
     bool isSelectingEdgeChecked;
 
-    // Others
+    // Setting Windows
+    bool settingsWindowActive;
+    int settingListViewScrollIndex;
+    int settingListViewActive;
+    bool weightPrecisionEditMode;
+    int weightPrecisionValue;
+    bool resetLabelsPressed;
+    bool isDirectedActive;
+    bool isWeightedActive;
+    bool isLabeledActive;
+    Color colorPreferenceColorPickerValue;
+    bool vSEc2Pressed;
+    bool vSEcPressed;
+    bool vVUc1Pressed;
+    bool vVUc2Pressed;
+    bool vCScPressed;
+    bool VUc2Pressed;
+    bool eBSc2Pressed;
+    bool eBSc1Pressed;
+    bool eVUc1Pressed;
+    bool eCPc1Pressed;
+    bool vCS2Pressed;
+    bool eCPc2Pressed;
+    bool preCol1Pressed;
+    bool preCol2Pressed;
+    bool preCol3Pressed;
+    bool preCol4Pressed;
+    bool preCo5Pressed;
+    bool preCol6Pressed;
+    bool preCol9Pressed;
+    bool preCol10Pressed;
+    bool preCol11Pressed;
+    bool preC12Pressed;
+    bool preCol7Pressed;
+    bool preCol8Pressed;
+    float vertexRadiusSliderValue;
+    float edgeThicknessSliderValue;
+    bool vertexRadiusValueBoxEditMode;
+    int vertexRadiusValueBoxValue;
+    bool edgeThicknessValueBoxEditMode;
+    int edgeThicknessValueBoxValue;
+    bool resetAllPressed;
+    bool resetColorPressed;
+    bool resetGridPressed;
+    float cellSizeSliderValue;
+    float subdivisionSizeSliderValue;
+    bool cellSizeValueBoxEditMode;
+    int cellSizeValueBoxValue;
+    bool subdivisionSizeValueBoxEditMode;
+    int subdivisionSizeValueBoxValue;
+    bool resetVertexPressed;
+
+    // Others 
     int currentSelectedTool;
     bool canUndo;
     bool canRedo;
@@ -110,6 +168,11 @@ GuiToolbarState InitGuiToolbar(void)
     state.viewAnchor = (Vector2){ 216, 0 };
     state.generalAnchor = (Vector2){ 0, 0 };
     state.settingAnchor = (Vector2){ 480, 0 };
+    state.settingWindowAnchor = (Vector2){ 168, 96 };
+    state.graphSettingAnchor = (Vector2){ 280, 144 };
+    state.colorPreferenceAnchor = (Vector2){ 280, 288 };
+    state.vertexEdgeSettingAnchor = (Vector2){ 688, 144 };
+    state.gridSettingsAnchor = (Vector2){ 648, 288 };
     
     // File
     state.newFilePressed = false;
@@ -151,6 +214,58 @@ GuiToolbarState InitGuiToolbar(void)
     state.colorPanelButtonPressed = false;
     state.isSelectingVertexChecked = true;
     state.isSelectingEdgeChecked = false;
+
+    // Setting Window
+    state.settingsWindowActive = true;
+    state.settingListViewScrollIndex = 0;
+    state.settingListViewActive = 0;
+    state.weightPrecisionEditMode = false;
+    state.weightPrecisionValue = 0;
+    state.resetLabelsPressed = false;
+    state.isDirectedActive = true;
+    state.isWeightedActive = true;
+    state.isLabeledActive = true;
+    state.colorPreferenceColorPickerValue = (Color){ 0, 0, 0, 0 };
+    state.vSEc2Pressed = false;
+    state.vSEcPressed = false;
+    state.vVUc1Pressed = false;
+    state.vVUc2Pressed = false;
+    state.vCScPressed = false;
+    state.VUc2Pressed = false;
+    state.eBSc2Pressed = false;
+    state.eBSc1Pressed = false;
+    state.eVUc1Pressed = false;
+    state.eCPc1Pressed = false;
+    state.vCS2Pressed = false;
+    state.eCPc2Pressed = false;
+    state.preCol1Pressed = false;
+    state.preCol2Pressed = false;
+    state.preCol3Pressed = false;
+    state.preCol4Pressed = false;
+    state.preCo5Pressed = false;
+    state.preCol6Pressed = false;
+    state.preCol9Pressed = false;
+    state.preCol10Pressed = false;
+    state.preCol11Pressed = false;
+    state.preC12Pressed = false;
+    state.preCol7Pressed = false;
+    state.preCol8Pressed = false;
+    state.vertexRadiusSliderValue = 0.0f;
+    state.edgeThicknessSliderValue = 0.0f;
+    state.vertexRadiusValueBoxEditMode = false;
+    state.vertexRadiusValueBoxValue = 0;
+    state.edgeThicknessValueBoxEditMode = false;
+    state.edgeThicknessValueBoxValue = 0;
+    state.resetAllPressed = false;
+    state.resetColorPressed = false;
+    state.resetGridPressed = false;
+    state.cellSizeSliderValue = 0.0f;
+    state.subdivisionSizeSliderValue = 0.0f;
+    state.cellSizeValueBoxEditMode = false;
+    state.cellSizeValueBoxValue = 0;
+    state.subdivisionSizeValueBoxEditMode = false;
+    state.subdivisionSizeValueBoxValue = 0;
+    state.resetVertexPressed = false;
 
     // Others
     state.currentSelectedTool = 0;
@@ -212,7 +327,6 @@ void GuiToolbar(GuiToolbarState *state)
     state->penColorPressed = GuiButton((Rectangle){ state->constructionAnchor.x + 150, state->constructionAnchor.y + 8, 12, 24 }, NULL);
     state->linkColorPressed = GuiButton((Rectangle){ state->constructionAnchor.x + 220, state->constructionAnchor.y + 8, 12, 24 }, NULL);
     
-    
     // Controls
     GuiGroupBox((Rectangle){ state->controlAnchor.x + 0, state->controlAnchor.y + 0, 600, 40 }, NULL);
     GuiLabel((Rectangle){ state->controlAnchor.x + 16, state->controlAnchor.y + 8, 48, 24 }, "Control:");
@@ -228,6 +342,78 @@ void GuiToolbar(GuiToolbarState *state)
     GuiLabel((Rectangle){ state->controlAnchor.x + 384, state->controlAnchor.y + 8, 50, 24 }, "Include:");
     GuiCheckBox((Rectangle){ state->controlAnchor.x + 432, state->controlAnchor.y + 8, 24, 24 }, "Node", &state->isSelectingVertexChecked);
     GuiCheckBox((Rectangle){ state->controlAnchor.x + 496, state->controlAnchor.y + 8, 24, 24 }, "Edge", &state->isSelectingEdgeChecked);
+
+    // Setting Window
+    if (state->settingsWindowActive)
+    {
+        state->settingsWindowActive = !GuiWindowBox((Rectangle){ state->settingWindowAnchor.x + 0, state->settingWindowAnchor.y + 0, 688, 480 }, "#142#Settings");
+        GuiListView((Rectangle){ state->settingWindowAnchor.x + 0, state->settingWindowAnchor.y + 24, 96, 456 }, "General;Graphics;DEBUG", &state->settingListViewScrollIndex, &state->settingListViewActive);
+        state->resetAllPressed = GuiButton((Rectangle){ state->settingWindowAnchor.x + 480, state->settingWindowAnchor.y + 424, 192, 32 }, "#152#Reset All Settings To Default"); 
+        state->resetColorPressed = GuiButton((Rectangle){ state->settingWindowAnchor.x + 480, state->settingWindowAnchor.y + 376, 192, 32 }, "#029#Reset Colors"); 
+        state->resetGridPressed = GuiButton((Rectangle){ state->settingWindowAnchor.x + 480, state->settingWindowAnchor.y + 344, 192, 32 }, "#096#Reset Grid"); 
+        state->resetVertexPressed = GuiButton((Rectangle){ state->settingWindowAnchor.x + 480, state->settingWindowAnchor.y + 312, 192, 32 }, "#032#Reset Vertex/Edge"); 
+
+        GuiGroupBox((Rectangle){ state->graphSettingAnchor.x + 0, state->graphSettingAnchor.y + 0, 392, 128 }, "Graph Settings");
+        if (GuiSpinner((Rectangle){ state->graphSettingAnchor.x + 16, state->graphSettingAnchor.y + 72, 104, 24 }, NULL, &state->weightPrecisionValue, 0, 100, state->weightPrecisionEditMode)) state->weightPrecisionEditMode = !state->weightPrecisionEditMode;
+        state->resetLabelsPressed = GuiButton((Rectangle){ state->graphSettingAnchor.x + 144, state->graphSettingAnchor.y + 40, 104, 24 }, "#211#Reset Labels"); 
+        GuiLabel((Rectangle){ state->graphSettingAnchor.x + 144, state->graphSettingAnchor.y + 64, 72, 24 }, "#191#Warning!");
+        GuiToggle((Rectangle){ state->graphSettingAnchor.x + 16, state->graphSettingAnchor.y + 16, 104, 24 }, "#210#Is Directed", &state->isDirectedActive);
+        GuiToggle((Rectangle){ state->graphSettingAnchor.x + 16, state->graphSettingAnchor.y + 48, 104, 24 }, "#178#Is Weighted", &state->isWeightedActive);
+        GuiLabel((Rectangle){ state->graphSettingAnchor.x + 24, state->graphSettingAnchor.y + 96, 96, 24 }, "Weight Precision");
+        GuiLabel((Rectangle){ state->graphSettingAnchor.x + 144, state->graphSettingAnchor.y + 80, 248, 24 }, "This will reset the undo/redo history as well!");
+        GuiToggle((Rectangle){ state->graphSettingAnchor.x + 144, state->graphSettingAnchor.y + 16, 104, 24 }, "#031#Is Labeled", &state->isLabeledActive);
+        GuiGroupBox((Rectangle){ state->colorPreferenceAnchor.x + 0, state->colorPreferenceAnchor.y + 0, 352, 272 }, "Color Preferences");
+        GuiColorPicker((Rectangle){ state->colorPreferenceAnchor.x + 216, state->colorPreferenceAnchor.y + 32, 96, 96 }, NULL, &state->colorPreferenceColorPickerValue);
+        GuiLine((Rectangle){ state->colorPreferenceAnchor.x + 8, state->colorPreferenceAnchor.y + 120, 176, 32 }, NULL);
+        state->vSEc2Pressed = GuiButton((Rectangle){ state->colorPreferenceAnchor.x + 112, state->colorPreferenceAnchor.y + 24, 24, 24 }, NULL); 
+        state->vSEcPressed = GuiButton((Rectangle){ state->colorPreferenceAnchor.x + 88, state->colorPreferenceAnchor.y + 24, 24, 24 }, NULL); 
+        state->vVUc1Pressed = GuiButton((Rectangle){ state->colorPreferenceAnchor.x + 120, state->colorPreferenceAnchor.y + 56, 24, 24 }, NULL); 
+        state->vVUc2Pressed = GuiButton((Rectangle){ state->colorPreferenceAnchor.x + 144, state->colorPreferenceAnchor.y + 56, 24, 24 }, NULL); 
+        state->vCScPressed = GuiButton((Rectangle){ state->colorPreferenceAnchor.x + 120, state->colorPreferenceAnchor.y + 88, 24, 24 }, NULL); 
+        state->VUc2Pressed = GuiButton((Rectangle){ state->colorPreferenceAnchor.x + 144, state->colorPreferenceAnchor.y + 160, 24, 24 }, NULL); 
+        state->eBSc2Pressed = GuiButton((Rectangle){ state->colorPreferenceAnchor.x + 128, state->colorPreferenceAnchor.y + 224, 24, 24 }, NULL); 
+        state->eBSc1Pressed = GuiButton((Rectangle){ state->colorPreferenceAnchor.x + 104, state->colorPreferenceAnchor.y + 224, 24, 24 }, NULL); 
+        state->eVUc1Pressed = GuiButton((Rectangle){ state->colorPreferenceAnchor.x + 120, state->colorPreferenceAnchor.y + 160, 24, 24 }, NULL); 
+        state->eCPc1Pressed = GuiButton((Rectangle){ state->colorPreferenceAnchor.x + 120, state->colorPreferenceAnchor.y + 192, 24, 24 }, NULL); 
+        GuiLabel((Rectangle){ state->colorPreferenceAnchor.x + 24, state->colorPreferenceAnchor.y + 24, 64, 24 }, "Start/End:");
+        state->vCS2Pressed = GuiButton((Rectangle){ state->colorPreferenceAnchor.x + 144, state->colorPreferenceAnchor.y + 88, 24, 24 }, NULL); 
+        GuiLabel((Rectangle){ state->colorPreferenceAnchor.x + 24, state->colorPreferenceAnchor.y + 56, 104, 24 }, "Visited/Unvisited:");
+        GuiLabel((Rectangle){ state->colorPreferenceAnchor.x + 24, state->colorPreferenceAnchor.y + 88, 96, 24 }, "Current/Special:");
+        GuiLabel((Rectangle){ state->colorPreferenceAnchor.x + 24, state->colorPreferenceAnchor.y + 224, 88, 24 }, "Block/Special:");
+        GuiLabel((Rectangle){ state->colorPreferenceAnchor.x + 24, state->colorPreferenceAnchor.y + 160, 104, 24 }, "Visited/Unvisited:");
+        GuiLabel((Rectangle){ state->colorPreferenceAnchor.x + 24, state->colorPreferenceAnchor.y + 192, 96, 24 }, "Current/Path:");
+        state->eCPc2Pressed = GuiButton((Rectangle){ state->colorPreferenceAnchor.x + 144, state->colorPreferenceAnchor.y + 192, 24, 24 }, NULL); 
+        GuiGroupBox((Rectangle){ state->colorPreferenceAnchor.x + 16, state->colorPreferenceAnchor.y + 16, 160, 104 }, "Vertex");
+        GuiGroupBox((Rectangle){ state->colorPreferenceAnchor.x + 16, state->colorPreferenceAnchor.y + 152, 160, 104 }, "Edge");
+        GuiLabel((Rectangle){ state->colorPreferenceAnchor.x + 216, state->colorPreferenceAnchor.y + 152, 120, 24 }, "Presets:");
+        state->preCol1Pressed = GuiButton((Rectangle){ state->colorPreferenceAnchor.x + 216, state->colorPreferenceAnchor.y + 168, 24, 24 }, NULL); 
+        state->preCol2Pressed = GuiButton((Rectangle){ state->colorPreferenceAnchor.x + 240, state->colorPreferenceAnchor.y + 168, 24, 24 }, NULL); 
+        state->preCol3Pressed = GuiButton((Rectangle){ state->colorPreferenceAnchor.x + 264, state->colorPreferenceAnchor.y + 168, 24, 24 }, NULL); 
+        state->preCol4Pressed = GuiButton((Rectangle){ state->colorPreferenceAnchor.x + 288, state->colorPreferenceAnchor.y + 168, 24, 24 }, NULL); 
+        state->preCo5Pressed = GuiButton((Rectangle){ state->colorPreferenceAnchor.x + 216, state->colorPreferenceAnchor.y + 192, 24, 24 }, NULL); 
+        state->preCol6Pressed = GuiButton((Rectangle){ state->colorPreferenceAnchor.x + 240, state->colorPreferenceAnchor.y + 192, 24, 24 }, NULL); 
+        state->preCol9Pressed = GuiButton((Rectangle){ state->colorPreferenceAnchor.x + 216, state->colorPreferenceAnchor.y + 216, 24, 24 }, NULL); 
+        state->preCol10Pressed = GuiButton((Rectangle){ state->colorPreferenceAnchor.x + 240, state->colorPreferenceAnchor.y + 216, 24, 24 }, NULL); 
+        state->preCol11Pressed = GuiButton((Rectangle){ state->colorPreferenceAnchor.x + 264, state->colorPreferenceAnchor.y + 216, 24, 24 }, NULL); 
+        state->preC12Pressed = GuiButton((Rectangle){ state->colorPreferenceAnchor.x + 288, state->colorPreferenceAnchor.y + 216, 24, 24 }, NULL); 
+        state->preCol7Pressed = GuiButton((Rectangle){ state->colorPreferenceAnchor.x + 264, state->colorPreferenceAnchor.y + 192, 24, 24 }, NULL); 
+        state->preCol8Pressed = GuiButton((Rectangle){ state->colorPreferenceAnchor.x + 288, state->colorPreferenceAnchor.y + 192, 24, 24 }, NULL); 
+        GuiGroupBox((Rectangle){ state->vertexEdgeSettingAnchor.x + 0, state->vertexEdgeSettingAnchor.y + 0, 152, 128 }, "Vertex/Edge Settings");
+        GuiLabel((Rectangle){ state->vertexEdgeSettingAnchor.x + 16, state->vertexEdgeSettingAnchor.y + 8, 120, 24 }, "Vertex Radius:");
+        GuiLabel((Rectangle){ state->vertexEdgeSettingAnchor.x + 16, state->vertexEdgeSettingAnchor.y + 64, 120, 24 }, "Edge Thickness:");
+        GuiSlider((Rectangle){ state->vertexEdgeSettingAnchor.x + 16, state->vertexEdgeSettingAnchor.y + 24, 120, 16 }, NULL, NULL, &state->vertexRadiusSliderValue, 0, 100);
+        GuiSlider((Rectangle){ state->vertexEdgeSettingAnchor.x + 16, state->vertexEdgeSettingAnchor.y + 80, 120, 16 }, NULL, NULL, &state->edgeThicknessSliderValue, 0, 100);
+        if (GuiValueBox((Rectangle){ state->vertexEdgeSettingAnchor.x + 16, state->vertexEdgeSettingAnchor.y + 40, 40, 16 }, NULL, &state->vertexRadiusValueBoxValue, 0, 100, state->vertexRadiusValueBoxEditMode)) state->vertexRadiusValueBoxEditMode = !state->vertexRadiusValueBoxEditMode;
+        if (GuiValueBox((Rectangle){ state->vertexEdgeSettingAnchor.x + 16, state->vertexEdgeSettingAnchor.y + 96, 40, 16 }, NULL, &state->edgeThicknessValueBoxValue, 0, 100, state->edgeThicknessValueBoxEditMode)) state->edgeThicknessValueBoxEditMode = !state->edgeThicknessValueBoxEditMode;
+        GuiGroupBox((Rectangle){ state->gridSettingsAnchor.x + 0, state->gridSettingsAnchor.y + 0, 192, 96 }, "Grid Settings");
+        GuiLabel((Rectangle){ state->gridSettingsAnchor.x + 16, state->gridSettingsAnchor.y + 8, 120, 24 }, "Cell Size:");
+        GuiSlider((Rectangle){ state->gridSettingsAnchor.x + 16, state->gridSettingsAnchor.y + 24, 120, 16 }, NULL, NULL, &state->cellSizeSliderValue, 0, 100);
+        GuiLabel((Rectangle){ state->gridSettingsAnchor.x + 16, state->gridSettingsAnchor.y + 48, 120, 24 }, "Subdivision Size:");
+        GuiSlider((Rectangle){ state->gridSettingsAnchor.x + 16, state->gridSettingsAnchor.y + 64, 120, 16 }, NULL, NULL, &state->subdivisionSizeSliderValue, 0, 100);
+        if (GuiValueBox((Rectangle){ state->gridSettingsAnchor.x + 136, state->gridSettingsAnchor.y + 24, 40, 16 }, NULL, &state->cellSizeValueBoxValue, 0, 100, state->cellSizeValueBoxEditMode)) state->cellSizeValueBoxEditMode = !state->cellSizeValueBoxEditMode;
+        if (GuiValueBox((Rectangle){ state->gridSettingsAnchor.x + 136, state->gridSettingsAnchor.y + 64, 40, 16 }, NULL, &state->subdivisionSizeValueBoxValue, 0, 100, state->subdivisionSizeValueBoxEditMode)) state->subdivisionSizeValueBoxEditMode = !state->subdivisionSizeValueBoxEditMode;
+        if (GuiDropdownBox((Rectangle){ state->settingAnchor.x + 80, state->settingAnchor.y + 8, 168, 24 }, "Greedy Best-first Search", &state->algorithmDropdownBoxActive, state->algorithmDropdownBoxEditMode)) state->algorithmDropdownBoxEditMode = !state->algorithmDropdownBoxEditMode;
+    }
 }
 
 #endif // GUI_TOOLBAR_IMPLEMENTATION

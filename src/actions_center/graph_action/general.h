@@ -37,7 +37,7 @@ namespace Action{
 
     class ConnectVertices : public GraphRelated{
     public:
-        ConnectVertices(VertexID startID, VertexID endID, std::optional<float> weight = std::nullopt, std::optional<Color> color = std::nullopt)
+        ConnectVertices(VertexID startID, VertexID endID, float weight, Color color)
             : startID_(startID), endID_(endID)
             , weight_(weight)
             , color_(color)
@@ -45,7 +45,7 @@ namespace Action{
             identifier_ = ID::CONNECT_VERTICES;
         };
         
-        void execute() override{ connectVertices(startID_, endID_, weight_, color_);}
+        void execute() override{ connectVertices(startID_, endID_, color_, weight_);}
 
         void undo() override{ disconnectVertices(startID_, endID_);}
         void redo() override{ execute();}
@@ -53,8 +53,8 @@ namespace Action{
     private:
         VertexID startID_;
         VertexID endID_;
-        std::optional<float> weight_;
-        std::optional<Color> color_;
+        float weight_;
+        Color color_;
     };
 
     class DisconnectVertices : public GraphRelated{
@@ -71,7 +71,7 @@ namespace Action{
             color_ = properties.second;
         };
 
-        void undo() override{ connectVertices(startID_, endID_, weight_, color_);}
+        void undo() override{ connectVertices(startID_, endID_, color_, weight_);}
         void redo() override{ disconnectVertices(startID_, endID_);}
 
     private:

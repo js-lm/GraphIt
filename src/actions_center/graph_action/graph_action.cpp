@@ -1,5 +1,5 @@
 #include "graph_action.h"
-#include "application.h"
+#include "system/application.h"
 #include "graph/graph.h"
 
 #include <raylib.h>
@@ -7,7 +7,7 @@
 
 using namespace Action;
 
-GraphRelated::VertexID GraphRelated::addVertex(Vector2 position, std::optional<Color> color){
+GraphRelated::VertexID GraphRelated::addVertex(Vector2 position, Color color){
     return Application::instance().graph().addVertex(position, color);
 }
 
@@ -19,8 +19,8 @@ void GraphRelated::restoreRemovedVertex(VertexID id){
     Application::instance().graph().restoreRemovedVertex(id);
 }
 
-bool GraphRelated::connectVertices(VertexID startID, VertexID endID, std::optional<float> weight, std::optional<Color> color){
-    return Application::instance().graph().connectVertices(startID, endID, weight, color);
+bool GraphRelated::connectVertices(VertexID startID, VertexID endID, Color color, float weight){
+    return Application::instance().graph().connectVertices(startID, endID, color, weight);
 }
     
 std::pair<float, Color> GraphRelated::disconnectVertices(VertexID startID, VertexID endID){
@@ -62,7 +62,7 @@ void GraphRelated::bulkRestoreRemovedEdges(
     if(edges.size() != colors.size()) throw;
 
     for(size_t i{0}; i < edges.size(); i++){
-        connectVertices(edges[i].first, edges[i].second, weight[i], colors[i]);
+        connectVertices(edges[i].first, edges[i].second, colors[i], weight[i]);
     }
 }
 

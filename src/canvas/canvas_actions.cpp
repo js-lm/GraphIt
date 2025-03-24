@@ -1,5 +1,5 @@
 #include "canvas.h"
-#include "application.h"
+#include "system/application.h"
 #include "graph/graph.h"
 #include "actions_center/actions_center.h"
 #include "actions_center/graph_action/general.h"
@@ -7,7 +7,7 @@
 #include "actions_center/graph_action/dye.h"
 #include "actions_center/graph_action/reweigh.h"
 #include "lib/magic_enum.hpp"
-#include "configs/terminal_prefix.h"
+#include "system/terminal_prefix.h"
 #include "gui/gui.h"
 
 #include <optional>
@@ -81,7 +81,7 @@ void Canvas::updateLink(){
                 std::make_unique<Action::ConnectVertices>(
                     linkFrom_.value(), 
                     hoveredVertexID_.value(),
-                    std::nullopt,
+                    1.0f,
                     linkColor_
                 )
             );

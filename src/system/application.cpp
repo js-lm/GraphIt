@@ -1,10 +1,10 @@
-#include "configs/version.h"
-#include "application.h"
+#include "system/version.h"
+#include "system/application.h"
 #include "graph/graph.h"
 #include "actions_center/actions_center.h"
 #include "gui/gui.h"
 #include "canvas/canvas.h"
-#include "configs/terminal_prefix.h"
+#include "system/terminal_prefix.h"
 #include "io/io.h"
 
 #define RAYGUI_IMPLEMENTATION
@@ -19,7 +19,10 @@ Application::Application()
     , ui_(new GUI())
     , canvas_(new Canvas())
     , serializer_(new Serializer())
-{}
+{
+    initSettings();
+    initFlags();
+}
 
 Application::~Application(){
     delete graph_;

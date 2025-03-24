@@ -1,5 +1,5 @@
 #include "io.h"
-#include "configs/terminal_prefix.h"
+#include "system/terminal_prefix.h"
 
 #include <iostream>
 #include <unordered_map>

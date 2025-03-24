@@ -1,16 +1,7 @@
 #include "graph.h"
+#include "system/application.h"
 
 #include <raylib.h>
-
-Graph::Graph()
-    : isDirected_(false)
-    , isWeighted_(false)
-    , defaultVertexColor_(BLACK)
-    , defaultEdgeWeight_(1.0f)
-    , defaultEdgeColor_(GRAY)
-    , vertexRadius_(20.0f)
-    , edgeThickness_(7.0f)  
-{}
 
 void Graph::hideVertex(VertexID id){
     if(!isValidID(id)) return;
@@ -29,13 +20,13 @@ bool Graph::isVertexHidden(VertexID id) const{
     return vertices_[id]->isHidden();
 }
 
-Graph::VertexID Graph::addVertex(Vector2 position, std::optional<Color> color){
+Graph::VertexID Graph::addVertex(Vector2 position, Color color){
     VertexID id{vertices_.size()};
     
     vertices_.emplace_back(
         std::make_unique<Vertex>(
             position,
-            color.value_or(defaultVertexColor_),
+            color,
             id
         )
     );
@@ -56,25 +47,23 @@ bool Graph::restoreRemovedVertex(VertexID id){
     return !isVertexHidden(id);
 }
 
-
-bool Graph::connectVertices(VertexID startID, VertexID endID, Color color){
-    return connectVertices(startID, endID, std::nullopt, color);
-}
-bool Graph::connectVertices(VertexID startID, VertexID endID, std::optional<float> weight, std::optional<Color> color){
+bool Graph::connectVertices(VertexID startID, VertexID endID, Color color, float weight){
     if(!isValidID(startID)
     || !isValidID(endID)
     || startID == endID
     || isVertexHidden(startID)
     || isVertexHidden(endID)
     || areNeighbors(startID, endID)
-    ) return false;
+    ){
+        return false;
+    }
 
     edges_.emplace_back(
         std::make_unique<Edge>(
             startID,
             endID,
-            weight.value_or(defaultEdgeWeight_),
-            color.value_or(defaultEdgeColor_)
+            weight,
+            color
         )
     );
 
@@ -132,7 +121,7 @@ std::unordered_set<Graph::VertexID> Graph::getNeighbors(VertexID id) const{
         }
     }
 
-    if(!isDirected_){
+    if(!Application::getData<Setting, bool>(Setting::GRAPH_IS_DIRECTED)){
         for(const auto &edge : edges_){
             if(edge->endID() == id && !isVertexHidden(edge->startID())){
                 neighbors.insert(edge->startID());
@@ -144,7 +133,7 @@ std::unordered_set<Graph::VertexID> Graph::getNeighbors(VertexID id) const{
 }
 
 std::optional<Graph::VertexID> Graph::findVertex(Vector2 point, std::optional<float> radius){
-    if(!radius) radius = vertexRadius_;
+    if(!radius) radius = Application::getData<Setting, float>(Setting::GRAPH_VERTEX_RADIUS);
     for(auto i{vertices_.size()}; i--> 0;){
         if(!vertices_[i]->isHidden() 
         && CheckCollisionPointCircle(point, vertices_[i]->position(), radius.value())
@@ -157,7 +146,7 @@ std::optional<Graph::VertexID> Graph::findVertex(Vector2 point, std::optional<fl
 }
 
 std::optional<Graph::EdgeID> Graph::findEdge(Vector2 point, std::optional<float> thickness){
-    if(!thickness) thickness = edgeThickness_;
+    if(!thickness) thickness = Application::getData<Setting, float>(Setting::GRAPH_EDGE_THICKNESS);
     for(auto i{edges_.size()}; i--> 0;){
         if(!isVertexHidden(edges_[i]->startID())
         && !isVertexHidden(edges_[i]->endID())
@@ -209,7 +198,7 @@ std::vector<Graph::EdgeID> Graph::findEdge(Rectangle area){
 bool Graph::isTheSameEdge(VertexID start1, VertexID end1, VertexID start2, VertexID end2) const{
     return ((start1 == start2
             && end1 == end2)
-           || (!isDirected_
+           || (!Application::getData<Setting, bool>(Setting::GRAPH_IS_DIRECTED)
             && start1 == end2
             && end1 == start2
            ));

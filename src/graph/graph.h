@@ -20,18 +20,17 @@ public:
     using EdgeID = std::pair<VertexID, VertexID>;
 
 public:
-    Graph();
+    Graph() = default;
     ~Graph() = default;
 
     void draw() const;
 
 public:
-    VertexID addVertex(Vector2 position, std::optional<Color> color = std::nullopt);
+    VertexID addVertex(Vector2 position, Color color);
     bool removeVertex(VertexID id);
     bool restoreRemovedVertex(VertexID id);
 
-    bool connectVertices(VertexID startID, VertexID endID, std::optional<float> weight = std::nullopt, std::optional<Color> color = std::nullopt);
-    bool connectVertices(VertexID startID, VertexID endID, Color color);
+    bool connectVertices(VertexID startID, VertexID endID, Color color, float weight);
     std::pair<float, Color> disconnectVertices(VertexID startID, VertexID endID);
 
     std::vector<Color> dyeSelectedVertices(const std::vector<VertexID> &ids, Color newColor);
@@ -59,18 +58,12 @@ public:
     std::vector<VertexID> findVertex(Rectangle area);
     std::vector<EdgeID> findEdge(Rectangle area);
 
-    const float getVertexRadius() const{ return vertexRadius_;}
-    const float getEdgeThickness() const{ return edgeThickness_;}
-
 public: // for IO
     std::vector<VertexID> getAllValidVertexIDs() const;
     std::vector<Normalized::Edge> getAllValidEdges() const;
 
     void loadNewGraph(const Normalized::SaveData &saveData);
     void clearGraph();
-
-    const bool isDirected() const{ return isDirected_;}
-    const bool isWeighted() const{ return isWeighted_;}
 
 private:
     void addVertex(size_t id, Vector2 position, Color color);
@@ -100,19 +93,9 @@ private:
     float calculateBrightness(Color color) const;
 
 private:
-    bool isDirected_;
-    bool isWeighted_;
-
     std::vector<std::unique_ptr<Vertex>> vertices_;
     std::vector<std::unique_ptr<Edge>> edges_;
     // std::unordered_map<size_t> adjacencyMap_;
     // std::vector<size_t, std::vector<size_t, bool>> adjacencyMatrix_;
     std::unordered_set<VertexID> hiddenVertices_;
-
-    Color defaultVertexColor_;
-    float defaultEdgeWeight_;
-    Color defaultEdgeColor_;
-
-    float vertexRadius_;
-    float edgeThickness_;
 };
