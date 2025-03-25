@@ -7,6 +7,46 @@ namespace UI{
 
 class Toolbar : public Panel{
 public:
+    enum class ButtonPressed{
+        NONE,
+
+        // setting
+        OPEN_SETTING_MENU,
+
+        // toolbar - io
+        NEW_FILE,
+        LOAD_FILE,
+        SAVE_FILE,
+        UNDO,
+        REDO,
+        SCREENSHOT,
+
+        // toolbar - algorithm
+        RUN_ALGORITHM,
+        EXIT_ALGORITHM,
+        PREVIOUS_STEP,
+        NEXT_STEP,
+
+        // toolbar - construction
+        DEBUG_PEN,
+        DEBUG_CHANGE_PEN_COLOR,
+        DEBUG_LINK,
+        DEBUG_CHANGE_LINK_COLOR,
+        DEBUG_MOVE,
+        DEBUG_ERASER,
+
+        // toolbar - controls
+        DEBUG_SELECT,
+        DEBUG_PAN,
+        DEBUG_DELETE_SELECTED,
+        DEBUG_DYE_SELECTED,
+        DEBUG_CHANGE_DYE_COLOR,
+        
+        // grid settings
+        RESET_CAMERA
+    };
+
+public:
     Toolbar(){
         id_ = ID::TOOLBAR;
         mainPanelBounds_ = {0, 0, 1000, 80};
@@ -16,6 +56,9 @@ public:
     void draw() override;
 
 private:
+    void pressButton(ButtonPressed button){ pressedButton_ = button;}
+    const ButtonPressed buttonPressed() const{ return pressedButton_;}
+
     void handleButtonPress() override;
 
     bool updateKeys(int key) override;
@@ -39,7 +82,16 @@ private: // utilities
 
     void resetCamera();
 
-private:
+    void changePenColor();
+    void changeLinkColor();
+    void changeDyeColor();
+
+    void enterAlgorithmMode();
+    void exitAlgorithmMode();
+    void goToPreviousStep();
+    void goToNextStep();
+
+private: // draw
     void drawIoBar();
     void drawGridSettingsBar();
     void drawAlgorithmBar();
@@ -48,7 +100,7 @@ private:
     void drawConstructionBar();
     void drawControlsBar();
 
-private:
+private: // anchors
     Vector2 ioAnchor_{0, 0};
     Vector2 gridSettingsAnchor_{216, 0};
     Vector2 algorithmAnchor_{480, 0};
@@ -56,39 +108,13 @@ private:
     Vector2 controlAnchor_{400, 40};
 
 private:
-    // setting
-    bool openSettingMenuPressed_{false};
-    bool isHidingUi{false};
+    ButtonPressed pressedButton_{ButtonPressed::NONE};
 
-    // toolbar - io
-    bool newfilePressed_{false};
-    bool loadfilePressed_{false};
-    bool savefilePressed_{false};
-    bool undoPressed_{false};
-    bool redoPressed_{false};
-    bool screenshotPressed_{false};
+    // setting
+    bool isHidingUi_{false};
 
     // toolbar - algorithm
-    bool runAlgorithmPressed_{false};
-    bool exitAlgorithmPressed_{false};
-    bool goToPreviousStepPressed_{false};
-    bool goToNextStepPressed_{false};
     bool algorithmDropdownBoxEditMode_{false};
-
-    // toolbar - construction
-    bool DEBUG_penPressed_{false};
-    bool DEBUG_changePenColorPressed_{false};
-    bool DEBUG_linkPressed_{false};
-    bool DEBUG_changeLinkColorPressed_{false};
-    bool DEBUG_movePressed_{false};
-    bool DEBUG_eraserPressed_{false};
-
-    // toolbar - controls
-    bool DEBUG_selectPressed_{false};
-    bool DEBUG_panPressed_{false};
-    bool DEBUG_deleteSelectedPressed_{false};
-    bool DEBUG_dyeSelectedPressed_{false};
-    bool DEBUG_changeDyeColorPressed_{false};
 };
 
 } // namespace UI

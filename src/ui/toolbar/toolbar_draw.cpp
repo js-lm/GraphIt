@@ -7,6 +7,8 @@
 
 using namespace UI;
 
+using BP = Toolbar::ButtonPressed;
+
 void Toolbar::drawIoBar(){
     Vector2 &anchor{ioAnchor_};
 
@@ -15,17 +17,32 @@ void Toolbar::drawIoBar(){
     
     GuiGroupBox({anchor.x, anchor.y, 216, 40}, NULL);
 
-    newfilePressed_ = GuiButton({anchor.x + 16, anchor.y + 8, 24, 24}, "#008#");
-    loadfilePressed_ = GuiButton({anchor.x + 44, anchor.y + 8, 24, 24}, "#005#");
-    savefilePressed_ = GuiButton({anchor.x + 72, anchor.y + 8, 24, 24}, "#006#");
-    screenshotPressed_ = GuiButton({anchor.x + 180, anchor.y + 8, 24, 24}, "#183#");
+    if(GuiButton({anchor.x + 16, anchor.y + 8, 24, 24}, "#008#")){
+        pressButton(BP::NEW_FILE);
+    }
+        
+    if(GuiButton({anchor.x + 44, anchor.y + 8, 24, 24}, "#005#")){
+        pressButton(BP::LOAD_FILE);
+    }
+        
+    if(GuiButton({anchor.x + 72, anchor.y + 8, 24, 24}, "#006#")){
+        pressButton(BP::SAVE_FILE);
+    }
+        
+    if(GuiButton({anchor.x + 180, anchor.y + 8, 24, 24}, "#183#")){
+        pressButton(BP::SCREENSHOT);
+    }
 
     if(!canUndo) GuiDisable();
-    undoPressed_ = GuiButton({anchor.x + 112, anchor.y + 8, 24, 24}, "#072#");
+    if(GuiButton({anchor.x + 112, anchor.y + 8, 24, 24}, "#072#")){
+        pressButton(BP::UNDO);
+    }
     GuiEnable();
 
     if(!canRedo) GuiDisable();
-    redoPressed_ = GuiButton({anchor.x + 140, anchor.y + 8, 24, 24}, "#073#");
+    if(GuiButton({anchor.x + 140, anchor.y + 8, 24, 24}, "#073#")){
+        pressButton(BP::REDO);
+    }
     GuiEnable();
 }
 
@@ -66,16 +83,30 @@ void Toolbar::drawAlgorithmBar(){
     }
 
     if(!isFocusMode){
-        runAlgorithmPressed_ = GuiButton({anchor.x + 284, anchor.y + 8, 64, 24}, "#131#Run");
+        if(GuiButton({anchor.x + 284, anchor.y + 8, 64, 24}, "#131#Run")){
+            pressButton(BP::RUN_ALGORITHM);
+        }
     }else{
         GuiToggle({anchor.x + 284, anchor.y + 8, 64, 24}, (isRunning ? "#132#Pause" : "#131#Resume"), &isRunning);
     }
 
-    exitAlgorithmPressed_ = GuiButton({anchor.x + 380, anchor.y + 8, 24, 24}, "#133#");   
-    goToPreviousStepPressed_ = GuiButton({anchor.x + 256, anchor.y + 8, 24, 24}, "#129#"); 
-    goToNextStepPressed_ = GuiButton({anchor.x + 352, anchor.y + 8, 24, 24}, "#134#"); 
+    if(GuiButton({anchor.x + 380, anchor.y + 8, 24, 24}, "#133#")){
+        pressButton(BP::EXIT_ALGORITHM);
+    }
+        
+    if(GuiButton({anchor.x + 256, anchor.y + 8, 24, 24}, "#129#")){
+        pressButton(BP::PREVIOUS_STEP);
+    }
+        
+    if(GuiButton({anchor.x + 352, anchor.y + 8, 24, 24}, "#134#")){
+        pressButton(BP::NEXT_STEP);
+    }
+        
     GuiToggle({anchor.x + 416, anchor.y + 8, 40, 24}, "Auto", &autoForward);
-    openSettingMenuPressed_ = GuiButton({anchor.x + 480, anchor.y + 8, 24, 24}, "#142#");
+    
+    if(GuiButton({anchor.x + 480, anchor.y + 8, 24, 24}, "#142#")){
+        pressButton(BP::OPEN_SETTING_MENU);
+    }
 
     Application::setValue<Setting, int>(Setting::ALGORITHM_DROPDOWN_OPTION, algorithmDropdownOption);
     Application::setValue<Setting, bool>(Setting::ALGORITHM_IS_AUTO_FORWARD, autoForward);
@@ -92,23 +123,36 @@ void Toolbar::drawConstructionBar(){
     GuiLabel({anchor.x + 16, anchor.y + 8, 72, 24}, "Construction:");
 
     if(currentSelectedTool == 3) GuiDisable();
-    DEBUG_penPressed_ = GuiButton({anchor.x + 96, anchor.y + 8, 56, 24}, "#022#Pen");
+    if(GuiButton({anchor.x + 96, anchor.y + 8, 56, 24}, "#022#Pen")){
+        pressButton(BP::DEBUG_PEN);
+    }
     GuiEnable();
 
     if(currentSelectedTool == 4) GuiDisable();
-    DEBUG_linkPressed_ = GuiButton({anchor.x + 167, anchor.y + 8, 56, 24}, "#034#Link");
+    if(GuiButton({anchor.x + 167, anchor.y + 8, 56, 24}, "#034#Link")){
+        pressButton(BP::DEBUG_LINK);
+    }
     GuiEnable();
 
     if(currentSelectedTool == 5) GuiDisable();
-    DEBUG_movePressed_ = GuiButton({anchor.x + 248, anchor.y + 8, 64, 24}, "#067#Move");
+    if(GuiButton({anchor.x + 248, anchor.y + 8, 64, 24}, "#067#Move")){
+        pressButton(BP::DEBUG_MOVE);
+    }
     GuiEnable();
 
     if(currentSelectedTool == 6) GuiDisable();
-    DEBUG_eraserPressed_ = GuiButton({anchor.x + 315, anchor.y + 8, 72, 24}, "#023#Eraser");
+    if(GuiButton({anchor.x + 315, anchor.y + 8, 72, 24}, "#023#Eraser")){
+        pressButton(BP::DEBUG_ERASER);
+    }
     GuiEnable();
 
-    DEBUG_changePenColorPressed_ = GuiButton({anchor.x + 150, anchor.y + 8, 12, 24}, NULL);
-    DEBUG_changeLinkColorPressed_ = GuiButton({anchor.x + 220, anchor.y + 8, 12, 24}, NULL);
+    if(GuiButton({anchor.x + 150, anchor.y + 8, 12, 24}, NULL)){
+        pressButton(BP::DEBUG_CHANGE_PEN_COLOR);
+    }
+        
+    if(GuiButton({anchor.x + 220, anchor.y + 8, 12, 24}, NULL)){
+        pressButton(BP::DEBUG_CHANGE_LINK_COLOR);
+    }
 }
 
 void Toolbar::drawControlsBar(){
@@ -122,16 +166,28 @@ void Toolbar::drawControlsBar(){
     GuiLabel({anchor.x + 16, anchor.y + 8, 48, 24}, "Control:");
 
     if(currentSelectedTool == 1) GuiDisable();
-    DEBUG_selectPressed_ = GuiButton({anchor.x + 64, anchor.y + 8, 72, 24}, "#021#Select");
+    if(GuiButton({anchor.x + 64, anchor.y + 8, 72, 24}, "#021#Select")){
+        pressButton(BP::DEBUG_SELECT);
+    }
     GuiEnable();
 
     if(currentSelectedTool == 2) GuiDisable();
-    DEBUG_panPressed_ = GuiButton({anchor.x + 140, anchor.y + 8, 64, 24}, "#019#View");
+    if(GuiButton({anchor.x + 140, anchor.y + 8, 64, 24}, "#019#View")){
+        pressButton(BP::DEBUG_PAN);
+    }
     GuiEnable();
 
-    DEBUG_dyeSelectedPressed_ = GuiButton({anchor.x + 296, anchor.y + 8, 56, 24}, "#025#Dye");
-    DEBUG_changeDyeColorPressed_ = GuiButton({anchor.x + 350, anchor.y + 8, 12, 24}, NULL);
-    DEBUG_deleteSelectedPressed_ = GuiButton({anchor.x + 221, anchor.y + 8, 72, 24}, "#143#Delete");
+    if(GuiButton({anchor.x + 296, anchor.y + 8, 56, 24}, "#025#Dye")){
+        pressButton(BP::DEBUG_DYE_SELECTED);
+    }
+        
+    if(GuiButton({anchor.x + 350, anchor.y + 8, 12, 24}, NULL)){
+        pressButton(BP::DEBUG_CHANGE_DYE_COLOR);
+    }
+        
+    if(GuiButton({anchor.x + 221, anchor.y + 8, 72, 24}, "#143#Delete")){
+        pressButton(BP::DEBUG_DELETE_SELECTED);
+    }
 
     GuiLabel({anchor.x + 384, anchor.y + 8, 50, 24}, "Include:");
     GuiCheckBox({anchor.x + 432, anchor.y + 8, 24, 24}, "Node", &isSelectingVertex);
@@ -143,5 +199,5 @@ void Toolbar::drawControlsBar(){
 
 void Toolbar::drawHideButton(){
     Vector2 &anchor{algorithmAnchor_};
-    GuiToggle({anchor.x + 480, anchor.y + 48, 24, 24}, (isHidingUi ? "#045#" : "#044#"), &isHidingUi);
+    GuiToggle({anchor.x + 480, anchor.y + 48, 24, 24}, (isHidingUi_ ? "#045#" : "#044#"), &isHidingUi_);
 }

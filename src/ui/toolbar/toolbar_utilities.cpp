@@ -80,3 +80,32 @@ void Toolbar::dyeSelected(){
 void Toolbar::resetCamera(){
     Application::instance().canvas().resetCamera();
 }
+
+void Toolbar::changePenColor(){
+
+}
+
+void Toolbar::changeLinkColor(){
+
+}
+
+void Toolbar::changeDyeColor(){
+
+}
+
+
+void Toolbar::enterAlgorithmMode(){
+
+}
+
+void Toolbar::exitAlgorithmMode(){
+
+}
+
+void Toolbar::goToPreviousStep(){
+
+}
+
+void Toolbar::goToNextStep(){
+
+}

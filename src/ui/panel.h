@@ -17,7 +17,6 @@ public:
 
 public:
     Panel() = default;
-    // Panel(ID id, Rectangle mainBound, std::vector<Rectangle> subBounds = {});
     virtual ~Panel() = default;
 
     virtual void draw() = 0;
@@ -28,16 +27,15 @@ public:
     virtual bool handleInput();
 
 protected:
-    // virtual void init() = 0;
+    bool isMousePressedInsidePanel(int button) const;
 
+protected:
     virtual void handleButtonPress() = 0;
 
     void handleKeyboardShortcuts();
     virtual bool updateKeys(int key){ return false;}
     virtual bool updateCommandKeys(int key){ return false;}
     virtual bool updateCommandShiftKeys(int key){ return false;}
-
-    bool isMousePressedInsidePanel(int button) const;
 
 private:
     bool isMouseInsidePanel() const;

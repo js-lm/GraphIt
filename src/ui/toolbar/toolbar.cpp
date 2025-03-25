@@ -4,10 +4,12 @@
 using namespace UI;
 
 void Toolbar::draw(){
-    if(!isHidingUi) DrawRectangleRec(mainPanelBounds_, Fade(WHITE, .5f));
+    if(!isHidingUi_) DrawRectangleRec(mainPanelBounds_, Fade(WHITE, .5f));
 
     drawHideButton();
-    if(isHidingUi) return;
+    if(isHidingUi_) return;
+
+    pressButton(ButtonPressed::NONE);
 
     drawConstructionBar();
     drawControlsBar();
@@ -17,52 +19,45 @@ void Toolbar::draw(){
 }
 
 void Toolbar::handleButtonPress(){
-    if(openSettingMenuPressed_) openSettingMenu();
+    using BP = ButtonPressed;
 
-    if(newfilePressed_) createNewFile();
-    if(loadfilePressed_) loadSavedGraph();
-    if(savefilePressed_) saveCurrentGraph();
-    if(undoPressed_) undo();
-    if(redoPressed_) redo();
-    if(screenshotPressed_) takeScreenshot();
+    switch(buttonPressed()){
+        // setting
+        case BP::OPEN_SETTING_MENU:     openSettingMenu();  break;
+            
+        // IO bar
+        case BP::NEW_FILE:      createNewFile();        break;
+        case BP::LOAD_FILE:     loadSavedGraph();       break;
+        case BP::SAVE_FILE:     saveCurrentGraph();     break;
+        case BP::UNDO:          undo();                 break;
+        case BP::REDO:          redo();                 break;
+        case BP::SCREENSHOT:    takeScreenshot();       break;
+            
+        // algorithm bar
+        case BP::RUN_ALGORITHM:     enterAlgorithmMode();       break;
+        case BP::EXIT_ALGORITHM:    exitAlgorithmMode();        break;
+        case BP::PREVIOUS_STEP:     goToPreviousStep();         break;
+        case BP::NEXT_STEP:         goToNextStep();             break;
 
-    if(runAlgorithmPressed_){
-
-    }
-
-    if(exitAlgorithmPressed_){
-
-    }
-
-    if(goToPreviousStepPressed_){
-
-    }
-
-    if(goToNextStepPressed_){
-
-    }
-
-    if(DEBUG_penPressed_) switchMode(Canvas::Mode::PEN);
-
-    if(DEBUG_changePenColorPressed_){
-
-    }
-
-    if(DEBUG_linkPressed_) switchMode(Canvas::Mode::LINK);
-
-    if(DEBUG_changeLinkColorPressed_){
-
-    }
-
-    if(DEBUG_movePressed_) switchMode(Canvas::Mode::MOVE);
-    if(DEBUG_eraserPressed_) switchMode(Canvas::Mode::ERASER);
-    if(DEBUG_selectPressed_) switchMode(Canvas::Mode::SELECT);
-    if(DEBUG_panPressed_) switchMode(Canvas::Mode::PAN);
-    if(DEBUG_deleteSelectedPressed_) deleteSelected();
-    if(DEBUG_dyeSelectedPressed_) dyeSelected();
-
-    if(DEBUG_changeDyeColorPressed_){
-
+        // construction bar
+        case BP::DEBUG_PEN:               switchMode(Canvas::Mode::PEN);        break;
+        case BP::DEBUG_CHANGE_PEN_COLOR:  changePenColor();                     break;
+        case BP::DEBUG_LINK:              switchMode(Canvas::Mode::LINK);       break;
+        case BP::DEBUG_CHANGE_LINK_COLOR: changeLinkColor();                    break;
+        case BP::DEBUG_MOVE:              switchMode(Canvas::Mode::MOVE);       break;
+        case BP::DEBUG_ERASER:            switchMode(Canvas::Mode::ERASER);     break;
+            
+        // control bar
+        case BP::DEBUG_SELECT:              switchMode(Canvas::Mode::SELECT);   break;
+        case BP::DEBUG_PAN:                 switchMode(Canvas::Mode::PAN);      break;
+        case BP::DEBUG_DELETE_SELECTED:     deleteSelected();                   break;
+        case BP::DEBUG_DYE_SELECTED:        dyeSelected();                      break;
+        case BP::DEBUG_CHANGE_DYE_COLOR:    changeDyeColor();                   break;
+        
+        // grid settings
+        case BP::RESET_CAMERA:  resetCamera();  break;
+            
+        case BP::NONE: default: break;
     }
 }
 
