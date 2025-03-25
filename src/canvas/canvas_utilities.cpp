@@ -17,11 +17,11 @@ void Canvas::resetCamera(){
 }
 
 void Canvas::drawGrid() const{
-    if(!Application::getData<Setting, bool>(Setting::GRID_IS_ENABLED)) return;
+    if(!Application::getValue<Setting, bool>(Setting::GRID_SHOW)) return;
 
     auto canvasPosition{canvasCamera_.target};
-    int cellSize{Application::getData<Setting, int>(Setting::GRID_CELL_SIZE)};
-    int lineInterval{Application::getData<Setting, int>(Setting::GRID_SUBDIVISION_SIZE)};
+    int cellSize{Application::getValue<Setting, int>(Setting::GRID_CELL_SIZE)};
+    int lineInterval{Application::getValue<Setting, int>(Setting::GRID_SUBDIVISION_SIZE)};
     int screenHeight{static_cast<int>(GetScreenHeight() / canvasCamera_.zoom)};
     int screenWeight{static_cast<int>(GetScreenWidth() / canvasCamera_.zoom)};
 
@@ -68,9 +68,10 @@ void Canvas::drawMouse() const{
 }
 
 void Canvas::drawPen() const{
+    bool snapToGrid{Application::getValue<Setting, bool>(Setting::GRID_IS_SNAP_TO_GRID)};
     DrawCircleV(
-        getMousePositionInCanvas(isSnapToGridEnabled_), 
-        Application::instance().getData<Setting, float>(Setting::GRAPH_VERTEX_RADIUS), 
+        getMousePositionInCanvas(snapToGrid), 
+        Application::instance().getValue<Setting, float>(Setting::GRAPH_VERTEX_RADIUS), 
         penColor_
     );
 }
@@ -78,7 +79,7 @@ void Canvas::drawPen() const{
 void Canvas::drawLink() const{
     if(linkFrom_){
         auto startingPosition{Application::instance().graph().getVertexPosition(linkFrom_.value())};
-        auto thickness{Application::instance().getData<Setting, float>(Setting::GRAPH_EDGE_THICKNESS)};
+        auto thickness{Application::instance().getValue<Setting, float>(Setting::GRAPH_EDGE_THICKNESS)};
         DrawLineEx(
             startingPosition,
             getMousePositionInCanvas(),
@@ -108,7 +109,7 @@ Vector2 Canvas::getMousePositionInCanvas(bool snap) const{
 }
 
 Vector2 Canvas::snapVector(Vector2 vector) const{
-    int cellSize{Application::instance().getData<Setting, int>(Setting::GRID_CELL_SIZE)};
+    int cellSize{Application::instance().getValue<Setting, int>(Setting::GRID_CELL_SIZE)};
     vector.x = std::round(vector.x / cellSize) * cellSize;
     vector.y = std::round(vector.y / cellSize) * cellSize;
     return vector;
@@ -117,7 +118,7 @@ Vector2 Canvas::snapVector(Vector2 vector) const{
 void Canvas::updateHoveredItem(){
     auto currentHoveredVertex{Application::instance().graph().findVertex(
         getMousePositionInCanvas(), 
-        Application::instance().getData<Setting, float>(Setting::GRAPH_VERTEX_RADIUS) * 1.5f
+        Application::instance().getValue<Setting, float>(Setting::GRAPH_VERTEX_RADIUS) * 1.5f
     )};
 
     if(currentHoveredVertex && !hoveredVertexID_){
@@ -133,7 +134,7 @@ void Canvas::updateHoveredItem(){
 
     auto currentHoveredEdge{Application::instance().graph().findEdge(
         getMousePositionInCanvas(), 
-        Application::instance().getData<Setting, float>(Setting::GRAPH_EDGE_THICKNESS) * 1.25f
+        Application::instance().getValue<Setting, float>(Setting::GRAPH_EDGE_THICKNESS) * 1.25f
     )};
 
     if(currentHoveredEdge && !hoveredEdgeIDs_){

@@ -71,14 +71,8 @@ public:
     void doDye();
 
 public:
-    const bool isSnapToGridEnabled() const{ return isSnapToGridEnabled_;}
-    void toggleSnapToGrid(bool snap){ isSnapToGridEnabled_ = snap;}
-
     Vector2 snapVector(Vector2 vector) const;
-
-    const bool isGridShown() const{ return isGridShown_;}
-    void toggleGrid(bool show){ isGridShown_ = show;}
-
+    
     Color &getPenColorReference(){ return penColor_;}
     Color &getLinkColorReference(){ return linkColor_;}
     Color &getDyeColorReference(){ return dyeColor_;}
@@ -162,8 +156,4 @@ private:
     std::optional<Vector2> startFrom_;
     std::optional<VertexID> selectedVertex_;
     std::optional<EdgeID> selectedEdge_;
-
-    // grid toggle
-    bool isSnapToGridEnabled_;
-    bool isGridShown_;
 };

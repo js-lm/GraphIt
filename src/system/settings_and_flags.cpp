@@ -8,9 +8,9 @@ std::unordered_map<Flag, Application::SettingValue> Application::flags_;
 
 void Application::initSettings(){
     // grid settings
-    settings_[Setting::GRID_IS_ENABLED] = true;
-    settings_[Setting::GRID_IS_SNAP_TO_GRID] = true;
-    settings_[Setting::GRID_CELL_SIZE] = 8;
+    settings_[Setting::GRID_SHOW] = false;
+    settings_[Setting::GRID_IS_SNAP_TO_GRID] = false;
+    settings_[Setting::GRID_CELL_SIZE] = 24;
     settings_[Setting::GRID_SUBDIVISION_SIZE] = 3;
 
     // graph settings
@@ -41,16 +41,22 @@ void Application::initSettings(){
 
     // algorithm settings
     settings_[Setting::ALGORITHM_IS_AUTO_FORWARD] = true;
+    settings_[Setting::ALGORITHM_DROPDOWN_OPTION] = 0;
+
+    // toolbar
+    settings_[Setting::TOOLBAR_CURRENT_SELECTED_TOOL] = 0;
+    settings_[Setting::TOOLBAR_IS_SELECTING_VERTEX] = true;
+    settings_[Setting::TOOLBAR_IS_SELECTING_EDGE] = true;
 }
 
 void Application::initFlags(){
     // canvas
-    flags_[Flag::CANVAS_SELECTED_TOOL] = 0;
-    flags_[Flag::CANVAS_IS_UI_HIDDEN] = false;
+    flags_[Flag::TOOLBAR_CAN_UNDO] = false;
+    flags_[Flag::TOOLBAR_CAN_REDO] = false;
 
-    // algorithm settings
+    // algorithm
+    flags_[Flag::ALGORITHM_FOCUS_MODE] = false;
     flags_[Flag::ALGORITHM_IS_RUNNING] = false;
-    flags_[Flag::ALGORITHM_TYPE] = 0;
 }
 
 template <typename EnumType, typename ValueType>
@@ -71,7 +77,7 @@ void Application::setValue(EnumType key, ValueType value) {
 }
 
 template <typename EnumType, typename ValueType>
-ValueType Application::getData(EnumType key) {
+ValueType Application::getValue(EnumType key) {
     if constexpr(std::is_same_v<EnumType, Setting>){
         if(settings_.find(key) != settings_.end()){
             return std::get<ValueType>(settings_[key]);
@@ -93,17 +99,11 @@ template void Application::setValue<Setting, int>(Setting, int);
 template void Application::setValue<Setting, bool>(Setting, bool);
 template void Application::setValue<Setting, Color>(Setting, Color);
 
-template void Application::setValue<Flag, float>(Flag, float);
-template void Application::setValue<Flag, int>(Flag, int);
+template float Application::getValue<Setting, float>(Setting);
+template int Application::getValue<Setting, int>(Setting);
+template bool Application::getValue<Setting, bool>(Setting);
+template Color Application::getValue<Setting, Color>(Setting);
+
 template void Application::setValue<Flag, bool>(Flag, bool);
-template void Application::setValue<Flag, Color>(Flag, Color);
+template bool Application::getValue<Flag, bool>(Flag);
 
-template float Application::getData<Setting, float>(Setting);
-template int Application::getData<Setting, int>(Setting);
-template bool Application::getData<Setting, bool>(Setting);
-template Color Application::getData<Setting, Color>(Setting);
-
-template float Application::getData<Flag, float>(Flag);
-template int Application::getData<Flag, int>(Flag);
-template bool Application::getData<Flag, bool>(Flag);
-template Color Application::getData<Flag, Color>(Flag);

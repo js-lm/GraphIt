@@ -22,9 +22,9 @@ Normalized::SaveData Serializer::normalizeData(){
     normalizedGraph.cameraSettings.zoom = canvas.getCameraZoom();
 
     normalizedGraph.graphSettings.isDirected 
-        = Application::instance().getData<Setting, bool>(Setting::GRAPH_IS_DIRECTED);
+        = Application::instance().getValue<Setting, bool>(Setting::GRAPH_IS_DIRECTED);
     normalizedGraph.graphSettings.isWeighted
-        = Application::instance().getData<Setting, bool>(Setting::GRAPH_IS_WEIGHTED);
+        = Application::instance().getValue<Setting, bool>(Setting::GRAPH_IS_WEIGHTED);
     
     // index: new ids
     // element: original ids
@@ -106,7 +106,7 @@ bool Serializer::save(const std::string &name){
                        << "}__|" << "\n";
     }
 
-    int weightPrecision{Application::instance().getData<Setting, int>(Setting::GRAPH_WEIGHT_PRECISION)};
+    int weightPrecision{Application::instance().getValue<Setting, int>(Setting::GRAPH_WEIGHT_PRECISION)};
 
     for(const auto &edge : graph.edges){
         saveFile << "StartID:" << edge.startID << "__"

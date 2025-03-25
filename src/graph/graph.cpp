@@ -121,7 +121,7 @@ std::unordered_set<Graph::VertexID> Graph::getNeighbors(VertexID id) const{
         }
     }
 
-    if(!Application::getData<Setting, bool>(Setting::GRAPH_IS_DIRECTED)){
+    if(!Application::getValue<Setting, bool>(Setting::GRAPH_IS_DIRECTED)){
         for(const auto &edge : edges_){
             if(edge->endID() == id && !isVertexHidden(edge->startID())){
                 neighbors.insert(edge->startID());
@@ -133,7 +133,7 @@ std::unordered_set<Graph::VertexID> Graph::getNeighbors(VertexID id) const{
 }
 
 std::optional<Graph::VertexID> Graph::findVertex(Vector2 point, std::optional<float> radius){
-    if(!radius) radius = Application::getData<Setting, float>(Setting::GRAPH_VERTEX_RADIUS);
+    if(!radius) radius = Application::getValue<Setting, float>(Setting::GRAPH_VERTEX_RADIUS);
     for(auto i{vertices_.size()}; i--> 0;){
         if(!vertices_[i]->isHidden() 
         && CheckCollisionPointCircle(point, vertices_[i]->position(), radius.value())
@@ -146,7 +146,7 @@ std::optional<Graph::VertexID> Graph::findVertex(Vector2 point, std::optional<fl
 }
 
 std::optional<Graph::EdgeID> Graph::findEdge(Vector2 point, std::optional<float> thickness){
-    if(!thickness) thickness = Application::getData<Setting, float>(Setting::GRAPH_EDGE_THICKNESS);
+    if(!thickness) thickness = Application::getValue<Setting, float>(Setting::GRAPH_EDGE_THICKNESS);
     for(auto i{edges_.size()}; i--> 0;){
         if(!isVertexHidden(edges_[i]->startID())
         && !isVertexHidden(edges_[i]->endID())
@@ -198,7 +198,7 @@ std::vector<Graph::EdgeID> Graph::findEdge(Rectangle area){
 bool Graph::isTheSameEdge(VertexID start1, VertexID end1, VertexID start2, VertexID end2) const{
     return ((start1 == start2
             && end1 == end2)
-           || (!Application::getData<Setting, bool>(Setting::GRAPH_IS_DIRECTED)
+           || (!Application::getValue<Setting, bool>(Setting::GRAPH_IS_DIRECTED)
             && start1 == end2
             && end1 == start2
            ));

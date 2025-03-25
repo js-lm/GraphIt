@@ -8,7 +8,6 @@
 #include "actions_center/graph_action/reweigh.h"
 #include "lib/magic_enum.hpp"
 #include "system/terminal_prefix.h"
-#include "gui/gui.h"
 
 #include <optional>
 #include <iostream>
@@ -19,14 +18,15 @@
 bool Canvas::isCanvasMouseButtonPressed(int key){
     if(!CheckCollisionPointRec(GetMousePosition(), {0, 40, 1000, 640})) return false;
 
-    if(Application::instance().ui().isMouseInsidePanel()){
-        return false;
-    }else if(Application::instance().ui().isShowingPanel() 
-          && IsMouseButtonPressed(key)
-    ){
-        Application::instance().ui().closePanel();
-        return true;
-    }
+    // TODO: remove this
+    // if(Application::instance().ui().isMouseInsidePanel()){
+    //     return false;
+    // }else if(Application::instance().ui().isShowingPanel() 
+    //       && IsMouseButtonPressed(key)
+    // ){
+    //     Application::instance().ui().closePanel();
+    //     return true;
+    // }
 
     return IsMouseButtonPressed(key);
 }
@@ -59,9 +59,11 @@ void Canvas::updatePen(){
     if(isCanvasMouseButtonPressed(MOUSE_BUTTON_LEFT)
     && !Application::instance().graph().findVertex(getMousePositionInCanvas())
     ){
+        bool snapToGrid{Application::getValue<Setting, bool>(Setting::GRID_IS_SNAP_TO_GRID)};
+
         Application::instance().actionCenter().addAction(
             std::make_unique<Action::AddVertex>(
-                getMousePositionInCanvas(isSnapToGridEnabled_),
+                getMousePositionInCanvas(snapToGrid),
                 penColor_
             )
         );
@@ -165,14 +167,16 @@ void Canvas::updateScreenZooming(){
 
 void Canvas::updateDrag(){
     if(vertexToDrag_){
-        Application::instance().graph().updateVertexPosition(vertexToDrag_.value(), getMousePositionInCanvas(isSnapToGridEnabled_));
+        bool snapToGrid{Application::getValue<Setting, bool>(Setting::GRID_IS_SNAP_TO_GRID)};
+
+        Application::instance().graph().updateVertexPosition(vertexToDrag_.value(), getMousePositionInCanvas(snapToGrid));
 
         if(IsMouseButtonReleased(MOUSE_BUTTON_LEFT)){
             Application::instance().actionCenter().addAction(
                 std::make_unique<Action::MoveVertex>(
                     vertexToDrag_.value(),
                     vertexOriginalPosition_,
-                    getMousePositionInCanvas(isSnapToGridEnabled_)
+                    getMousePositionInCanvas(snapToGrid)
                 )
             );
 

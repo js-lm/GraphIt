@@ -5,6 +5,7 @@
 #include <raylib.h>
 #include <raymath.h>
 #include <iomanip>
+#include <sstream>
 
 void Graph::draw() const{
     drawEdges();
@@ -15,7 +16,7 @@ void Graph::drawVertices() const{
     auto &hoveredVertexID{Application::instance().canvas().getHoveredVertexID()};
     auto &selectedVertexIDs{Application::instance().canvas().getSelectedVertexIDs()};
 
-    float vertexRadius{Application::getData<Setting, float>(Setting::GRAPH_VERTEX_RADIUS)};
+    float vertexRadius{Application::getValue<Setting, float>(Setting::GRAPH_VERTEX_RADIUS)};
 
     for(const auto &vertex : vertices_){
         if(vertex->isHidden()) continue;
@@ -48,7 +49,7 @@ void Graph::drawEdges() const{
     auto &selectedEdgeIDs{Application::instance().canvas().getSelectedEdgeIDs()};
 
     const auto &weightTempLabel{Application::instance().canvas().getWeightTempLabel()};
-    float edgeThickness{Application::getData<Setting, float>(Setting::GRAPH_EDGE_THICKNESS)};
+    float edgeThickness{Application::getValue<Setting, float>(Setting::GRAPH_EDGE_THICKNESS)};
 
     for(const auto &edge : edges_){
         if(isVertexHidden(edge->startID())
@@ -91,7 +92,7 @@ void Graph::drawEdges() const{
         }
 
         std::stringstream weightLabel;
-        weightLabel << std::fixed << std::setprecision(Application::getData<Setting, int>(Setting::GRAPH_WEIGHT_PRECISION)) << edge->weight();
+        weightLabel << std::fixed << std::setprecision(Application::getValue<Setting, int>(Setting::GRAPH_WEIGHT_PRECISION)) << edge->weight();
         drawArrowLine(
             startPoint, 
             endPoint, 
@@ -103,8 +104,8 @@ void Graph::drawEdges() const{
 }
 
 void Graph::drawArrowLine(const Vector2 &startPoint, const Vector2 &endPoint, float thickness, const std::string &label, Color color) const{
-    float vertexRadius{Application::getData<Setting, float>(Setting::GRAPH_VERTEX_RADIUS)};
-    float edgeThickness{Application::getData<Setting, float>(Setting::GRAPH_EDGE_THICKNESS)};
+    float vertexRadius{Application::getValue<Setting, float>(Setting::GRAPH_VERTEX_RADIUS)};
+    float edgeThickness{Application::getValue<Setting, float>(Setting::GRAPH_EDGE_THICKNESS)};
 
     Vector2 arrowVector{Vector2Subtract(endPoint, startPoint)};
 
@@ -121,7 +122,7 @@ void Graph::drawArrowLine(const Vector2 &startPoint, const Vector2 &endPoint, fl
     DrawLineEx(startPoint, arrowEndPoint, thickness, color);
 
     // arrow
-    if(Application::getData<Setting, bool>(Setting::GRAPH_IS_DIRECTED)){
+    if(Application::getValue<Setting, bool>(Setting::GRAPH_IS_DIRECTED)){
         Vector2 direction{Vector2Normalize(Vector2Subtract(arrowEndPoint, startPoint))};
         Vector2 rotateAngel1{Vector2Rotate(direction, 70.0f * DEG2RAD)};
         Vector2 rotateAngel2{Vector2Rotate(direction, 110.0f * DEG2RAD)};
@@ -135,7 +136,7 @@ void Graph::drawArrowLine(const Vector2 &startPoint, const Vector2 &endPoint, fl
 
     // label
     if(label.empty()
-    || !Application::getData<Setting, bool>(Setting::GRAPH_IS_LABELED)
+    || !Application::getValue<Setting, bool>(Setting::GRAPH_IS_LABELED)
     ){
         return;
     }

@@ -10,35 +10,35 @@
 
 namespace Normalized{
 
-    struct CameraSettings{
-        Vector2 position;
-        float zoom;
-    };
+struct CameraSettings{
+    Vector2 position;
+    float zoom;
+};
 
-    struct GraphSettings{
-        bool isDirected;
-        bool isWeighted;
-    };
+struct GraphSettings{
+    bool isDirected;
+    bool isWeighted;
+};
 
-    struct Vertex{
-        size_t id;
-        Vector2 position;
-        Color color;
-    };
+struct Vertex{
+    size_t id;
+    Vector2 position;
+    Color color;
+};
 
-    struct Edge{
-        size_t startID;
-        size_t endID;
-        float weight;
-        Color color;
-    };
+struct Edge{
+    size_t startID;
+    size_t endID;
+    float weight;
+    Color color;
+};
 
-    struct SaveData{
-        CameraSettings cameraSettings;
-        GraphSettings graphSettings;
-        std::vector<Vertex> vertices;
-        std::vector<Edge> edges;
-    };
+struct SaveData{
+    CameraSettings cameraSettings;
+    GraphSettings graphSettings;
+    std::vector<Vertex> vertices;
+    std::vector<Edge> edges;
+};
 
 } // namespace Normalized
 

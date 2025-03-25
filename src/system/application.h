@@ -1,15 +1,14 @@
 #pragma once
 
 #include "settings_and_flags.h"
+#include "ui/ui.h"
 
 #include <variant>
 #include <unordered_map>
 
 struct Color;
-
 class Graph;
 class ActionsCenter;
-class GUI;
 class Canvas;
 class Serializer;
 
@@ -31,7 +30,7 @@ public:
 
     Graph &graph(){ return *graph_;}
     ActionsCenter &actionCenter(){ return *actionsCenter_;}
-    GUI &ui(){ return *ui_;}
+    UI::Center &ui(){ return *ui_;}
     Canvas &canvas(){ return *canvas_;}
     Serializer &serializer(){ return *serializer_;}
 
@@ -43,7 +42,7 @@ public:
     static void setValue(EnumType key, ValueType value);
 
     template <typename EnumType, typename ValueType>
-    static ValueType getData(EnumType key);
+    static ValueType getValue(EnumType key);
 
 private:
     Application();
@@ -52,10 +51,11 @@ private:
 private:
     Graph *graph_;
     ActionsCenter *actionsCenter_;
-    GUI *ui_;
+    UI::Center *ui_;
     Canvas *canvas_;
     Serializer *serializer_;
 
+    // TODO: I don't need hash, normal array is fine
     static std::unordered_map<Setting, SettingValue> settings_;
     static std::unordered_map<Flag, SettingValue> flags_;
 };

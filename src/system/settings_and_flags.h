@@ -12,7 +12,7 @@ enum class Setting{
     GRAPH_EDGE_THICKNESS,       // float
 
     // grid settings
-    GRID_IS_ENABLED,            // bool
+    GRID_SHOW,                  // bool
     GRID_IS_SNAP_TO_GRID,       // bool
     GRID_CELL_SIZE,             // int
     GRID_SUBDIVISION_SIZE,      // int
@@ -33,16 +33,28 @@ enum class Setting{
     COLOR_EDGE_BLOCKED,         // Color
     COLOR_EDGE_SPECIAL,         // Color
 
+    // debug colors
+    COLOR_DEBUG_PEN,            // Color
+    COLOR_DEBUG_LINK,           // Color
+    COLOR_DEBUG_DYE,            // Color
+
     // algorithm settings
     ALGORITHM_IS_AUTO_FORWARD,  // bool
+    ALGORITHM_DROPDOWN_OPTION,  // int
+
+    // toolbar
+    TOOLBAR_CURRENT_SELECTED_TOOL, // (int)SelectedTool
+    TOOLBAR_IS_SELECTING_VERTEX,   // bool
+    TOOLBAR_IS_SELECTING_EDGE,     // bool
 };
 
 enum class Flag{
-    // canvas
-    CANVAS_SELECTED_TOOL,       // (int) Selected Tool
-    CANVAS_IS_UI_HIDDEN,        // bool
+    // toolbar - general
+    TOOLBAR_CAN_UNDO,
+    TOOLBAR_CAN_REDO,
 
-    // algorithm settings
-    ALGORITHM_IS_RUNNING,       // bool
-    ALGORITHM_TYPE,             // (int) Algorithm Type
+    // algorithm
+    ALGORITHM_FOCUS_MODE, // this switches between two different modes
+    ALGORITHM_IS_RUNNING, // this is for when you want to pause the auto forwarding
+
 };

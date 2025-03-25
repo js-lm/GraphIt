@@ -11,8 +11,6 @@ Canvas::Canvas()
     , dyeColor_(MAROON)
     , pivotPoint_({0, 0})
     , vertexOriginalPosition_({0, 0})
-    , isSnapToGridEnabled_(true)
-    , isGridShown_(true)
 {
     resetCamera();
 }

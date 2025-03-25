@@ -2,7 +2,7 @@
 #include "system/application.h"
 #include "graph/graph.h"
 #include "actions_center/actions_center.h"
-#include "gui/gui.h"
+#include "ui/ui.h"
 #include "canvas/canvas.h"
 #include "system/terminal_prefix.h"
 #include "io/io.h"
@@ -16,7 +16,7 @@
 Application::Application()
     : graph_(new Graph())
     , actionsCenter_(new ActionsCenter())
-    , ui_(new GUI())
+    , ui_(new UI::Center())
     , canvas_(new Canvas())
     , serializer_(new Serializer())
 {
