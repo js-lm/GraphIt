@@ -110,7 +110,7 @@ void Toolbar::drawAlgorithmBar(){
 
     Application::setValue<Setting, int>(Setting::ALGORITHM_DROPDOWN_OPTION, algorithmDropdownOption);
     Application::setValue<Setting, bool>(Setting::ALGORITHM_IS_AUTO_FORWARD, autoForward);
-    // Application::setValue<Flag, bool>(Flag::ALGORITHM_FOCUS_MODE, isFocusMode);
+    Application::setValue<Flag, bool>(Flag::ALGORITHM_FOCUS_MODE, isFocusMode);
     Application::setValue<Flag, bool>(Flag::ALGORITHM_IS_RUNNING, isRunning);
 }
 

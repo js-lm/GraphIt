@@ -1,4 +1,5 @@
 #include "system/application.h"
+#include "magic_enum.hpp"
 
 #include <raylib.h>
 #include <stdexcept>
@@ -16,8 +17,11 @@ void Application::initSettings(){
     // graph settings
     settings_[Setting::GRAPH_IS_DIRECTED] = true;
     settings_[Setting::GRAPH_IS_WEIGHTED] = true;
-    settings_[Setting::GRAPH_WEIGHT_PRECISION] = 0;
+    settings_[Setting::GRAPH_WEIGHT_PRECISION] = 2;
     settings_[Setting::GRAPH_IS_LABELED] = true;
+
+    // color preferences
+    settings_[Setting::COLOR_PREFERENCE_PICKER] = (Color){137, 207, 240, 255};
 
     // graph visual
     settings_[Setting::GRAPH_VERTEX_RADIUS] = 20.0f;
@@ -65,30 +69,44 @@ void Application::setValue(EnumType key, ValueType value) {
         if(settings_.find(key) != settings_.end()){
             settings_[key] = value;
         }else{
-            throw std::runtime_error("Setting not found!");
+            throw std::runtime_error("Setting not found: " + std::string(magic_enum::enum_name(key)));
         }
     }else if constexpr(std::is_same_v<EnumType, Flag>){
         if(flags_.find(key) != flags_.end()){
             flags_[key] = value;
         }else{
-            throw std::runtime_error("Flag not found!");
+            throw std::runtime_error("Flag not found: " + std::string(magic_enum::enum_name(key)));
         }
     }
 }
 
 template <typename EnumType, typename ValueType>
-ValueType Application::getValue(EnumType key) {
+ValueType Application::getValue(EnumType key){
     if constexpr(std::is_same_v<EnumType, Setting>){
         if(settings_.find(key) != settings_.end()){
-            return std::get<ValueType>(settings_[key]);
+            try{
+                return std::get<ValueType>(settings_[key]);
+            }catch(const std::bad_variant_access &error){
+                throw std::runtime_error("Type mismatch for setting: " 
+                    + std::string(magic_enum::enum_name(key)) 
+                    + ". Expected type: " + typeid(ValueType).name()
+                    + " (" + error.what() + ")");
+            }
         }else{
-            throw std::runtime_error("Setting not found!");
+            throw std::runtime_error("Setting not found: " + std::string(magic_enum::enum_name(key)));
         }
     }else if constexpr(std::is_same_v<EnumType, Flag>){
-        if(flags_.find(key) != flags_.end()) {
-            return std::get<ValueType>(flags_[key]);
+        if(flags_.find(key) != flags_.end()){
+            try{
+                return std::get<ValueType>(flags_[key]);
+            }catch(const std::bad_variant_access& error){
+                throw std::runtime_error("Type mismatch for flag: " 
+                    + std::string(magic_enum::enum_name(key)) 
+                    + ". Expected type: " + typeid(ValueType).name()
+                    + " (" + error.what() + ")");
+            }
         }else{
-            throw std::runtime_error("Flag not found!");
+            throw std::runtime_error("Flag not found: " + std::string(magic_enum::enum_name(key)));
         }
     }
     throw std::runtime_error("Invalid enum type!");

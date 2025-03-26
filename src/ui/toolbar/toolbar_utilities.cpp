@@ -48,7 +48,7 @@ void Toolbar::takeScreenshot(){
 }
 
 void Toolbar::openSettingMenu(){
-
+    Application::instance().ui().openPanel(Panel::ID::SETTINGS);
 }
 
 void Toolbar::deleteSelected(){ 

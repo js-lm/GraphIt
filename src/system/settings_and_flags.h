@@ -17,6 +17,9 @@ enum class Setting{
     GRID_CELL_SIZE,             // int
     GRID_SUBDIVISION_SIZE,      // int
 
+    // color preferences
+    COLOR_PREFERENCE_PICKER,    // Color
+
     // vertex colors
     COLOR_VERTEX_START,         // Color
     COLOR_VERTEX_END,           // Color

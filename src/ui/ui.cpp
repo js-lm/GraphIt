@@ -1,6 +1,7 @@
 #include "ui.h"
 #include "toolbar/toolbar.h"
 #include "file_dialog_load/file_dialog_load.h"
+#include "settings_menu/settings_menu.h"
 
 #include <raylib.h>
 #include <raygui.h>
@@ -61,9 +62,9 @@ void Center::openPanel(Panel::ID id){
     // case Panel::ID::CONFIRM_REPLACE:
     //     openedPanels_.push_back(std::make_unique<UI::Toolbar>());
     //     break;
-    // case Panel::ID::SETTINGS:
-    //     openedPanels_.push_back(std::make_unique<UI::Toolbar>());
-    //     break;
+    case Panel::ID::SETTINGS:
+        openedPanels_.push_back(std::make_unique<UI::SettingsMenu>());
+        break;
     
     default: break;
     }
