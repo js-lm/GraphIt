@@ -56,18 +56,28 @@ void Canvas::drawGrid() const{
 
 void Canvas::drawMouse() const{
     switch(mode_){
-    case Mode::VIEW: break;
-    case Mode::SELECT: drawSelect(); break; // drawSelect(); // below UI
-    case Mode::PAN: break;
-    case Mode::PEN: drawPen(); break;
-    case Mode::LINK: break; // drawLink(); break; // below UI and Vertices
-    case Mode::MOVE: break;
-    case Mode::ERASER: drawEraser(); break;
+    case Mode::VIEW:                    break;
+    case Mode::SELECT:  drawSelect();   break;
+    case Mode::PAN:                     break;
+    case Mode::PEN:     drawPen();      break;
+    // case Mode::LINK:                    break;
+    case Mode::MOVE:    drawMove();     break;
+    case Mode::ERASER:  drawEraser();   break;
     default: break;
     }
 }
 
+void Canvas::updateCursor() const{
+    if(hoveredVertexID_ || hoveredEdgeIDs_){
+        SetMouseCursor(MOUSE_CURSOR_POINTING_HAND);
+    }else{
+        SetMouseCursor(MOUSE_CURSOR_DEFAULT);
+    }
+}
+
 void Canvas::drawPen() const{
+    if(!Application::instance().ui().isMouseOnCanvas()) return;
+
     bool snapToGrid{Application::getValue<Setting, bool>(Setting::GRID_IS_SNAP_TO_GRID)};
     DrawCircleV(
         getMousePositionInCanvas(snapToGrid), 
@@ -77,6 +87,8 @@ void Canvas::drawPen() const{
 }
 
 void Canvas::drawLink() const{
+    if(mode_ != Mode::LINK) return;
+
     if(linkFrom_){
         auto startingPosition{Application::instance().graph().getVertexPosition(linkFrom_.value())};
         auto thickness{Application::instance().getValue<Setting, float>(Setting::GRAPH_EDGE_THICKNESS)};
@@ -88,19 +100,35 @@ void Canvas::drawLink() const{
         );
         DrawCircleV(getMousePositionInCanvas(), thickness / 2, linkColor_);
     }
+
+    updateCursor();
 }
 
 void Canvas::drawEraser() const{
-    
+    updateCursor();
 }
 
 void Canvas::drawSelect() const{
+    updateCursor();
+
     if(!startFrom_) return;
 
     Rectangle rectangle{normalizeRectangle(startFrom_.value(), getMousePositionInCanvas())};
 
     DrawRectangleRec(rectangle, Fade(BLUE, .5f));
     DrawRectangleLinesEx(rectangle, 2.0f, BLUE);
+}
+
+void Canvas::drawMove() const{
+    if(hoveredVertexID_ || hoveredEdgeIDs_){
+        if(vertexToDrag_){
+            SetMouseCursor(MOUSE_CURSOR_RESIZE_ALL);
+        }else{
+            SetMouseCursor(MOUSE_CURSOR_POINTING_HAND);
+        }
+    }else{
+        SetMouseCursor(MOUSE_CURSOR_DEFAULT);
+    }
 }
 
 Vector2 Canvas::getMousePositionInCanvas(bool snap) const{
@@ -116,6 +144,14 @@ Vector2 Canvas::snapVector(Vector2 vector) const{
 }
 
 void Canvas::updateHoveredItem(){
+    if(!Application::instance().ui().isMouseOnCanvas()
+    || mode_ == Mode::PAN
+    ){
+        hoveredVertexID_ = std::nullopt;
+        hoveredEdgeIDs_ = std::nullopt;
+        return;
+    }
+
     auto currentHoveredVertex{Application::instance().graph().findVertex(
         getMousePositionInCanvas(), 
         Application::instance().getValue<Setting, float>(Setting::GRAPH_VERTEX_RADIUS) * 1.5f
@@ -156,6 +192,7 @@ void Canvas::switchMode(Mode mode){
               << magic_enum::enum_name(mode) 
               << std::endl;
     resetToolStatus();
+    SetMouseCursor(MOUSE_CURSOR_DEFAULT);
 }
 
 Rectangle Canvas::normalizeRectangle(Vector2 startingPosition, Vector2 endingPosition) const{

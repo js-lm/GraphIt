@@ -4,7 +4,7 @@
 
 namespace UI{
 
-class FileDialogSaveing : public Panel{
+class FileDialogSave : public Panel{
 public:
     enum class ButtonPressed{
         NONE,
@@ -12,11 +12,11 @@ public:
     };
 
 public:
-    FileDialogSaveing(){
+    FileDialogSave(){
         id_ = ID::SAVE;
         mainPanelBounds_ = {0, 0, 0, 0};
     };
-    ~FileDialogSaveing() = default;
+    ~FileDialogSave() = default;
 
     void draw() override;
 

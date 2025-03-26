@@ -20,14 +20,20 @@ public:
     virtual ~Panel() = default;
 
     virtual void draw() = 0;
-    virtual void update(){} // I think update() isn't needed for most panels
+    virtual void update(){}
 
     // only handle inputs from the top panel
     // return true to request poping
     virtual bool handleInput();
 
-protected:
+    const Rectangle getMainPanelBounds() const{ return mainPanelBounds_;}
+
+    const bool shouldExit() const{ return shouldExit_;}
+    const bool shouldBlurBackground() const{ return shouldBlueBackground_;}
+
+public:
     bool isMousePressedInsidePanel(int button) const;
+    bool isMouseInsidePanel() const;
 
 protected:
     virtual void handleButtonPress() = 0;
@@ -37,14 +43,14 @@ protected:
     virtual bool updateCommandKeys(int key){ return false;}
     virtual bool updateCommandShiftKeys(int key){ return false;}
 
-private:
-    bool isMouseInsidePanel() const;
-
 protected:
     ID id_;
 
+    bool shouldExit_{false};
+    bool shouldBlueBackground_{false};
+
     Rectangle mainPanelBounds_;
-    std::vector<Rectangle> subPanelBounds_;
+    // std::vector<Rectangle> subPanelBounds_;
 };
 
 } // namespace UI

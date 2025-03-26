@@ -16,7 +16,7 @@ void Application::initSettings(){
     // graph settings
     settings_[Setting::GRAPH_IS_DIRECTED] = true;
     settings_[Setting::GRAPH_IS_WEIGHTED] = true;
-    settings_[Setting::GRAPH_WEIGHT_PRECISION] = 2;
+    settings_[Setting::GRAPH_WEIGHT_PRECISION] = 0;
     settings_[Setting::GRAPH_IS_LABELED] = true;
 
     // graph visual

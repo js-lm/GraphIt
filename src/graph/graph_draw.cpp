@@ -96,7 +96,7 @@ void Graph::drawEdges() const{
         drawArrowLine(
             startPoint, 
             endPoint, 
-            edgeThickness, 
+            edgeThicknessForThisEdge, 
             (!weightTempLabel.empty() && isSelected ? weightTempLabel.c_str() : weightLabel.str()), 
             edge->color()
         );

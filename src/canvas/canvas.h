@@ -88,10 +88,12 @@ public:
 private:
     void drawGrid() const;
 
+    void updateCursor() const;
     void drawPen() const;
     void drawLink() const;
     void drawEraser() const;
     void drawSelect() const;
+    void drawMove() const;
 
     void updateHoveredItem();
 

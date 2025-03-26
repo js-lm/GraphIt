@@ -1,9 +1,13 @@
 #include "toolbar.h"
 #include "system/application.h"
 
+#include <raygui.h>
+
 using namespace UI;
 
 void Toolbar::draw(){
+    if(algorithmDropdownBoxEditMode_) GuiLock();
+
     if(!isHidingUi_) DrawRectangleRec(mainPanelBounds_, Fade(WHITE, .5f));
 
     drawHideButton();
@@ -16,6 +20,8 @@ void Toolbar::draw(){
     drawIoBar();
     drawGridSettingsBar();
     drawAlgorithmBar();
+
+    if(algorithmDropdownBoxEditMode_) GuiUnlock();
 }
 
 void Toolbar::handleButtonPress(){

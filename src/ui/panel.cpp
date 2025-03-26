@@ -41,11 +41,11 @@ bool Panel::isMouseInsidePanel() const{
     bool isInside{false};
     isInside = CheckCollisionPointRec(GetMousePosition(), mainPanelBounds_);
 
-    for(const auto &panel : subPanelBounds_){
-        if(CheckCollisionPointRec(GetMousePosition(), panel)){
-            return true;
-        }
-    }
+    // for(const auto &panel : subPanelBounds_){
+    //     if(CheckCollisionPointRec(GetMousePosition(), panel)){
+    //         return true;
+    //     }
+    // }
 
     return isInside;
 }

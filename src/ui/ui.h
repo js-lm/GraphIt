@@ -15,12 +15,15 @@ public:
     void draw();
     void update();
 
-private:
+public:
+    bool isMouseOnCanvas() const;
+
+public:
     void openPanel(Panel::ID id);
     void closeTopPanel();
 
 private:
     std::vector<std::unique_ptr<Panel>> openedPanels_;
-};
+};  
 
 } // namespace UI

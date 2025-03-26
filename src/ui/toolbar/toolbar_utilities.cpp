@@ -25,7 +25,7 @@ void Toolbar::createNewFile(){
 }
 
 void Toolbar::loadSavedGraph(){
-
+    Application::instance().ui().openPanel(Panel::ID::LOAD);
 }
 
 void Toolbar::saveCurrentGraph(){

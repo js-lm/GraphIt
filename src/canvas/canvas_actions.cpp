@@ -8,6 +8,7 @@
 #include "actions_center/graph_action/reweigh.h"
 #include "lib/magic_enum.hpp"
 #include "system/terminal_prefix.h"
+#include "ui/ui.h"
 
 #include <optional>
 #include <iostream>
@@ -16,17 +17,7 @@
 #include <iterator>
 
 bool Canvas::isCanvasMouseButtonPressed(int key){
-    if(!CheckCollisionPointRec(GetMousePosition(), {0, 40, 1000, 640})) return false;
-
-    // TODO: remove this
-    // if(Application::instance().ui().isMouseInsidePanel()){
-    //     return false;
-    // }else if(Application::instance().ui().isShowingPanel() 
-    //       && IsMouseButtonPressed(key)
-    // ){
-    //     Application::instance().ui().closePanel();
-    //     return true;
-    // }
+    if(!Application::instance().ui().isMouseOnCanvas()) return false;
 
     return IsMouseButtonPressed(key);
 }
