@@ -43,6 +43,12 @@ void Application::initSettings(){
     settings_[Setting::COLOR_EDGE_BLOCKED] = RED;
     settings_[Setting::COLOR_EDGE_SPECIAL] = PURPLE;
 
+    // debug colors
+    settings_[Setting::COLOR_DEBUG_PEN] = DARKGRAY;
+    settings_[Setting::COLOR_DEBUG_LINK] = GRAY;
+    settings_[Setting::COLOR_DEBUG_DYE] = MAROON;
+    settings_[Setting::COLOR_PANEL_CALL_FROM] = 0;
+
     // algorithm settings
     settings_[Setting::ALGORITHM_IS_AUTO_FORWARD] = true;
     settings_[Setting::ALGORITHM_DROPDOWN_OPTION] = 0;

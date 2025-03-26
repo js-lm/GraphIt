@@ -72,10 +72,6 @@ public:
 
 public:
     Vector2 snapVector(Vector2 vector) const;
-    
-    Color &getPenColorReference(){ return penColor_;}
-    Color &getLinkColorReference(){ return linkColor_;}
-    Color &getDyeColorReference(){ return dyeColor_;}
 
 public:
     const Vector2 getCameraPosition(){ return canvasCamera_.target;}
@@ -138,10 +134,6 @@ private:
     SelectedVertices selectedVertexIDs_;
     SelectedEdges selectedEdgeIDs_;
     std::string weightInputString_;
-
-    Color penColor_;
-    Color linkColor_;
-    Color dyeColor_;
 
     // link mode
     std::optional<VertexID> linkFrom_;

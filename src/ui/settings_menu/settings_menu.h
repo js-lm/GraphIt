@@ -80,6 +80,14 @@ private:
 
 private: // utilities
 
+    // general
+    void resetLabel();
+    void resetVertexEdgeSize();
+    void resetColor();
+    void selectButton(ButtonPressed button);
+    void changeSelectedButtonColor(ButtonPressed button);
+    void resetGrid();
+    void resetALL();
 
 private: // draw
     void drawMainWindow();

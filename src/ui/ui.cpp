@@ -2,6 +2,7 @@
 #include "toolbar/toolbar.h"
 #include "file_dialog_load/file_dialog_load.h"
 #include "settings_menu/settings_menu.h"
+#include "color_panel/color_panel.h"
 
 #include <raylib.h>
 #include <raygui.h>
@@ -34,7 +35,7 @@ void Center::draw(){
 void Center::update(){
     for(auto i{openedPanels_.size()}; i--> 0;){
         openedPanels_[i]->update();
-        if(openedPanels_[i]->shouldExit()){
+        if(openedPanels_[i]->shouldClosePanel()){
             openedPanels_.erase(openedPanels_.begin() + i);
         }
     }
@@ -64,6 +65,9 @@ void Center::openPanel(Panel::ID id){
     //     break;
     case Panel::ID::SETTINGS:
         openedPanels_.push_back(std::make_unique<UI::SettingsMenu>());
+        break;
+    case Panel::ID::COLOR:
+        openedPanels_.push_back(std::make_unique<UI::ColorPanel>());
         break;
     
     default: break;

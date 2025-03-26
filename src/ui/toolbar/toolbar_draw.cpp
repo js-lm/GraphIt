@@ -118,6 +118,8 @@ void Toolbar::drawConstructionBar(){
     Vector2 &anchor{constructionAnchor_};
 
     int currentSelectedTool{Application::getValue<Setting, int>(Setting::TOOLBAR_CURRENT_SELECTED_TOOL)};
+    Color penColor{Application::getValue<Setting, Color>(Setting::COLOR_DEBUG_PEN)};
+    Color linkColor{Application::getValue<Setting, Color>(Setting::COLOR_DEBUG_LINK)};
 
     GuiGroupBox({anchor.x + 0, anchor.y + 0, 400, 40}, NULL);
     GuiLabel({anchor.x + 16, anchor.y + 8, 72, 24}, "Construction:");
@@ -149,10 +151,15 @@ void Toolbar::drawConstructionBar(){
     if(GuiButton({anchor.x + 150, anchor.y + 8, 12, 24}, NULL)){
         pressButton(BP::DEBUG_CHANGE_PEN_COLOR);
     }
+    DrawRectangle(anchor.x + 150, anchor.y + 8, 12, 24, penColor);
+    DrawRectangleLinesEx({anchor.x + 150, anchor.y + 8, 12, 24}, 2.0f, ColorBrightness(penColor, -.3f));
         
     if(GuiButton({anchor.x + 220, anchor.y + 8, 12, 24}, NULL)){
         pressButton(BP::DEBUG_CHANGE_LINK_COLOR);
     }
+    DrawRectangle(anchor.x + 220, anchor.y + 8, 12, 24, linkColor);
+    DrawRectangleLinesEx({anchor.x + 220, anchor.y + 8, 12, 24}, 2.0f, ColorBrightness(linkColor, -.3f));
+
 }
 
 void Toolbar::drawControlsBar(){
@@ -161,6 +168,7 @@ void Toolbar::drawControlsBar(){
     int currentSelectedTool{Application::getValue<Setting, int>(Setting::TOOLBAR_CURRENT_SELECTED_TOOL)};
     bool isSelectingVertex{Application::getValue<Setting, bool>(Setting::TOOLBAR_IS_SELECTING_VERTEX)};
     bool isSelectingEdge{Application::getValue<Setting, bool>(Setting::TOOLBAR_IS_SELECTING_EDGE)};
+    Color dyeColor{Application::getValue<Setting, Color>(Setting::COLOR_DEBUG_DYE)};
 
     GuiGroupBox({anchor.x + 0, anchor.y + 0, 600, 40}, NULL);
     GuiLabel({anchor.x + 16, anchor.y + 8, 48, 24}, "Control:");
@@ -184,6 +192,8 @@ void Toolbar::drawControlsBar(){
     if(GuiButton({anchor.x + 350, anchor.y + 8, 12, 24}, NULL)){
         pressButton(BP::DEBUG_CHANGE_DYE_COLOR);
     }
+    DrawRectangle(anchor.x + 350, anchor.y + 8, 12, 24, dyeColor);
+    DrawRectangleLinesEx({anchor.x + 350, anchor.y + 8, 12, 24}, 2.0f, ColorBrightness(dyeColor, -.3f));
         
     if(GuiButton({anchor.x + 221, anchor.y + 8, 72, 24}, "#143#Delete")){
         pressButton(BP::DEBUG_DELETE_SELECTED);

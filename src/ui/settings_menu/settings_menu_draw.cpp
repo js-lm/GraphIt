@@ -13,7 +13,9 @@ using BP = SettingsMenu::ButtonPressed;
 void SettingsMenu::drawMainWindow(){
     const Vector2 &anchor{settingWindowAnchor_};
 
-    shouldExit_ = GuiWindowBox({anchor.x + 0, anchor.y + 0, 688, 480}, "#142#Settings");
+    if(GuiWindowBox({anchor.x + 0, anchor.y + 0, 688, 480}, "#142#Settings")){
+        shouldClosePanel_ = true;
+    }
 
     GuiListView({anchor.x + 0, anchor.y + 24, 96, 456}, "General;Graphics;DEBUG", &settingListViewScrollIndex_, &settingListViewActive_);
 

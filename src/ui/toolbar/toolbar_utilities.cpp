@@ -82,15 +82,20 @@ void Toolbar::resetCamera(){
 }
 
 void Toolbar::changePenColor(){
-
+    Application::setValue<Setting, int>(Setting::COLOR_PANEL_CALL_FROM, 1);
+    Application::instance().ui().openPanel(Panel::ID::COLOR);
+    switchMode(Canvas::Mode::PEN);
 }
 
 void Toolbar::changeLinkColor(){
-
+    Application::setValue<Setting, int>(Setting::COLOR_PANEL_CALL_FROM, 2);
+    Application::instance().ui().openPanel(Panel::ID::COLOR);
+    switchMode(Canvas::Mode::LINK);
 }
 
 void Toolbar::changeDyeColor(){
-
+    Application::setValue<Setting, int>(Setting::COLOR_PANEL_CALL_FROM, 3);
+    Application::instance().ui().openPanel(Panel::ID::COLOR);
 }
 
 

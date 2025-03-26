@@ -40,6 +40,7 @@ enum class Setting{
     COLOR_DEBUG_PEN,            // Color
     COLOR_DEBUG_LINK,           // Color
     COLOR_DEBUG_DYE,            // Color
+    COLOR_PANEL_CALL_FROM,      // (int) none:0 pen:1 link:2 dye:3
 
     // algorithm settings
     ALGORITHM_IS_AUTO_FORWARD,  // bool

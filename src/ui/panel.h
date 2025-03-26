@@ -12,7 +12,8 @@ public:
         SAVE,
         LOAD,
         CONFIRM_REPLACE,
-        SETTINGS
+        SETTINGS,
+        COLOR,
     };
 
 public:
@@ -23,12 +24,11 @@ public:
     virtual void update(){}
 
     // only handle inputs from the top panel
-    // return true to request poping
-    virtual bool handleInput();
+    virtual void handleInput();
 
     const Rectangle getMainPanelBounds() const{ return mainPanelBounds_;}
 
-    const bool shouldExit() const{ return shouldExit_;}
+    const bool shouldClosePanel() const{ return shouldClosePanel_;}
     const bool shouldBlurBackground() const{ return shouldBlueBackground_;}
 
 public:
@@ -39,18 +39,17 @@ protected:
     virtual void handleButtonPress() = 0;
 
     void handleKeyboardShortcuts();
-    virtual bool updateKeys(int key){ return false;}
+    virtual bool updateKeys(int key);
     virtual bool updateCommandKeys(int key){ return false;}
     virtual bool updateCommandShiftKeys(int key){ return false;}
 
 protected:
     ID id_;
 
-    bool shouldExit_{false};
+    bool shouldClosePanel_{false};
     bool shouldBlueBackground_{false};
 
     Rectangle mainPanelBounds_;
-    // std::vector<Rectangle> subPanelBounds_;
 };
 
 } // namespace UI

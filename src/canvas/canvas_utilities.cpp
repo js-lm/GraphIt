@@ -79,10 +79,11 @@ void Canvas::drawPen() const{
     if(!Application::instance().ui().isMouseOnCanvas()) return;
 
     bool snapToGrid{Application::getValue<Setting, bool>(Setting::GRID_IS_SNAP_TO_GRID)};
+    Color penColor{Application::getValue<Setting, Color>(Setting::COLOR_DEBUG_PEN)};
     DrawCircleV(
         getMousePositionInCanvas(snapToGrid), 
         Application::instance().getValue<Setting, float>(Setting::GRAPH_VERTEX_RADIUS), 
-        penColor_
+        penColor
     );
 }
 
@@ -92,13 +93,14 @@ void Canvas::drawLink() const{
     if(linkFrom_){
         auto startingPosition{Application::instance().graph().getVertexPosition(linkFrom_.value())};
         auto thickness{Application::instance().getValue<Setting, float>(Setting::GRAPH_EDGE_THICKNESS)};
+        Color linkColor{Application::getValue<Setting, Color>(Setting::COLOR_DEBUG_LINK)};
         DrawLineEx(
             startingPosition,
             getMousePositionInCanvas(),
             thickness,
-            linkColor_
+            linkColor
         );
-        DrawCircleV(getMousePositionInCanvas(), thickness / 2, linkColor_);
+        DrawCircleV(getMousePositionInCanvas(), thickness / 2, linkColor);
     }
 
     updateCursor();

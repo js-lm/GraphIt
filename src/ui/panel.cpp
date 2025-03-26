@@ -10,11 +10,9 @@
 
 using namespace UI;
 
-bool Panel::handleInput(){
+void Panel::handleInput(){
     handleButtonPress();
     handleKeyboardShortcuts();
-
-    return false;
 }
 
 void Panel::handleKeyboardShortcuts(){
@@ -41,11 +39,14 @@ bool Panel::isMouseInsidePanel() const{
     bool isInside{false};
     isInside = CheckCollisionPointRec(GetMousePosition(), mainPanelBounds_);
 
-    // for(const auto &panel : subPanelBounds_){
-    //     if(CheckCollisionPointRec(GetMousePosition(), panel)){
-    //         return true;
-    //     }
-    // }
-
     return isInside;
+}
+
+bool Panel::updateKeys(int key){
+    // no modifier keys
+    switch(key){
+    case KEY_ESCAPE: return shouldClosePanel_ = true;
+    default: break;
+    }
+    return false;
 }

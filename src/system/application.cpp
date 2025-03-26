@@ -41,11 +41,11 @@ int Application::run(){
     // SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_WINDOW_TRANSPARENT);
 
     InitWindow(screenWidth, screenHeight, "GraphIt! v" GRAPHIT_VERSION_STRING);
-    // SetTargetFPS(300);
+    SetTargetFPS(300);
 
     printInitMessage();
 
-    // SetExitKey(KEY_NULL);
+    SetExitKey(KEY_NULL);
 
     while(!WindowShouldClose()){
         ui_->update();
@@ -53,12 +53,9 @@ int Application::run(){
         actionsCenter_->update();
 
         BeginDrawing(); {
-            ClearBackground(RAYWHITE); // BLANK);
-
+            ClearBackground(RAYWHITE);
             canvas_->draw();
             ui_->draw();
-            
-            DrawFPS(screenWidth - 50, screenHeight - 20);
         } EndDrawing();
     }
 

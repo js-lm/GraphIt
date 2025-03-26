@@ -12,7 +12,9 @@ using BP = FileDialogLoad::ButtonPressed;
 void FileDialogLoad::drawPanel(){
     if(fileTypeEditMode) GuiLock();
 
-    shouldExit_ = GuiWindowBox({windowAnchor_.x + 0, windowAnchor_.y + 0, 480, 300}, "#005#Select a save file");
+    if(GuiWindowBox({windowAnchor_.x + 0, windowAnchor_.y + 0, 480, 300}, "#005#Select a save file")){
+        shouldClosePanel_ = true;
+    }
 
     if(GuiButton({windowAnchor_.x + 424, windowAnchor_.y + 32, 48, 24}, "<")){
         pressButton(BP::BACK);
@@ -39,7 +41,7 @@ void FileDialogLoad::drawPanel(){
     }
 
     if(GuiButton({windowAnchor_.x + 360, windowAnchor_.y + 264, 112, 24}, "Cancel")){
-        shouldExit_ = true;
+        shouldClosePanel_ = true;
     }
 
     GuiLabel({windowAnchor_.x + 8, windowAnchor_.y + 264, 64, 24}, "File filter:");
