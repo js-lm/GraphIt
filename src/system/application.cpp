@@ -38,16 +38,19 @@ int Application::run(){
     const int screenWidth{1000};
     const int screenHeight{720};
 
-    // SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_WINDOW_TRANSPARENT);
-
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(screenWidth, screenHeight, "GraphIt! v" GRAPHIT_VERSION_STRING);
-    SetTargetFPS(300);
-
     printInitMessage();
 
+    SetTargetFPS(300);
     SetExitKey(KEY_NULL);
+    SetWindowMinSize(screenWidth, screenHeight);
+    SetWindowMaxSize(screenWidth * 10, screenHeight * 10);  
+
+    handleWindowResizeEvent(); // since the window was created after the ui
 
     while(!WindowShouldClose()){
+        update();
         ui_->update();
         canvas_->update();
         actionsCenter_->update();
@@ -62,4 +65,12 @@ int Application::run(){
     CloseWindow();
 
     return 0;
+}
+
+void Application::update(){
+    if(IsWindowResized()) handleWindowResizeEvent();
+}
+
+void Application::handleWindowResizeEvent(){
+    ui_->updatePanelAnchors();
 }

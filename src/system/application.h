@@ -49,6 +49,11 @@ private:
     ~Application();
 
 private:
+    void update();
+
+    void handleWindowResizeEvent();
+
+private:
     Graph *graph_;
     ActionsCenter *actionsCenter_;
     UI::Center *ui_;

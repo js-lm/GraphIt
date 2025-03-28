@@ -21,31 +21,23 @@ public:
 public:
     FileDialogLoad(){
         id_ = ID::LOAD;
-
-        shouldBlueBackground_ = true;
-
-        windowAnchor_ ={
-            (float)(GetScreenWidth() - 480) / 2.0f, 
-            (float)(GetScreenHeight() - 300) / 2.0f
-        };
-
-        mainPanelBounds_ = {
-            windowAnchor_.x, 
-            windowAnchor_.y,
-            480.0f,
-            300.0f
-        };
-        
+        shouldBlueBackground_ = true;  
+        refreshAnchors();      
     };
     ~FileDialogLoad() = default;
 
     void draw() override;
+    void update() override;
+
+    void refreshAnchors() override;
 
 private:
     void pressButton(ButtonPressed button){ pressedButton_ = button;}
     const ButtonPressed buttonPressed() const{ return pressedButton_;}
 
     void handleButtonPress() override;
+
+    void updateFileList(); 
 
 private: // utilities
     void goBack();
@@ -55,6 +47,9 @@ private: // utilities
 
 private: // draw
     void drawPanel();
+    void drawScrollPanel();
+
+    void drawFilesListing();
 
 private: // anchors
     Vector2 windowAnchor_;
@@ -62,18 +57,18 @@ private: // anchors
 private:
     ButtonPressed pressedButton_{ButtonPressed::NONE};
 
-    bool pathEditMode{false};
-    std::string pathText;
+    bool pathEditMode_{false};
+    std::string pathText_;
     
-    bool filenameEditMode{false};
-    std::string fileNameText;
+    bool filenameEditMode_{false};
+    std::string fileNameText_;
 
-    bool fileTypeEditMode{false};
-    int fileTypeActive{0};
+    bool fileTypeEditMode_{false};
+    int fileTypeActive_{0};
 
-    Rectangle scrollPanelScrollView{0, 0, 0, 0};
-    Vector2 scrollPanelScrollOffset{0, 0};
-    Vector2 scrollPanelBoundsOffset{0, 0};
+    Rectangle scrollPanelScrollView_{0, 0, 0, 0};
+    Vector2 scrollPanelScrollOffset_{0, 0};
+    Vector2 scrollPanelBoundsOffset_{0, 0};
 };
 
 } // namespace UI

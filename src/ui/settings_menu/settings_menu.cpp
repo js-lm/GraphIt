@@ -61,3 +61,25 @@ void SettingsMenu::handleButtonPress(){
         case BP::NONE: default: break;
     }
 }
+
+void SettingsMenu::refreshAnchors(){
+    Vector2 anchor{
+        (GetScreenWidth() - 688) / 2.0f, 
+        (GetScreenHeight() - 480) / 2.0f
+    };
+    
+    settingWindowAnchor_ = anchor;
+ 
+    mainPanelBounds_ = {
+        anchor.x, 
+        anchor.y,
+        688.0f,
+        480.0f
+    };
+
+    // general
+    graphSettingAnchor_ = {anchor. x + 112, anchor. y + 48};
+    colorPreferencesAnchor_ = {anchor. x + 112, anchor. y + 192};
+    vertexEdgeSettingsAnchor_ = {anchor. x + 520, anchor. y + 48};
+    gridSettingsAnchor_ = {anchor. x + 480, anchor. y + 192};
+}

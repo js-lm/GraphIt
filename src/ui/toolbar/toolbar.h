@@ -47,13 +47,12 @@ public:
     };
 
 public:
-    Toolbar(){
-        id_ = ID::TOOLBAR;
-        mainPanelBounds_ = {0, 0, 1000, 80};
-    };
+    Toolbar(){ id_ = ID::TOOLBAR;};
     ~Toolbar() = default;
 
     void draw() override;
+
+    void refreshAnchors() override;
 
 private:
     void pressButton(ButtonPressed button){ pressedButton_ = button;}
@@ -101,11 +100,12 @@ private: // draw
     void drawControlsBar();
 
 private: // anchors
-    Vector2 ioAnchor_{0, 0};
-    Vector2 gridSettingsAnchor_{216, 0};
-    Vector2 algorithmAnchor_{480, 0};
-    Vector2 constructionAnchor_{0, 40};
-    Vector2 controlAnchor_{400, 40};
+    Vector2 ioAnchor_;
+    Vector2 gridSettingsAnchor_;
+    Vector2 algorithmAnchor_;
+    Vector2 constructionAnchor_;
+    Vector2 controlAnchor_;
+    Rectangle hideButtonAnchor_;
 
 private:
     ButtonPressed pressedButton_{ButtonPressed::NONE};

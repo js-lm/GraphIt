@@ -38,6 +38,8 @@ public:
     void draw() override;
     void update() override;
 
+    void refreshAnchors() override;
+
 private:
     void pressButton(ButtonPressed button){ pressedButton_ = button;}
     const ButtonPressed buttonPressed() const{ return pressedButton_;}

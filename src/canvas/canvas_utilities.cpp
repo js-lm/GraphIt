@@ -8,12 +8,15 @@
 #include <iostream>
 #include <cmath>
 #include <raymath.h>
+#include <raygui.h>
+#include <string>
 
 void Canvas::resetCamera(){
     canvasCamera_.target = {0.0f, 0.0f};
     canvasCamera_.offset = {0.0f, 0.0f};
     canvasCamera_.rotation = 0.0f;
     canvasCamera_.zoom = 1.0f;
+    zoomFactorTemp_ = 1.0f;
 }
 
 void Canvas::drawGrid() const{
@@ -24,6 +27,7 @@ void Canvas::drawGrid() const{
     int lineInterval{Application::getValue<Setting, int>(Setting::GRID_SUBDIVISION_SIZE)};
     int screenHeight{static_cast<int>(GetScreenHeight() / canvasCamera_.zoom)};
     int screenWeight{static_cast<int>(GetScreenWidth() / canvasCamera_.zoom)};
+    float lineThickness{1.0f / canvasCamera_.zoom};
 
     int leftMostVerticalLine{static_cast<int>(canvasPosition.x - static_cast<int>(canvasPosition.x) % cellSize)};
     int verticalLineNumber{static_cast<int>(screenWeight / cellSize)};
@@ -34,7 +38,7 @@ void Canvas::drawGrid() const{
         DrawLineEx(
             {x, canvasCamera_.target.y},
             {x, canvasCamera_.target.y + screenHeight},
-            (static_cast<int>(x) % (cellSize * lineInterval) == 0 ? 2.0f : 1.0f),
+            lineThickness * (static_cast<int>(x) % (cellSize * lineInterval) == 0 ? 2.0f : 1.0f),
             {235, 235, 235, 255}
         );
     }
@@ -48,10 +52,44 @@ void Canvas::drawGrid() const{
         DrawLineEx(
             {canvasCamera_.target.x, y},
             {canvasCamera_.target.x + screenWeight, y},
-            (static_cast<int>(y) % (cellSize * lineInterval) == 0 ? 2.0f : 1.0f),
+            lineThickness * (static_cast<int>(y) % (cellSize * lineInterval) == 0 ? 2.0f : 1.0f),
             {235, 235, 235, 255}
         );
     }
+}
+
+void Canvas::drawZoomProgressBar() const{
+    if(timeSinceLastScrolling_ > 1.0f) return;
+
+    float zoomPercent{(canvasCamera_.zoom - .2f) / 1.8f};
+
+    Rectangle progressBarRectangle{
+        (GetScreenWidth() - 400) / 2.0f,
+        GetScreenHeight() - 40.0f,
+        400.0f,
+        16.0f
+    };
+
+    GuiProgressBar(
+        progressBarRectangle,
+        "20%", 
+        "200%", 
+        &zoomPercent, 
+        0.0f, 
+        1.0f
+    );
+
+    std::string zoomLabel{"Zoom: " + std::to_string(canvasCamera_.zoom)};
+
+    GuiLabel(
+        {
+            progressBarRectangle.x, 
+            progressBarRectangle.y - 24, 
+            120, 
+            24
+        }, 
+        zoomLabel.c_str()
+    );
 }
 
 void Canvas::drawMouse() const{
@@ -118,7 +156,7 @@ void Canvas::drawSelect() const{
     Rectangle rectangle{normalizeRectangle(startFrom_.value(), getMousePositionInCanvas())};
 
     DrawRectangleRec(rectangle, Fade(BLUE, .5f));
-    DrawRectangleLinesEx(rectangle, 2.0f, BLUE);
+    DrawRectangleLinesEx(rectangle, 2.0f / canvasCamera_.zoom, BLUE);
 }
 
 void Canvas::drawMove() const{

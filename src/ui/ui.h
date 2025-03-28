@@ -17,6 +17,8 @@ public:
 
 public:
     bool isMouseOnCanvas() const;
+    
+    void updatePanelAnchors();
 
 public:
     void openPanel(Panel::ID id);

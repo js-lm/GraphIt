@@ -31,6 +31,8 @@ public:
     const bool shouldClosePanel() const{ return shouldClosePanel_;}
     const bool shouldBlurBackground() const{ return shouldBlueBackground_;}
 
+    virtual void refreshAnchors() = 0;
+
 public:
     bool isMousePressedInsidePanel(int button) const;
     bool isMouseInsidePanel() const;

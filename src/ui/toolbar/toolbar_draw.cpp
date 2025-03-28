@@ -10,7 +10,7 @@ using namespace UI;
 using BP = Toolbar::ButtonPressed;
 
 void Toolbar::drawIoBar(){
-    Vector2 &anchor{ioAnchor_};
+    const Vector2 &anchor{ioAnchor_};
 
     bool canUndo{Application::getValue<Flag, bool>(Flag::TOOLBAR_CAN_UNDO)};
     bool canRedo{Application::getValue<Flag, bool>(Flag::TOOLBAR_CAN_REDO)};
@@ -47,7 +47,7 @@ void Toolbar::drawIoBar(){
 }
 
 void Toolbar::drawGridSettingsBar(){
-    Vector2 &anchor{gridSettingsAnchor_};
+    const Vector2 &anchor{gridSettingsAnchor_};
 
     bool showGrid{Application::getValue<Setting, bool>(Setting::GRID_SHOW)};
     bool snapToGrid{Application::getValue<Setting, bool>(Setting::GRID_IS_SNAP_TO_GRID)};
@@ -63,7 +63,7 @@ void Toolbar::drawGridSettingsBar(){
 }
 
 void Toolbar::drawAlgorithmBar(){
-    Vector2 &anchor{algorithmAnchor_};
+    const Vector2 &anchor{algorithmAnchor_};
 
     int algorithmDropdownOption{Application::getValue<Setting, int>(Setting::ALGORITHM_DROPDOWN_OPTION)};
     bool autoForward{Application::getValue<Setting, bool>(Setting::ALGORITHM_IS_AUTO_FORWARD)};
@@ -115,7 +115,7 @@ void Toolbar::drawAlgorithmBar(){
 }
 
 void Toolbar::drawConstructionBar(){
-    Vector2 &anchor{constructionAnchor_};
+    const Vector2 &anchor{constructionAnchor_};
 
     int currentSelectedTool{Application::getValue<Setting, int>(Setting::TOOLBAR_CURRENT_SELECTED_TOOL)};
     Color penColor{Application::getValue<Setting, Color>(Setting::COLOR_DEBUG_PEN)};
@@ -163,7 +163,7 @@ void Toolbar::drawConstructionBar(){
 }
 
 void Toolbar::drawControlsBar(){
-    Vector2 &anchor{controlAnchor_};
+    const Vector2 &anchor{controlAnchor_};
 
     int currentSelectedTool{Application::getValue<Setting, int>(Setting::TOOLBAR_CURRENT_SELECTED_TOOL)};
     bool isSelectingVertex{Application::getValue<Setting, bool>(Setting::TOOLBAR_IS_SELECTING_VERTEX)};
@@ -208,6 +208,5 @@ void Toolbar::drawControlsBar(){
 }
 
 void Toolbar::drawHideButton(){
-    Vector2 &anchor{algorithmAnchor_};
-    GuiToggle({anchor.x + 480, anchor.y + 48, 24, 24}, (isHidingUi_ ? "#045#" : "#044#"), &isHidingUi_);
+    GuiToggle(hideButtonAnchor_, (isHidingUi_ ? "#045#" : "#044#"), &isHidingUi_);
 }

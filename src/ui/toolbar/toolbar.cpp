@@ -101,3 +101,27 @@ bool Toolbar::updateCommandShiftKeys(int key){
     }
     return false;
 }
+
+void Toolbar::refreshAnchors(){
+    float horizontalOffset{(GetScreenWidth() - 1000) / 2.0f};
+
+    mainPanelBounds_ = {horizontalOffset, 0, 1000, 80};
+
+    ioAnchor_ = {horizontalOffset, 0}; 
+    gridSettingsAnchor_ = {216 + horizontalOffset, 0};
+    algorithmAnchor_ = {480 + horizontalOffset, 0};
+    constructionAnchor_ = {0 + horizontalOffset, 40};
+    controlAnchor_ = {400 + horizontalOffset, 40};
+
+    hideButtonAnchor_ = {
+        algorithmAnchor_.x + 480, 
+        algorithmAnchor_.y + 48, 
+        24, 
+        24
+    };
+
+    if(GetScreenWidth() >= 1080){
+        hideButtonAnchor_.x = GetScreenWidth() - 32;
+        hideButtonAnchor_.y = algorithmAnchor_.y + 8;
+    }
+}

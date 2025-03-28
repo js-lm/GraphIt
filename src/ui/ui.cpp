@@ -49,6 +49,12 @@ bool Center::isMouseOnCanvas() const{
         && !openedPanels_.back()->isMouseInsidePanel();
 }
 
+void Center::updatePanelAnchors(){
+    for(const auto &panel : openedPanels_){
+        panel->refreshAnchors();
+    }
+}
+
 void Center::openPanel(Panel::ID id){
     switch(id){
     case Panel::ID::TOOLBAR:

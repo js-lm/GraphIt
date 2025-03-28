@@ -3,22 +3,12 @@
 
 using namespace UI;
 
-ColorPanel::ColorPanel()
-    : panelAnchor_({
-        (float)(GetScreenWidth() - 336) / 2.0f, 
-        (float)(GetScreenHeight() - 208) / 2.0f
-    })
-{
+ColorPanel::ColorPanel(){
     id_ = ID::COLOR;
 
     shouldBlueBackground_ = true;
 
-    mainPanelBounds_ = {
-        panelAnchor_.x,
-        panelAnchor_.y,
-        336,
-        208
-    };
+    refreshAnchors();
 
     // TODO: don't use int
     int destination{Application::getValue<Setting, int>(Setting::COLOR_PANEL_CALL_FROM)};
@@ -56,4 +46,18 @@ void ColorPanel::handleButtonPress(){
         
     case BP::NONE: default: break;
     }
+}
+
+void ColorPanel::refreshAnchors(){
+    panelAnchor_ = {
+        (GetScreenWidth() - 336) / 2.0f, 
+        (GetScreenHeight() - 208) / 2.0f
+    };
+    
+    mainPanelBounds_ = {
+        panelAnchor_.x,
+        panelAnchor_.y,
+        336,
+        208
+    };
 }

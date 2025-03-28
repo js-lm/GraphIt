@@ -148,14 +148,23 @@ void Canvas::updateScreenZooming(){
     auto zoom{GetMouseWheelMove()};
     if(zoom){
         Vector2 pivot{getMousePositionInCanvas()};
-        float zoomSpeed{.1f * canvasCamera_.zoom};
-        canvasCamera_.zoom += zoomSpeed * GetMouseWheelMove();
-        canvasCamera_.zoom = Clamp(canvasCamera_.zoom, .2f, 2.0f);
+        float zoomSpeed{.1f * zoomFactorTemp_};
+        zoomFactorTemp_ += zoomSpeed * GetMouseWheelMove();
+        zoomFactorTemp_ = Clamp(zoomFactorTemp_, .2f, 2.0f);
+        canvasCamera_.zoom = zoomFactorTemp_;
+
+        if(abs(1.0f - canvasCamera_.zoom) < .075f){
+            canvasCamera_.zoom = 1.0f;
+        }
         
         canvasCamera_.target = Vector2Add(
             canvasCamera_.target, 
             Vector2Subtract(pivot, getMousePositionInCanvas())
         );
+
+        timeSinceLastScrolling_ = 0.0f;
+    }else if(timeSinceLastScrolling_ <= 999.0f){
+        timeSinceLastScrolling_ += GetFrameTime();
     }
 }
 

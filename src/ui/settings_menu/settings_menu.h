@@ -57,20 +57,14 @@ public:
 public:
     SettingsMenu(){
         id_ = ID::SETTINGS;
-
         shouldBlueBackground_ = true;
-
-        mainPanelBounds_ = {
-            settingWindowAnchor_.x, 
-            settingWindowAnchor_.y,
-            688.0f,
-            480.0f
-        };
-        
+        refreshAnchors();
     };
     ~SettingsMenu() = default;
 
     void draw() override;
+
+    void refreshAnchors() override;
 
 private:
     void pressButton(ButtonPressed button){ pressedButton_ = button;}
@@ -99,13 +93,13 @@ private: // draw
     void drawGeneralGridSetting();
 
 private: // anchors
-    Vector2 settingWindowAnchor_{168, 96};
+    Vector2 settingWindowAnchor_;
 
     // general
-    Vector2 graphSettingAnchor_{280, 144};
-    Vector2 colorPreferencesAnchor_{280, 288};
-    Vector2 vertexEdgeSettingsAnchor_{688, 144};
-    Vector2 gridSettingsAnchor_{648, 288};
+    Vector2 graphSettingAnchor_;
+    Vector2 colorPreferencesAnchor_;
+    Vector2 vertexEdgeSettingsAnchor_;
+    Vector2 gridSettingsAnchor_;
 
 private:
     ButtonPressed pressedButton_{ButtonPressed::NONE};

@@ -84,6 +84,8 @@ public:
 private:
     void drawGrid() const;
 
+    void drawZoomProgressBar() const;
+
     void updateCursor() const;
     void drawPen() const;
     void drawLink() const;
@@ -140,6 +142,8 @@ private:
 
     // move mode
     Vector2 pivotPoint_;
+    float zoomFactorTemp_; // for integer snapping
+    float timeSinceLastScrolling_; // for displaying the zoom factor
 
     // drag mode
     std::optional<VertexID> vertexToDrag_;

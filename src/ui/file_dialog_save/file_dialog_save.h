@@ -30,6 +30,8 @@ private:
     bool updateCommandKeys(int key) override;
     bool updateCommandShiftKeys(int key) override;
 
+    void refreshAnchors() override;
+    
 private: // utilities
 
 private: // draw
