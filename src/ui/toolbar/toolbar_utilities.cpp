@@ -2,6 +2,7 @@
 #include "system/application.h"
 #include "actions_center/actions_center.h"
 #include "graph/graph.h"
+#include "io/io.h"
 
 #include <iomanip>
 #include <ctime>
@@ -29,7 +30,7 @@ void Toolbar::loadSavedGraph(){
 }
 
 void Toolbar::saveCurrentGraph(){
-
+    Application::instance().serializer().save("save");
 }
 
 void Toolbar::undo(){ Application::instance().actionCenter().undo();}
@@ -79,6 +80,7 @@ void Toolbar::dyeSelected(){
 
 void Toolbar::resetCamera(){
     Application::instance().canvas().resetCamera();
+    Application::instance().canvas().setZoomBarTimer();
 }
 
 void Toolbar::changePenColor(){

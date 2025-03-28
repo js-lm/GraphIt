@@ -72,13 +72,14 @@ private:
 private:
     void drawVertices() const;
     void drawEdges() const;
-    void drawArrowLine(
+    void drawArrow(
         const Vector2 &startPoint, 
         const Vector2 &endPoint, 
-        float thickness, 
-        const std::string &label, 
+        float thickness,  
         Color color
     ) const;
+    void drawLabels() const;
+    void drawWeights() const;
 
     bool isValidID(VertexID id) const{ return id < vertices_.size();}
     bool isVertexHidden(size_t id) const;

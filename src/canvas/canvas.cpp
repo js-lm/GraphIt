@@ -7,11 +7,8 @@
 Canvas::Canvas()
     : mode_(Mode::VIEW)
     , pivotPoint_({0, 0})
-    , timeSinceLastScrolling_(999.0f)
     , vertexOriginalPosition_({0, 0})
-{
-    resetCamera();
-}
+{}
 
 void Canvas::update(){
     updateHoveredItem();

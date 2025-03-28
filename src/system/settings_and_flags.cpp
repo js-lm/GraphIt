@@ -9,8 +9,8 @@ std::unordered_map<Flag, Application::SettingValue> Application::flags_;
 
 void Application::initSettings(){
     // grid settings
-    settings_[Setting::GRID_SHOW] = false;
-    settings_[Setting::GRID_IS_SNAP_TO_GRID] = false;
+    settings_[Setting::GRID_SHOW] = true;
+    settings_[Setting::GRID_IS_SNAP_TO_GRID] = true;
     settings_[Setting::GRID_CELL_SIZE] = 24;
     settings_[Setting::GRID_SUBDIVISION_SIZE] = 3;
 

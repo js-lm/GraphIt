@@ -12,7 +12,7 @@
 #include <string>
 
 void Canvas::resetCamera(){
-    canvasCamera_.target = {0.0f, 0.0f};
+    canvasCamera_.target = {-GetScreenWidth() / 2.0f, -GetScreenHeight() / 2.0f};
     canvasCamera_.offset = {0.0f, 0.0f};
     canvasCamera_.rotation = 0.0f;
     canvasCamera_.zoom = 1.0f;
@@ -30,38 +30,38 @@ void Canvas::drawGrid() const{
     float lineThickness{1.0f / canvasCamera_.zoom};
 
     int leftMostVerticalLine{static_cast<int>(canvasPosition.x - static_cast<int>(canvasPosition.x) % cellSize)};
-    int verticalLineNumber{static_cast<int>(screenWeight / cellSize)};
+    int verticalLineNumber{static_cast<int>(screenWeight / cellSize) + 1};
 
-    for(auto i{0}; i < verticalLineNumber; i++){
+    for(auto i{0}; i <= verticalLineNumber; i++){
         float x{static_cast<float>(leftMostVerticalLine + cellSize * i)};
 
         DrawLineEx(
             {x, canvasCamera_.target.y},
             {x, canvasCamera_.target.y + screenHeight},
             lineThickness * (static_cast<int>(x) % (cellSize * lineInterval) == 0 ? 2.0f : 1.0f),
-            {235, 235, 235, 255}
+            GetColor(GuiGetStyle(DEFAULT, BASE_COLOR_DISABLED))
         );
     }
 
     int topMostHorizontalLine{static_cast<int>(canvasPosition.y - static_cast<int>(canvasPosition.y) % cellSize)};
-    int horizontalLineNumber{static_cast<int>(screenHeight / cellSize)};
+    int horizontalLineNumber{static_cast<int>(screenHeight / cellSize) + 1};
 
-    for(auto i{0}; i < horizontalLineNumber; i++){
+    for(auto i{0}; i <= horizontalLineNumber; i++){
         float y{static_cast<float>(topMostHorizontalLine + cellSize * i)};
 
         DrawLineEx(
             {canvasCamera_.target.x, y},
             {canvasCamera_.target.x + screenWeight, y},
             lineThickness * (static_cast<int>(y) % (cellSize * lineInterval) == 0 ? 2.0f : 1.0f),
-            {235, 235, 235, 255}
+            GetColor(GuiGetStyle(DEFAULT, BASE_COLOR_DISABLED))
         );
     }
 }
 
 void Canvas::drawZoomProgressBar() const{
-    if(timeSinceLastScrolling_ > 1.0f) return;
+    if(!lostScrollCD_) return;
 
-    float zoomPercent{(canvasCamera_.zoom - .2f) / 1.8f};
+    float zoomPercent{(std::log(canvasCamera_.zoom / .2f) / std::log(10.0f))};
 
     Rectangle progressBarRectangle{
         (GetScreenWidth() - 400) / 2.0f,
@@ -69,6 +69,8 @@ void Canvas::drawZoomProgressBar() const{
         400.0f,
         16.0f
     };
+
+    DrawRectangleRec(progressBarRectangle, Fade(GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR)), .5f));
 
     GuiProgressBar(
         progressBarRectangle,
@@ -79,7 +81,19 @@ void Canvas::drawZoomProgressBar() const{
         1.0f
     );
 
-    std::string zoomLabel{"Zoom: " + std::to_string(canvasCamera_.zoom)};
+    DrawLine(
+        progressBarRectangle.x + 280.0f,
+        progressBarRectangle.y + 2.0f,
+        progressBarRectangle.x + 280.0f,
+        progressBarRectangle.y + 14.0f,
+        GetColor(GuiGetStyle(
+            DEFAULT, 
+            LINE_COLOR
+        ))
+    );
+
+    char zoomLabel[32];
+    std::snprintf(zoomLabel, 32, "#42#Zoom: %.2f", canvasCamera_.zoom);
 
     GuiLabel(
         {
@@ -88,11 +102,12 @@ void Canvas::drawZoomProgressBar() const{
             120, 
             24
         }, 
-        zoomLabel.c_str()
+        zoomLabel
     );
 }
 
 void Canvas::drawMouse() const{
+    if(!IsCursorOnScreen()) return;
     switch(mode_){
     case Mode::VIEW:                    break;
     case Mode::SELECT:  drawSelect();   break;
@@ -114,7 +129,7 @@ void Canvas::updateCursor() const{
 }
 
 void Canvas::drawPen() const{
-    if(!Application::instance().ui().isMouseOnCanvas()) return;
+    if(!isMouseOnCanvas()) return;
 
     bool snapToGrid{Application::getValue<Setting, bool>(Setting::GRID_IS_SNAP_TO_GRID)};
     Color penColor{Application::getValue<Setting, Color>(Setting::COLOR_DEBUG_PEN)};

@@ -20,15 +20,14 @@ void ColorPanel::drawPanel(){
 
     GuiLabel({anchor.x + 16, anchor.y + 144, 32, 24}, "RBG: ");
     static char r[16];
-    sprintf(r, "%3d", newColor_.r);
+    std::snprintf(r, 16, "%3d", newColor_.r);
     GuiLabel({anchor.x + 56, anchor.y + 144, 24, 24}, r);
     static char g[16];
-    sprintf(g, "%3d", newColor_.g);
+    std::snprintf(g, 16, "%3d", newColor_.g);
     GuiLabel({anchor.x + 80, anchor.y + 144, 24, 24}, g);
     static char b[16];
-    sprintf(b, "%3d", newColor_.b);
+    std::snprintf(b, 16, "%3d", newColor_.b);
     GuiLabel({anchor.x + 104, anchor.y + 144, 24, 24}, b);
-
     GuiLabel({anchor.x + 144, anchor.y + 40, 64, 24}, "Old Color:");
     GuiPanel({anchor.x + 200, anchor.y + 40, 24, 24}, NULL);
     DrawRectangle(anchor.x + 200, anchor.y + 40, 24, 24, oldColor_);

@@ -75,10 +75,10 @@ inline void printErrorPrefix(){ // Red
     }
 }
 
-inline void printGuiPrefix(){ // Blue
+inline void printFilesystemPrefix(){ // Blue
     if(TERMINAL_PRINT_WITH_COLOR){
-        std::cout << "\x1b[44;30m" << "[GUI]" << TERMINAL_RESET << " ";
+        std::cout << "\x1b[44;30m" << "[Filesystem]" << TERMINAL_RESET << " ";
     }else{
-        std::cout << "[GUI] ";
+        std::cout << "[Filesystem] ";
     }
 }

@@ -11,6 +11,7 @@
 #include "raygui.h"
 
 #include <raylib.h>
+#include <raymath.h>
 #include <iostream>
 
 Application::Application()
@@ -19,10 +20,7 @@ Application::Application()
     , ui_(new UI::Center())
     , canvas_(new Canvas())
     , serializer_(new Serializer())
-{
-    initSettings();
-    initFlags();
-}
+{}
 
 Application::~Application(){
     delete graph_;
@@ -32,11 +30,16 @@ Application::~Application(){
     delete serializer_;
 }
 
-int Application::run(){
+void Application::init(){
     printInitMessage(GRAPHIT_VERSION_STRING);
-    
+
+    initSettings();
+    initFlags();
+
     const int screenWidth{1000};
     const int screenHeight{720};
+
+    previousWindowRectangle_ = {screenWidth, screenHeight};
 
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(screenWidth, screenHeight, "GraphIt! v" GRAPHIT_VERSION_STRING);
@@ -48,29 +51,56 @@ int Application::run(){
     SetWindowMaxSize(screenWidth * 10, screenHeight * 10);  
 
     handleWindowResizeEvent(); // since the window was created after the ui
+    canvas_->resetCamera();
+}
 
+int Application::run(){
+    init();
     while(!WindowShouldClose()){
         update();
-        ui_->update();
-        canvas_->update();
-        actionsCenter_->update();
-
-        BeginDrawing(); {
-            ClearBackground(RAYWHITE);
-            canvas_->draw();
-            ui_->draw();
-        } EndDrawing();
+        BeginDrawing();
+        draw();
+        EndDrawing();
     }
-
     CloseWindow();
-
     return 0;
 }
 
 void Application::update(){
+    ui_->update();
+    canvas_->update();
+    actionsCenter_->update();
+
     if(IsWindowResized()) handleWindowResizeEvent();
+}
+
+void Application::draw(){
+    ClearBackground(GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR)));
+    canvas_->draw();
+    ui_->draw();
+    // DrawFPS(0, GetScreenHeight() - 16);
 }
 
 void Application::handleWindowResizeEvent(){
     ui_->updatePanelAnchors();
+
+    Vector2 delta{
+        previousWindowRectangle_.x - GetScreenWidth(), 
+        previousWindowRectangle_.y - GetScreenHeight()
+    };
+
+    Vector2 cameraPosition{canvas_->getCameraPosition()};
+    Vector2 cameraNewPosition{
+        Vector2Add(
+            cameraPosition, 
+            Vector2Scale(delta, .5f / canvas_->getCameraZoom())
+        )
+    };
+
+    canvas_->setCameraPosition(cameraNewPosition);
+
+    previousWindowRectangle_ = {
+        static_cast<float>(GetScreenWidth()), 
+        static_cast<float>(GetScreenHeight())
+    };
 }

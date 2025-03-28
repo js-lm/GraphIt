@@ -8,7 +8,7 @@ using namespace UI;
 void Toolbar::draw(){
     if(algorithmDropdownBoxEditMode_) GuiLock();
 
-    if(!isHidingUi_) DrawRectangleRec(mainPanelBounds_, Fade(WHITE, .5f));
+    if(!isHidingUi_) DrawRectangleRec(mainPanelBounds_, Fade(GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR)), .5f));
 
     drawHideButton();
     if(isHidingUi_) return;

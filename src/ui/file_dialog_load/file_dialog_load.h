@@ -2,7 +2,11 @@
 
 #include "../panel.h"
 
-#include <string>
+#include <filesystem>
+#include <vector>
+#include <optional>
+
+namespace fs = std::filesystem;
 
 struct Rectangle;
 struct Vector2;
@@ -21,8 +25,9 @@ public:
 public:
     FileDialogLoad(){
         id_ = ID::LOAD;
-        shouldBlueBackground_ = true;  
-        refreshAnchors();      
+        shouldBlueBackground_ = true;
+        refreshAnchors();
+        resetPath();
     };
     ~FileDialogLoad() = default;
 
@@ -37,19 +42,23 @@ private:
 
     void handleButtonPress() override;
 
-    void updateFileList(); 
-
 private: // utilities
     void goBack();
-
-    void selectFile();
     void cancel();
+    void loadSelectedFile();
+    
+    void synNames();
+    void fetchUserInput();
+    void openSelectedFile();
+
+    void updateFileList(); 
+    void resetPath();
+    void trySetPath(const std::string &path);
+    void trySetFile(const std::string &path);
 
 private: // draw
     void drawPanel();
     void drawScrollPanel();
-
-    void drawFilesListing();
 
 private: // anchors
     Vector2 windowAnchor_;
@@ -58,17 +67,28 @@ private:
     ButtonPressed pressedButton_{ButtonPressed::NONE};
 
     bool pathEditMode_{false};
-    std::string pathText_;
+    char pathText_[256]{0};
     
     bool filenameEditMode_{false};
-    std::string fileNameText_;
+    char fileNameText_[128]{0};
 
     bool fileTypeEditMode_{false};
-    int fileTypeActive_{0};
+    int fileTypeIndex_{0};
 
-    Rectangle scrollPanelScrollView_{0, 0, 0, 0};
-    Vector2 scrollPanelScrollOffset_{0, 0};
-    Vector2 scrollPanelBoundsOffset_{0, 0};
+    int listViewScrollIndex_{0};
+    std::optional<int> itemIndex_;
+
+private:
+    fs::path currentPath_;
+    fs::path selectedFile_;
+
+    std::vector<fs::path> filesList_;
+    std::string listViewString_;
+
+    std::string fileExtensionFilter_{".grt"};
+
+private:
+    std::optional<float> doubleLeftClickCD_;
 };
 
 } // namespace UI

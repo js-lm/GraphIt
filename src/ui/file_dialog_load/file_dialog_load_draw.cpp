@@ -26,21 +26,17 @@ void FileDialogLoad::drawPanel(){
         pressButton(BP::BACK);
     }
 
-    char pathCString[128]{0};
-    strcpy(pathCString, pathText_.c_str());
-    if(GuiTextBox({anchor.x + 8, anchor.y + 32, 408, 24}, pathCString, 128, pathEditMode_)){
+    if(GuiTextBox({anchor.x + 8, anchor.y + 32, 408, 24}, pathText_, 128, pathEditMode_)){
         pathEditMode_ = !pathEditMode_;
+        trySetPath(pathText_);
     }
-    pathText_ = pathCString;
 
     GuiLabel({anchor.x + 8, anchor.y + 232, 64, 24}, "File name:");
 
-    char filenameCString[128]{0};
-    strcpy(filenameCString, fileNameText_.c_str());
-    if(GuiTextBox({anchor.x + 72, anchor.y + 232, 280, 24}, filenameCString, 128, filenameEditMode_)){
+    if(GuiTextBox({anchor.x + 72, anchor.y + 232, 280, 24}, fileNameText_, 128, filenameEditMode_)){
         filenameEditMode_ = !filenameEditMode_;
+        trySetFile(fileNameText_);
     }
-    fileNameText_ = filenameCString;
 
     if(GuiButton({anchor.x + 360, anchor.y + 232, 112, 24}, "#005#Select")){
         pressButton(BP::SELECT);
@@ -52,45 +48,43 @@ void FileDialogLoad::drawPanel(){
 
     GuiLabel({anchor.x + 8, anchor.y + 264, 64, 24}, "File filter:");
 
-    if(GuiDropdownBox({anchor.x + 72, anchor.y + 264, 280, 24}, "GraphIt! (.grt);All (*.*)", &fileTypeActive_, fileTypeEditMode_)){
+    if(GuiDropdownBox({anchor.x + 72, anchor.y + 264, 280, 24}, "GraphIt! (.grt);All (*.*)", &fileTypeIndex_, fileTypeEditMode_)){
         fileTypeEditMode_ = !fileTypeEditMode_;
+        switch(fileTypeIndex_){
+            case 0: fileExtensionFilter_ = "grt"; break;
+            case 1: default: fileExtensionFilter_.clear(); break;
+        }
     }
     
     GuiUnlock();
 }
 
 void FileDialogLoad::drawScrollPanel(){
+    auto originalAlignment{GuiGetStyle(LISTVIEW, TEXT_ALIGNMENT)};
+    auto originalBorderWidth{GuiGetStyle(LISTVIEW, LIST_ITEMS_BORDER_WIDTH)};
+    auto originalHeight{GuiGetStyle(LISTVIEW, LIST_ITEMS_HEIGHT)};
+
+    GuiSetStyle(LISTVIEW, TEXT_ALIGNMENT, TEXT_ALIGN_LEFT);
+    GuiSetStyle(LISTVIEW, LIST_ITEMS_BORDER_WIDTH, 0);
+    GuiSetStyle(LISTVIEW, LIST_ITEMS_HEIGHT, 16);
+
     const Vector2 &anchor{windowAnchor_};
 
-    Rectangle scrollBounds{ 
-        anchor.x + 8, 
-        anchor.y + 64, 
-        464 - scrollPanelScrollOffset_.x, 
-        160 - scrollPanelScrollOffset_.y 
-    };
+    int itemIndexTemp{itemIndex_.value_or(-1)};
 
-    Rectangle contentBounds{ 
-        anchor.x + 8, 
-        anchor.y + 64, 
-        464, 
-        20
-    };
-
-    GuiScrollPanel(
-        scrollBounds,
-        NULL,
-        contentBounds,
-        &scrollPanelScrollOffset_, 
-        &scrollPanelScrollView_
+    GuiListView(
+        {anchor.x + 8, anchor.y + 64, 464, 160}, 
+        listViewString_.empty() ? "#079#This folder is empty." : listViewString_.c_str(), 
+        &listViewScrollIndex_, 
+        &itemIndexTemp
     );
 
-    drawFilesListing();
-}
+    if(itemIndexTemp != -1 && !listViewString_.empty()) itemIndex_ = itemIndexTemp;
 
-void FileDialogLoad::drawFilesListing(){
-    Rectangle &viewBounds{scrollPanelScrollView_};
-    
-    BeginScissorMode(viewBounds.x, viewBounds.y, viewBounds.width, viewBounds.height);
+    // std::cout << "listViewScrollIndex_: " << listViewScrollIndex_
+    //           << "\nitemIndex_" << itemIndex_ << std::endl;
 
-    EndScissorMode();
+    GuiSetStyle(LISTVIEW, TEXT_ALIGNMENT, originalAlignment);
+    GuiSetStyle(LISTVIEW, LIST_ITEMS_BORDER_WIDTH, originalBorderWidth);
+    GuiSetStyle(LISTVIEW, LIST_ITEMS_HEIGHT, originalHeight);
 }

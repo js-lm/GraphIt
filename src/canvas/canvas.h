@@ -60,6 +60,7 @@ public:
     Vector2 getMousePositionInCanvas(bool snap = false) const;
 
     void resetCamera();
+    void setZoomBarTimer(float second = 1.5f){ lostScrollCD_ = second;}
 
 public:
     void doBulkDeleteVertices();
@@ -79,7 +80,7 @@ public:
     void setCameraPosition(Vector2 position){ canvasCamera_.target = position;}
     void setCameraZoom(float zoom){ canvasCamera_.zoom = zoom;}
 
-    const std::string &getWeightTempLabel() const{ return weightInputString_;}
+    const std::string &getWeightInputLabel() const{ return weightInputString_;}
 
 private:
     void drawGrid() const;
@@ -96,7 +97,8 @@ private:
     void updateHoveredItem();
 
 private:
-    bool isCanvasMouseButtonPressed(int key);
+    bool isMouseOnCanvas() const;
+    bool isCanvasMouseButtonPressed(int key) const;
 
     void updateMouseActions();
 
@@ -143,12 +145,13 @@ private:
     // move mode
     Vector2 pivotPoint_;
     float zoomFactorTemp_; // for integer snapping
-    float timeSinceLastScrolling_; // for displaying the zoom factor
+    std::optional<float> lostScrollCD_; // for displaying the zoom factor
 
     // drag mode
     std::optional<VertexID> vertexToDrag_;
     Vector2 vertexOriginalPosition_;
     std::optional<float> doubleMiddleClickCD_;
+    Vector2 doubleMiddleClickStartPosition_;
 
     // select mode
     std::optional<Vector2> startFrom_;

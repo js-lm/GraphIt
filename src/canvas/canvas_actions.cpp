@@ -16,9 +16,12 @@
 #include <raymath.h>
 #include <iterator>
 
-bool Canvas::isCanvasMouseButtonPressed(int key){
-    if(!Application::instance().ui().isMouseOnCanvas()) return false;
+bool Canvas::isMouseOnCanvas() const{
+    return Application::instance().ui().isMouseOnCanvas();
+}
 
+bool Canvas::isCanvasMouseButtonPressed(int key) const{
+    if(!isMouseOnCanvas()) return false;
     return IsMouseButtonPressed(key);
 }
 
@@ -117,6 +120,7 @@ void Canvas::updateCamera(){
 }
 
 void Canvas::updateScreenDragging(int key){
+    if(!isMouseOnCanvas()) return;
     // screen dragging
     if(IsMouseButtonPressed(key)){
         pivotPoint_ = getMousePositionInCanvas();
@@ -128,10 +132,14 @@ void Canvas::updateScreenDragging(int key){
 }
 
 void Canvas::updateScreenReset(){
+    if(!isMouseOnCanvas()) return;
     // double middle clicks to reset camera
     if(doubleMiddleClickCD_){
-        if(IsMouseButtonPressed(MOUSE_BUTTON_MIDDLE)){
+        if(IsMouseButtonPressed(MOUSE_BUTTON_MIDDLE)
+        && Vector2Distance(doubleMiddleClickStartPosition_, GetMousePosition()) < 10.0f
+        ){
             resetCamera();
+            setZoomBarTimer();
             doubleMiddleClickCD_ = std::nullopt;
         }else{
             *doubleMiddleClickCD_ -= 1.0f * GetFrameTime();
@@ -139,11 +147,13 @@ void Canvas::updateScreenReset(){
             if(doubleMiddleClickCD_.value() <= 0) doubleMiddleClickCD_ = std::nullopt;
         }
     }else if(IsMouseButtonPressed(MOUSE_BUTTON_MIDDLE)){
-        doubleMiddleClickCD_ = .2f;
+        doubleMiddleClickCD_ = .5f;
+        doubleMiddleClickStartPosition_ = GetMousePosition();
     }
 }
 
 void Canvas::updateScreenZooming(){
+    if(!isMouseOnCanvas()) return;
     // zooming
     auto zoom{GetMouseWheelMove()};
     if(zoom){
@@ -162,9 +172,14 @@ void Canvas::updateScreenZooming(){
             Vector2Subtract(pivot, getMousePositionInCanvas())
         );
 
-        timeSinceLastScrolling_ = 0.0f;
-    }else if(timeSinceLastScrolling_ <= 999.0f){
-        timeSinceLastScrolling_ += GetFrameTime();
+        setZoomBarTimer();
+
+    }else if(lostScrollCD_){
+        *lostScrollCD_ -= GetFrameTime();
+
+        if(lostScrollCD_.value() <= 0.0f){
+            lostScrollCD_ = std::nullopt;
+        }
     }
 }
 

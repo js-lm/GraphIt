@@ -12,6 +12,8 @@ class ActionsCenter;
 class Canvas;
 class Serializer;
 
+struct Rectangle;
+
 class Application{
 public:
     using SettingValue = std::variant<int, float, bool, Color>;
@@ -49,7 +51,10 @@ private:
     ~Application();
 
 private:
+    void init();
+
     void update();
+    void draw();
 
     void handleWindowResizeEvent();
 
@@ -60,7 +65,9 @@ private:
     Canvas *canvas_;
     Serializer *serializer_;
 
-    // TODO: I don't need hash, normal array is fine
     static std::unordered_map<Setting, SettingValue> settings_;
     static std::unordered_map<Flag, SettingValue> flags_;
+
+    // handleWindowResizeEvent()
+    Rectangle previousWindowRectangle_;
 };

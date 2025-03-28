@@ -20,12 +20,12 @@ void Toolbar::drawIoBar(){
     if(GuiButton({anchor.x + 16, anchor.y + 8, 24, 24}, "#008#")){
         pressButton(BP::NEW_FILE);
     }
-        
-    if(GuiButton({anchor.x + 44, anchor.y + 8, 24, 24}, "#005#")){
+
+    if(GuiButton({anchor.x + 44, anchor.y + 8, 24, 24}, "#001#")){
         pressButton(BP::LOAD_FILE);
     }
         
-    if(GuiButton({anchor.x + 72, anchor.y + 8, 24, 24}, "#006#")){
+    if(GuiButton({anchor.x + 72, anchor.y + 8, 24, 24}, "#002#")){
         pressButton(BP::SAVE_FILE);
     }
         
@@ -120,33 +120,37 @@ void Toolbar::drawConstructionBar(){
     int currentSelectedTool{Application::getValue<Setting, int>(Setting::TOOLBAR_CURRENT_SELECTED_TOOL)};
     Color penColor{Application::getValue<Setting, Color>(Setting::COLOR_DEBUG_PEN)};
     Color linkColor{Application::getValue<Setting, Color>(Setting::COLOR_DEBUG_LINK)};
+    Color selectedColor{GetColor(GuiGetStyle(DEFAULT, BORDER_COLOR_NORMAL))};
+
+    auto drawHighlighting{
+        [selectedColor](const Rectangle &rectangle){
+            DrawRectangleRec({rectangle.x, rectangle.y - 4, rectangle.width, 2}, selectedColor);
+            DrawRectangleRec({rectangle.x, rectangle.y + 26, rectangle.width, 2}, selectedColor);
+        }
+    };
 
     GuiGroupBox({anchor.x + 0, anchor.y + 0, 400, 40}, NULL);
     GuiLabel({anchor.x + 16, anchor.y + 8, 72, 24}, "Construction:");
-
-    if(currentSelectedTool == 3) GuiDisable();
+    
+    if(currentSelectedTool == 3) drawHighlighting({anchor.x + 96, anchor.y + 8, 66, 2});
     if(GuiButton({anchor.x + 96, anchor.y + 8, 56, 24}, "#022#Pen")){
         pressButton(BP::DEBUG_PEN);
     }
-    GuiEnable();
 
-    if(currentSelectedTool == 4) GuiDisable();
-    if(GuiButton({anchor.x + 167, anchor.y + 8, 56, 24}, "#034#Link")){
+    if(currentSelectedTool == 4) drawHighlighting({anchor.x + 167, anchor.y + 8, 66, 2});
+    if(GuiButton({anchor.x + 167, anchor.y + 8, 56, 24}, "#174#Link")){
         pressButton(BP::DEBUG_LINK);
     }
-    GuiEnable();
 
-    if(currentSelectedTool == 5) GuiDisable();
+    if(currentSelectedTool == 5) drawHighlighting({anchor.x + 248, anchor.y + 8, 64, 24});
     if(GuiButton({anchor.x + 248, anchor.y + 8, 64, 24}, "#067#Move")){
         pressButton(BP::DEBUG_MOVE);
     }
-    GuiEnable();
 
-    if(currentSelectedTool == 6) GuiDisable();
-    if(GuiButton({anchor.x + 315, anchor.y + 8, 72, 24}, "#023#Eraser")){
+    if(currentSelectedTool == 6) drawHighlighting({anchor.x + 315, anchor.y + 8, 72, 24});
+    if(GuiButton({anchor.x + 315, anchor.y + 8, 72, 24}, "#028#Eraser")){
         pressButton(BP::DEBUG_ERASER);
     }
-    GuiEnable();
 
     if(GuiButton({anchor.x + 150, anchor.y + 8, 12, 24}, NULL)){
         pressButton(BP::DEBUG_CHANGE_PEN_COLOR);
@@ -169,21 +173,27 @@ void Toolbar::drawControlsBar(){
     bool isSelectingVertex{Application::getValue<Setting, bool>(Setting::TOOLBAR_IS_SELECTING_VERTEX)};
     bool isSelectingEdge{Application::getValue<Setting, bool>(Setting::TOOLBAR_IS_SELECTING_EDGE)};
     Color dyeColor{Application::getValue<Setting, Color>(Setting::COLOR_DEBUG_DYE)};
+    Color selectedColor{GetColor(GuiGetStyle(DEFAULT, BORDER_COLOR_NORMAL))};
+
+    auto drawHighlighting{
+        [selectedColor](const Rectangle &rectangle){
+            DrawRectangleRec({rectangle.x, rectangle.y - 4, rectangle.width, 2}, selectedColor);
+            DrawRectangleRec({rectangle.x, rectangle.y + 26, rectangle.width, 2}, selectedColor);
+        }
+    };
 
     GuiGroupBox({anchor.x + 0, anchor.y + 0, 600, 40}, NULL);
     GuiLabel({anchor.x + 16, anchor.y + 8, 48, 24}, "Control:");
 
-    if(currentSelectedTool == 1) GuiDisable();
+    if(currentSelectedTool == 1) drawHighlighting({anchor.x + 64, anchor.y + 8, 72, 24});
     if(GuiButton({anchor.x + 64, anchor.y + 8, 72, 24}, "#021#Select")){
         pressButton(BP::DEBUG_SELECT);
     }
-    GuiEnable();
 
-    if(currentSelectedTool == 2) GuiDisable();
+    if(currentSelectedTool == 2) drawHighlighting({anchor.x + 140, anchor.y + 8, 64, 24});
     if(GuiButton({anchor.x + 140, anchor.y + 8, 64, 24}, "#019#View")){
         pressButton(BP::DEBUG_PAN);
     }
-    GuiEnable();
 
     if(GuiButton({anchor.x + 296, anchor.y + 8, 56, 24}, "#025#Dye")){
         pressButton(BP::DEBUG_DYE_SELECTED);
