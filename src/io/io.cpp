@@ -1,9 +1,9 @@
-#include "io.h"
-#include "system/application.h"
-#include "graph/graph.h"
-#include "system/version.h"
-#include "system/terminal_prefix.h"
-#include "canvas/canvas.h"
+#include "io.hpp"
+#include "system/application.hpp"
+#include "graph/graph.hpp"
+#include "system/version.hpp"
+#include "system/terminal_prefix.hpp"
+#include "canvas/canvas.hpp"
 
 #include <iostream>
 #include <unordered_map>

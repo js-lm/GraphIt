@@ -1,5 +1,5 @@
-#include "color_panel.h"
-#include "system/application.h"
+#include "color_panel.hpp"
+#include "system/application.hpp"
 
 #include <raylib.h>
 #include <raygui.h>
@@ -16,7 +16,7 @@ void ColorPanel::drawPanel(){
         pressButton(BP::CANCEL);
     }
 
-    GuiColorPicker({anchor.x + 16, anchor.y + 40, 96, 96}, NULL, &newColor_);
+    GuiColorPicker({anchor.x + 16, anchor.y + 40, 96, 96}, nullptr, &newColor_);
 
     GuiLabel({anchor.x + 16, anchor.y + 144, 32, 24}, "RBG: ");
     static char r[16];
@@ -29,54 +29,54 @@ void ColorPanel::drawPanel(){
     std::snprintf(b, 16, "%3d", newColor_.b);
     GuiLabel({anchor.x + 104, anchor.y + 144, 24, 24}, b);
     GuiLabel({anchor.x + 144, anchor.y + 40, 64, 24}, "Old Color:");
-    GuiPanel({anchor.x + 200, anchor.y + 40, 24, 24}, NULL);
+    GuiPanel({anchor.x + 200, anchor.y + 40, 24, 24}, nullptr);
     DrawRectangle(anchor.x + 200, anchor.y + 40, 24, 24, oldColor_);
     DrawRectangleLinesEx({anchor.x + 200, anchor.y + 40, 24, 24}, 2.0f, ColorBrightness(oldColor_, -.3f));
 
     GuiLabel({anchor.x + 237, anchor.y + 40, 64, 24}, "New Color:");
-    GuiPanel({anchor.x + 296, anchor.y + 40, 24, 24}, NULL);
+    GuiPanel({anchor.x + 296, anchor.y + 40, 24, 24}, nullptr);
     DrawRectangle(anchor.x + 296, anchor.y + 40, 24, 24, newColor_);
     DrawRectangleLinesEx({anchor.x + 296, anchor.y + 40, 24, 24}, 2.0f, ColorBrightness(newColor_, -.3f));
 
     GuiGroupBox({anchor.x + 144, anchor.y + 80, 176, 80}, "Preset Colors");
-    if(GuiButton({anchor.x + 160, anchor.y + 96, 24, 24}, NULL)){
+    if(GuiButton({anchor.x + 160, anchor.y + 96, 24, 24}, nullptr)){
         pressButton(BP::COLOR_1);
     }
-    if(GuiButton({anchor.x + 184, anchor.y + 96, 24, 24}, NULL)){
+    if(GuiButton({anchor.x + 184, anchor.y + 96, 24, 24}, nullptr)){
         pressButton(BP::COLOR_2);
     }
-    if(GuiButton({anchor.x + 208, anchor.y + 96, 24, 24}, NULL)){
+    if(GuiButton({anchor.x + 208, anchor.y + 96, 24, 24}, nullptr)){
         pressButton(BP::COLOR_3);
     }
-    if(GuiButton({anchor.x + 232, anchor.y + 96, 24, 24}, NULL)){
+    if(GuiButton({anchor.x + 232, anchor.y + 96, 24, 24}, nullptr)){
         pressButton(BP::COLOR_4);
     }
-    if(GuiButton({anchor.x + 256, anchor.y + 96, 24, 24}, NULL)){
+    if(GuiButton({anchor.x + 256, anchor.y + 96, 24, 24}, nullptr)){
         pressButton(BP::COLOR_5);
     }
-    if(GuiButton({anchor.x + 280, anchor.y + 96, 24, 24}, NULL)){
+    if(GuiButton({anchor.x + 280, anchor.y + 96, 24, 24}, nullptr)){
         pressButton(BP::COLOR_6);
     }
-    if(GuiButton({anchor.x + 160, anchor.y + 120, 24, 24}, NULL)){
+    if(GuiButton({anchor.x + 160, anchor.y + 120, 24, 24}, nullptr)){
         pressButton(BP::COLOR_7);
     }
-    if(GuiButton({anchor.x + 184, anchor.y + 120, 24, 24}, NULL)){
+    if(GuiButton({anchor.x + 184, anchor.y + 120, 24, 24}, nullptr)){
         pressButton(BP::COLOR_8);
     }
-    if(GuiButton({anchor.x + 208, anchor.y + 120, 24, 24}, NULL)){
+    if(GuiButton({anchor.x + 208, anchor.y + 120, 24, 24}, nullptr)){
         pressButton(BP::COLOR_9);
     }
-    if(GuiButton({anchor.x + 232, anchor.y + 120, 24, 24}, NULL)){
+    if(GuiButton({anchor.x + 232, anchor.y + 120, 24, 24}, nullptr)){
         pressButton(BP::COLOR_10);
     }
-    if(GuiButton({anchor.x + 256, anchor.y + 120, 24, 24}, NULL)){
+    if(GuiButton({anchor.x + 256, anchor.y + 120, 24, 24}, nullptr)){
         pressButton(BP::COLOR_11);
     }
-    if(GuiButton({anchor.x + 280, anchor.y + 120, 24, 24}, NULL)){
+    if(GuiButton({anchor.x + 280, anchor.y + 120, 24, 24}, nullptr)){
         pressButton(BP::COLOR_12);
     }
 
-    GuiLine({anchor.x + 8, anchor.y + 160, 320, 16}, NULL);
+    GuiLine({anchor.x + 8, anchor.y + 160, 320, 16}, nullptr);
     if(GuiButton({anchor.x + 176, anchor.y + 176, 64, 24}, "#113#Back")){
         pressButton(BP::CANCEL);
     }

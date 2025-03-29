@@ -1,14 +1,14 @@
-#include "system/version.h"
-#include "system/application.h"
-#include "graph/graph.h"
-#include "actions_center/actions_center.h"
-#include "ui/ui.h"
-#include "canvas/canvas.h"
-#include "system/terminal_prefix.h"
-#include "io/io.h"
+#include "system/version.hpp"
+#include "system/application.hpp"
+#include "graph/graph.hpp"
+#include "actions_center/actions_center.hpp"
+#include "ui/ui.hpp"
+#include "canvas/canvas.hpp"
+#include "system/terminal_prefix.hpp"
+#include "io/io.hpp"
 
 #define RAYGUI_IMPLEMENTATION
-#include "raygui.h"
+#include <raygui.h>
 
 #include <raylib.h>
 #include <raymath.h>

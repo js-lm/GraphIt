@@ -1,4 +1,4 @@
-#include "panel.h"
+#include "panel.hpp"
 
 #include <raylib.h>
 

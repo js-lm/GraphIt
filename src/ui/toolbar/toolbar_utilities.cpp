@@ -1,8 +1,8 @@
-#include "toolbar.h"
-#include "system/application.h"
-#include "actions_center/actions_center.h"
-#include "graph/graph.h"
-#include "io/io.h"
+#include "toolbar.hpp"
+#include "system/application.hpp"
+#include "actions_center/actions_center.hpp"
+#include "graph/graph.hpp"
+#include "io/io.hpp"
 
 #include <iomanip>
 #include <ctime>
@@ -14,8 +14,6 @@
 using namespace UI;
 
 void Toolbar::switchMode(Canvas::Mode mode){
-    // Application::instance().canvas().switchMode(mode);
-    // ui.currentSelectedTool = static_cast<int>(mode);
     Application::instance().canvas().switchMode(mode);
     Application::setValue<Setting, int>(Setting::TOOLBAR_CURRENT_SELECTED_TOOL, static_cast<int>(mode));
 }
@@ -30,7 +28,7 @@ void Toolbar::loadSavedGraph(){
 }
 
 void Toolbar::saveCurrentGraph(){
-    Application::instance().serializer().save("save");
+    Application::instance().ui().openPanel(Panel::ID::SAVE);
 }
 
 void Toolbar::undo(){ Application::instance().actionCenter().undo();}

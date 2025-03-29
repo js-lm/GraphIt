@@ -1,5 +1,5 @@
-#include "graph.h"
-#include "system/application.h"
+#include "graph.hpp"
+#include "system/application.hpp"
 
 #include <raylib.h>
 

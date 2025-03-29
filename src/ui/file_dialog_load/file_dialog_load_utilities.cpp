@@ -1,7 +1,7 @@
-#include "file_dialog_load.h"
-#include "system/application.h"
-#include "system/terminal_prefix.h"
-#include "io/io.h"
+#include "file_dialog_load.hpp"
+#include "system/application.hpp"
+#include "system/terminal_prefix.hpp"
+#include "io/io.hpp"
 
 #include <algorithm>
 #include <iostream>
@@ -56,7 +56,14 @@ void FileDialogLoad::synNames(){
 }
 
 void FileDialogLoad::resetPath(){
-    currentPath_ = fs::current_path();
+    if(fs::exists(fs::current_path() / "Saves")
+    || fs::create_directory(fs::current_path() / "Saves")
+    ){
+        currentPath_ = fs::current_path() / "Saves";
+    }else{
+        currentPath_ = fs::current_path();
+    }
+
     selectedFile_ = "";
 
     synNames();

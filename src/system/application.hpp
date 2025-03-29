@@ -1,7 +1,7 @@
 #pragma once
 
-#include "settings_and_flags.h"
-#include "ui/ui.h"
+#include "settings_and_flags.hpp"
+#include "ui/ui.hpp"
 
 #include <variant>
 #include <unordered_map>

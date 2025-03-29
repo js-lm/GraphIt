@@ -1,6 +1,6 @@
-#include "graph.h"
-#include "system/application.h"
-#include "canvas/canvas.h"
+#include "graph.hpp"
+#include "system/application.hpp"
+#include "canvas/canvas.hpp"
 
 #include <raylib.h>
 #include <raymath.h>
@@ -90,6 +90,8 @@ void Graph::drawEdges() const{
 }
 
 void Graph::drawArrow(const Vector2 &startPoint, const Vector2 &endPoint, float thickness, Color color) const{
+    if(!Application::getValue<Setting, bool>(Setting::GRAPH_IS_DIRECTED)) return;
+
     float vertexRadius{Application::getValue<Setting, float>(Setting::GRAPH_VERTEX_RADIUS)};
 
     Vector2 arrowVector{Vector2Subtract(endPoint, startPoint)};
@@ -101,20 +103,20 @@ void Graph::drawArrow(const Vector2 &startPoint, const Vector2 &endPoint, float 
 
     Vector2 arrowEndPoint{Vector2Add(startPoint, lineVector)};
 
-    if(Application::getValue<Setting, bool>(Setting::GRAPH_IS_DIRECTED)){
-        Vector2 direction{Vector2Normalize(Vector2Subtract(arrowEndPoint, startPoint))};
-        Vector2 rotateAngel1{Vector2Rotate(direction, 70.0f * DEG2RAD)};
-        Vector2 rotateAngel2{Vector2Rotate(direction, 110.0f * DEG2RAD)};
-    
-        Vector2 arrow1{Vector2Add(arrowEndPoint, Vector2Scale(Vector2Add(direction, rotateAngel1), thickness * -2.0f))};
-        Vector2 arrow2{Vector2Add(arrowEndPoint, Vector2Scale(Vector2Subtract(direction, rotateAngel2), thickness * -2.0f))};
-    
-        DrawLineEx(arrowEndPoint, arrow1, thickness, color);
-        DrawLineEx(arrowEndPoint, arrow2, thickness, color);
-    }
+    Vector2 direction{Vector2Normalize(Vector2Subtract(arrowEndPoint, startPoint))};
+    Vector2 rotateAngel1{Vector2Rotate(direction, 70.0f * DEG2RAD)};
+    Vector2 rotateAngel2{Vector2Rotate(direction, 110.0f * DEG2RAD)};
+
+    Vector2 arrow1{Vector2Add(arrowEndPoint, Vector2Scale(Vector2Add(direction, rotateAngel1), thickness * -2.0f))};
+    Vector2 arrow2{Vector2Add(arrowEndPoint, Vector2Scale(Vector2Subtract(direction, rotateAngel2), thickness * -2.0f))};
+
+    DrawLineEx(arrowEndPoint, arrow1, thickness, color);
+    DrawLineEx(arrowEndPoint, arrow2, thickness, color);
 }
 
 void Graph::drawLabels() const{
+    if(!Application::getValue<Setting, bool>(Setting::GRAPH_IS_LABELED)) return;
+
     auto &hoveredVertexID{Application::instance().canvas().getHoveredVertexID()};
 
     float vertexRadius{Application::getValue<Setting, float>(Setting::GRAPH_VERTEX_RADIUS)};

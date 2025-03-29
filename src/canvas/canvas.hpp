@@ -29,7 +29,6 @@ public:
 
 public:
     enum class Mode{
-    // remember to also change gui_toolbar.h
         VIEW   = 0,
 
         SELECT = 1,
@@ -78,7 +77,7 @@ public:
     const Vector2 getCameraPosition(){ return canvasCamera_.target;}
     const float getCameraZoom(){ return canvasCamera_.zoom;}
     void setCameraPosition(Vector2 position){ canvasCamera_.target = position;}
-    void setCameraZoom(float zoom){ canvasCamera_.zoom = zoom;}
+    void setCameraZoom(float zoom);
 
     const std::string &getWeightInputLabel() const{ return weightInputString_;}
 

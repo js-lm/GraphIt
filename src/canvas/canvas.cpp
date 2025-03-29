@@ -1,6 +1,6 @@
-#include "canvas.h"
-#include "system/application.h"
-#include "graph/graph.h"
+#include "canvas.hpp"
+#include "system/application.hpp"
+#include "graph/graph.hpp"
 
 #include <raylib.h>
 

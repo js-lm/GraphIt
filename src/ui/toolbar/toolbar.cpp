@@ -1,5 +1,5 @@
-#include "toolbar.h"
-#include "system/application.h"
+#include "toolbar.hpp"
+#include "system/application.hpp"
 
 #include <raygui.h>
 

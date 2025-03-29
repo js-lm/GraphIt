@@ -1,6 +1,6 @@
 #pragma once
 
-#include "graph/vertex_and_edge.h"
+#include "graph/vertex_and_edge.hpp"
 
 #include <raylib.h>
 #include <vector>

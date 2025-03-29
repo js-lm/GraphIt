@@ -1,5 +1,5 @@
-#include "settings_menu.h"
-#include "system/application.h"
+#include "settings_menu.hpp"
+#include "system/application.hpp"
 
 #include <raylib.h>
 #include <raygui.h>
@@ -50,7 +50,7 @@ void SettingsMenu::drawGeneralGraphSettings(){
 
     GuiToggle({anchor.x + 16, anchor.y + 48, 104, 24}, "#178#Is Weighted", &isWeighted);
     GuiLabel({anchor.x + 24, anchor.y + 96, 96, 24}, "Weight Precision");
-    if(GuiSpinner({anchor.x + 16, anchor.y + 72, 104, 24}, NULL, &precision, 0, 100, weightPrecisionEditMode_)){
+    if(GuiSpinner({anchor.x + 16, anchor.y + 72, 104, 24}, nullptr, &precision, 0, 100, weightPrecisionEditMode_)){
         weightPrecisionEditMode_ = !weightPrecisionEditMode_;
     }
 
@@ -74,94 +74,94 @@ void SettingsMenu::drawGeneralColorPreferences(){
     Color colorPickerValue{Application::getValue<Setting, Color>(Setting::COLOR_PREFERENCE_PICKER)};
 
     GuiGroupBox({anchor.x + 0, anchor.y + 0, 352, 272}, "Color Preferences");
-    GuiColorPicker({anchor.x + 216, anchor.y + 32, 96, 96}, NULL, &colorPickerValue);
-    GuiLine({anchor.x + 8, anchor.y + 120, 176, 32}, NULL);
+    GuiColorPicker({anchor.x + 216, anchor.y + 32, 96, 96}, nullptr, &colorPickerValue);
+    GuiLine({anchor.x + 8, anchor.y + 120, 176, 32}, nullptr);
 
     GuiGroupBox({anchor.x + 16, anchor.y + 16, 160, 104}, "Vertex");
     GuiLabel({anchor.x + 24, anchor.y + 24, 64, 24}, "Start/End:");
-    if(GuiButton({anchor.x + 88, anchor.y + 24, 24, 24}, NULL)){
+    if(GuiButton({anchor.x + 88, anchor.y + 24, 24, 24}, nullptr)){
         pressButton(BP::COLOR_VERTEX_START);
     }
-    if(GuiButton({anchor.x + 112, anchor.y + 24, 24, 24}, NULL)){
+    if(GuiButton({anchor.x + 112, anchor.y + 24, 24, 24}, nullptr)){
         pressButton(BP::COLOR_VERTEX_END);
     }
 
     GuiLabel({anchor.x + 24, anchor.y + 56, 104, 24}, "Visited/Unvisited:");
-    if(GuiButton({anchor.x + 120, anchor.y + 56, 24, 24}, NULL)){
+    if(GuiButton({anchor.x + 120, anchor.y + 56, 24, 24}, nullptr)){
         pressButton(BP::COLOR_VERTEX_VISTED);
     }
-    if(GuiButton({anchor.x + 144, anchor.y + 56, 24, 24}, NULL)){
+    if(GuiButton({anchor.x + 144, anchor.y + 56, 24, 24}, nullptr)){
         pressButton(BP::COLOR_VERTEX_UNVISITED);
     }
 
     GuiLabel({anchor.x + 24, anchor.y + 88, 96, 24}, "Current/Special:");
-    if(GuiButton({anchor.x + 120, anchor.y + 88, 24, 24}, NULL)){
+    if(GuiButton({anchor.x + 120, anchor.y + 88, 24, 24}, nullptr)){
         pressButton(BP::COLOR_VERTEX_CURRENT);
     }
-    if(GuiButton({anchor.x + 144, anchor.y + 88, 24, 24}, NULL)){
+    if(GuiButton({anchor.x + 144, anchor.y + 88, 24, 24}, nullptr)){
         pressButton(BP::COLOR_VERTEX_SPECIAL);
     }
 
     GuiGroupBox({anchor.x + 16, anchor.y + 152, 160, 104}, "Edge");
     GuiLabel({anchor.x + 24, anchor.y + 160, 104, 24}, "Visited/Unvisited:");
-    if(GuiButton({anchor.x + 120, anchor.y + 160, 24, 24}, NULL)){
+    if(GuiButton({anchor.x + 120, anchor.y + 160, 24, 24}, nullptr)){
         pressButton(BP::COLOR_EDGE_VISTED);
     }
-    if(GuiButton({anchor.x + 144, anchor.y + 160, 24, 24}, NULL)){
+    if(GuiButton({anchor.x + 144, anchor.y + 160, 24, 24}, nullptr)){
         pressButton(BP::COLOR_EDGE_UNVISITED);
     }
 
     GuiLabel({anchor.x + 24, anchor.y + 192, 96, 24}, "Current/Path:");
-    if(GuiButton({anchor.x + 120, anchor.y + 192, 24, 24}, NULL)){
+    if(GuiButton({anchor.x + 120, anchor.y + 192, 24, 24}, nullptr)){
         pressButton(BP::COLOR_EDGE_CURRENT);
     }
-    if(GuiButton({anchor.x + 144, anchor.y + 192, 24, 24}, NULL)){
+    if(GuiButton({anchor.x + 144, anchor.y + 192, 24, 24}, nullptr)){
         pressButton(BP::COLOR_EDGE_PATH);
     }
 
     GuiLabel({anchor.x + 24, anchor.y + 224, 88, 24}, "Block/Special:");
-    if(GuiButton({anchor.x + 104, anchor.y + 224, 24, 24}, NULL)){
+    if(GuiButton({anchor.x + 104, anchor.y + 224, 24, 24}, nullptr)){
         pressButton(BP::COLOR_EDGE_BLOCK);
     }
-    if(GuiButton({anchor.x + 128, anchor.y + 224, 24, 24}, NULL)){
+    if(GuiButton({anchor.x + 128, anchor.y + 224, 24, 24}, nullptr)){
         pressButton(BP::COLOR_EDGE_SPECIAL);
     }
 
     GuiLabel({anchor.x + 216, anchor.y + 152, 120, 24}, "Presets:");
-    if(GuiButton({anchor.x + 216, anchor.y + 168, 24, 24}, NULL)){
+    if(GuiButton({anchor.x + 216, anchor.y + 168, 24, 24}, nullptr)){
         pressButton(BP::COLOR_PRESET_1);
     }
-    if(GuiButton({anchor.x + 240, anchor.y + 168, 24, 24}, NULL)){
+    if(GuiButton({anchor.x + 240, anchor.y + 168, 24, 24}, nullptr)){
         pressButton(BP::COLOR_PRESET_2);
     }
-    if(GuiButton({anchor.x + 264, anchor.y + 168, 24, 24}, NULL)){
+    if(GuiButton({anchor.x + 264, anchor.y + 168, 24, 24}, nullptr)){
         pressButton(BP::COLOR_PRESET_3);
     }
-    if(GuiButton({anchor.x + 288, anchor.y + 168, 24, 24}, NULL)){
+    if(GuiButton({anchor.x + 288, anchor.y + 168, 24, 24}, nullptr)){
         pressButton(BP::COLOR_PRESET_4);
     }
-    if(GuiButton({anchor.x + 216, anchor.y + 192, 24, 24}, NULL)){
+    if(GuiButton({anchor.x + 216, anchor.y + 192, 24, 24}, nullptr)){
         pressButton(BP::COLOR_PRESET_5);
     }
-    if(GuiButton({anchor.x + 240, anchor.y + 192, 24, 24}, NULL)){
+    if(GuiButton({anchor.x + 240, anchor.y + 192, 24, 24}, nullptr)){
         pressButton(BP::COLOR_PRESET_6);
     }
-    if(GuiButton({anchor.x + 264, anchor.y + 192, 24, 24}, NULL)){
+    if(GuiButton({anchor.x + 264, anchor.y + 192, 24, 24}, nullptr)){
         pressButton(BP::COLOR_PRESET_7);
     }
-    if(GuiButton({anchor.x + 288, anchor.y + 192, 24, 24}, NULL)){
+    if(GuiButton({anchor.x + 288, anchor.y + 192, 24, 24}, nullptr)){
         pressButton(BP::COLOR_PRESET_8);
     }
-    if(GuiButton({anchor.x + 216, anchor.y + 216, 24, 24}, NULL)){
+    if(GuiButton({anchor.x + 216, anchor.y + 216, 24, 24}, nullptr)){
         pressButton(BP::COLOR_PRESET_9);
     }
-    if(GuiButton({anchor.x + 240, anchor.y + 216, 24, 24}, NULL)){
+    if(GuiButton({anchor.x + 240, anchor.y + 216, 24, 24}, nullptr)){
         pressButton(BP::COLOR_PRESET_10);
     }
-    if(GuiButton({anchor.x + 264, anchor.y + 216, 24, 24}, NULL)){
+    if(GuiButton({anchor.x + 264, anchor.y + 216, 24, 24}, nullptr)){
         pressButton(BP::COLOR_PRESET_11);
     }
-    if(GuiButton({anchor.x + 288, anchor.y + 216, 24, 24}, NULL)){
+    if(GuiButton({anchor.x + 288, anchor.y + 216, 24, 24}, nullptr)){
         pressButton(BP::COLOR_PRESET_12);
     }
 
@@ -181,8 +181,8 @@ void SettingsMenu::drawGeneralVertexEdgeSettings(){
     GuiGroupBox({anchor.x + 0, anchor.y + 0, 152, 128}, "Vertex/Edge Settings");
 
     GuiLabel({anchor.x + 16, anchor.y + 8, 120, 24}, "Vertex Radius:");
-    GuiSlider({anchor.x + 16, anchor.y + 24, 120, 16}, NULL, NULL, &radius, minRadius, maxRadius);
-    if(GuiValueBox({anchor.x + 16, anchor.y + 40, 40, 16}, NULL, &vertexRadiusValueBoxTempValue_, minRadius, maxRadius, vertexRadiusValueBoxEditMode_)){
+    GuiSlider({anchor.x + 16, anchor.y + 24, 120, 16}, nullptr, nullptr, &radius, minRadius, maxRadius);
+    if(GuiValueBox({anchor.x + 16, anchor.y + 40, 40, 16}, nullptr, &vertexRadiusValueBoxTempValue_, minRadius, maxRadius, vertexRadiusValueBoxEditMode_)){
         vertexRadiusValueBoxEditMode_ = !vertexRadiusValueBoxEditMode_;
         radius = static_cast<float>(vertexRadiusValueBoxTempValue_);
     }else if(!vertexRadiusValueBoxEditMode_){
@@ -190,8 +190,8 @@ void SettingsMenu::drawGeneralVertexEdgeSettings(){
     }
 
     GuiLabel({anchor.x + 16, anchor.y + 64, 120, 24}, "Edge Thickness:");
-    GuiSlider({anchor.x + 16, anchor.y + 80, 120, 16}, NULL, NULL, &thickness, minThickness, radius);
-    if(GuiValueBox({anchor.x + 16, anchor.y + 96, 40, 16}, NULL, &edgeThicknessValueBoxTempValue_, minThickness, radius, edgeThicknessValueBoxEditMode_)){
+    GuiSlider({anchor.x + 16, anchor.y + 80, 120, 16}, nullptr, nullptr, &thickness, minThickness, radius);
+    if(GuiValueBox({anchor.x + 16, anchor.y + 96, 40, 16}, nullptr, &edgeThicknessValueBoxTempValue_, minThickness, radius, edgeThicknessValueBoxEditMode_)){
         edgeThicknessValueBoxEditMode_ = !edgeThicknessValueBoxEditMode_;
         thickness = static_cast<float>(edgeThicknessValueBoxTempValue_);
     }else if(!edgeThicknessValueBoxEditMode_){
@@ -218,9 +218,9 @@ void SettingsMenu::drawGeneralGridSetting(){
     GuiGroupBox({anchor.x + 0, anchor.y + 0, 192, 96}, "Grid Settings");
 
     GuiLabel({anchor.x + 16, anchor.y + 8, 120, 24}, "Cell Size:");
-    GuiSlider({anchor.x + 16, anchor.y + 24, 120, 16}, NULL, NULL, &cellSizeFLOAT, minCellSize, maxCellSize);
+    GuiSlider({anchor.x + 16, anchor.y + 24, 120, 16}, nullptr, nullptr, &cellSizeFLOAT, minCellSize, maxCellSize);
     cellSize = cellSizeFLOAT;
-    if(GuiValueBox({anchor.x + 136, anchor.y + 24, 40, 16}, NULL, &cellSizeValueBoxTempValue_, minCellSize, maxCellSize, cellSizeValueBoxEditMode_)){
+    if(GuiValueBox({anchor.x + 136, anchor.y + 24, 40, 16}, nullptr, &cellSizeValueBoxTempValue_, minCellSize, maxCellSize, cellSizeValueBoxEditMode_)){
         cellSizeValueBoxEditMode_ = !cellSizeValueBoxEditMode_;
         cellSize = cellSizeValueBoxTempValue_;
     }else if(!cellSizeValueBoxEditMode_){
@@ -228,9 +228,9 @@ void SettingsMenu::drawGeneralGridSetting(){
     }
 
     GuiLabel({anchor.x + 16, anchor.y + 48, 120, 24}, "Subdivision Size:");
-    GuiSlider({anchor.x + 16, anchor.y + 64, 120, 16}, NULL, NULL, &subdivisionSizeFLOAT, minSubdivisionSize, maxSubdivisionSize);
+    GuiSlider({anchor.x + 16, anchor.y + 64, 120, 16}, nullptr, nullptr, &subdivisionSizeFLOAT, minSubdivisionSize, maxSubdivisionSize);
     subdivisionSize = subdivisionSizeFLOAT;
-    if(GuiValueBox({anchor.x + 136, anchor.y + 64, 40, 16}, NULL, &subdivisionSizeValueBoxTempValue_, 0, 100, subdivisionSizeValueBoxEditMode_)){
+    if(GuiValueBox({anchor.x + 136, anchor.y + 64, 40, 16}, nullptr, &subdivisionSizeValueBoxTempValue_, 0, 100, subdivisionSizeValueBoxEditMode_)){
         subdivisionSizeValueBoxEditMode_ = !subdivisionSizeValueBoxEditMode_;
         subdivisionSize = subdivisionSizeValueBoxTempValue_;
     }else if(!subdivisionSizeValueBoxEditMode_){

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "lib/magic_enum.hpp"
+#include "magic_enum.hpp"
 
 #include <raylib.h>
 #include <string>

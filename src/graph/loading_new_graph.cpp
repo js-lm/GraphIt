@@ -1,6 +1,6 @@
-#include "graph.h"
-#include "system/application.h"
-#include "actions_center/actions_center.h"
+#include "graph.hpp"
+#include "system/application.hpp"
+#include "actions_center/actions_center.hpp"
 
 std::vector<Graph::VertexID> Graph::getAllValidVertexIDs() const{
     std::vector<VertexID> ids;

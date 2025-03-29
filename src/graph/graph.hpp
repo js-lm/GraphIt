@@ -1,7 +1,7 @@
 #pragma once
 
-#include "vertex_and_edge.h"
-#include "io/io.h"
+#include "vertex_and_edge.hpp"
+#include "io/io.hpp"
 
 #include <raylib.h>
 #include <memory>

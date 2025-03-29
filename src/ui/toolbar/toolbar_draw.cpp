@@ -1,5 +1,5 @@
-#include "toolbar.h"
-#include "system/application.h"
+#include "toolbar.hpp"
+#include "system/application.hpp"
 
 #include <raylib.h>
 #include <raygui.h>
@@ -15,7 +15,7 @@ void Toolbar::drawIoBar(){
     bool canUndo{Application::getValue<Flag, bool>(Flag::TOOLBAR_CAN_UNDO)};
     bool canRedo{Application::getValue<Flag, bool>(Flag::TOOLBAR_CAN_REDO)};
     
-    GuiGroupBox({anchor.x, anchor.y, 216, 40}, NULL);
+    GuiGroupBox({anchor.x, anchor.y, 216, 40}, nullptr);
 
     if(GuiButton({anchor.x + 16, anchor.y + 8, 24, 24}, "#008#")){
         pressButton(BP::NEW_FILE);
@@ -52,7 +52,7 @@ void Toolbar::drawGridSettingsBar(){
     bool showGrid{Application::getValue<Setting, bool>(Setting::GRID_SHOW)};
     bool snapToGrid{Application::getValue<Setting, bool>(Setting::GRID_IS_SNAP_TO_GRID)};
     
-    GuiGroupBox({anchor.x + 0, anchor.y + 0, 264, 40}, NULL);
+    GuiGroupBox({anchor.x + 0, anchor.y + 0, 264, 40}, nullptr);
     GuiLabel({anchor.x + 16, anchor.y + 8, 32, 24}, "View:");
 
     GuiToggle({anchor.x + 48, anchor.y + 8, 88, 24}, "#097#Show Grid", &showGrid);
@@ -70,7 +70,7 @@ void Toolbar::drawAlgorithmBar(){
     bool isFocusMode{Application::getValue<Flag, bool>(Flag::ALGORITHM_FOCUS_MODE)};
     bool isRunning{Application::getValue<Flag, bool>(Flag::ALGORITHM_IS_RUNNING)};
     
-    GuiGroupBox({anchor.x + 0, anchor.y + 0, 520, 40}, NULL);
+    GuiGroupBox({anchor.x + 0, anchor.y + 0, 520, 40}, nullptr);
     GuiLabel({anchor.x + 16, anchor.y + 8, 64, 24}, "Algorithms: ");
     
     if(GuiDropdownBox(
@@ -129,7 +129,7 @@ void Toolbar::drawConstructionBar(){
         }
     };
 
-    GuiGroupBox({anchor.x + 0, anchor.y + 0, 400, 40}, NULL);
+    GuiGroupBox({anchor.x + 0, anchor.y + 0, 400, 40}, nullptr);
     GuiLabel({anchor.x + 16, anchor.y + 8, 72, 24}, "Construction:");
     
     if(currentSelectedTool == 3) drawHighlighting({anchor.x + 96, anchor.y + 8, 66, 2});
@@ -152,13 +152,13 @@ void Toolbar::drawConstructionBar(){
         pressButton(BP::DEBUG_ERASER);
     }
 
-    if(GuiButton({anchor.x + 150, anchor.y + 8, 12, 24}, NULL)){
+    if(GuiButton({anchor.x + 150, anchor.y + 8, 12, 24}, nullptr)){
         pressButton(BP::DEBUG_CHANGE_PEN_COLOR);
     }
     DrawRectangle(anchor.x + 150, anchor.y + 8, 12, 24, penColor);
     DrawRectangleLinesEx({anchor.x + 150, anchor.y + 8, 12, 24}, 2.0f, ColorBrightness(penColor, -.3f));
         
-    if(GuiButton({anchor.x + 220, anchor.y + 8, 12, 24}, NULL)){
+    if(GuiButton({anchor.x + 220, anchor.y + 8, 12, 24}, nullptr)){
         pressButton(BP::DEBUG_CHANGE_LINK_COLOR);
     }
     DrawRectangle(anchor.x + 220, anchor.y + 8, 12, 24, linkColor);
@@ -182,7 +182,7 @@ void Toolbar::drawControlsBar(){
         }
     };
 
-    GuiGroupBox({anchor.x + 0, anchor.y + 0, 600, 40}, NULL);
+    GuiGroupBox({anchor.x + 0, anchor.y + 0, 600, 40}, nullptr);
     GuiLabel({anchor.x + 16, anchor.y + 8, 48, 24}, "Control:");
 
     if(currentSelectedTool == 1) drawHighlighting({anchor.x + 64, anchor.y + 8, 72, 24});
@@ -199,7 +199,7 @@ void Toolbar::drawControlsBar(){
         pressButton(BP::DEBUG_DYE_SELECTED);
     }
         
-    if(GuiButton({anchor.x + 350, anchor.y + 8, 12, 24}, NULL)){
+    if(GuiButton({anchor.x + 350, anchor.y + 8, 12, 24}, nullptr)){
         pressButton(BP::DEBUG_CHANGE_DYE_COLOR);
     }
     DrawRectangle(anchor.x + 350, anchor.y + 8, 12, 24, dyeColor);

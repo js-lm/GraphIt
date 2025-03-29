@@ -1,5 +1,5 @@
-#include "color_panel.h"
-#include "system/application.h"
+#include "color_panel.hpp"
+#include "system/application.hpp"
 
 using namespace UI;
 

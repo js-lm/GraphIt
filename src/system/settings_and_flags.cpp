@@ -1,4 +1,4 @@
-#include "system/application.h"
+#include "system/application.hpp"
 #include "magic_enum.hpp"
 
 #include <raylib.h>

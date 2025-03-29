@@ -142,7 +142,7 @@ ifeq ($(PLATFORM),PLATFORM_WEB)
 endif
 
 # Define include paths for required headers
-INCLUDE_PATHS = -I. -I$(RAYLIB_PATH)/src -I$(RAYLIB_PATH)/src/external -Ilib -Isrc
+INCLUDE_PATHS = -I. -I$(RAYLIB_PATH)/src -I$(RAYLIB_PATH)/src/external -Isrc -Iexternal -Iinclude
 ifneq ($(wildcard /opt/homebrew/include/.*),)
     INCLUDE_PATHS += -I/opt/homebrew/include
 endif

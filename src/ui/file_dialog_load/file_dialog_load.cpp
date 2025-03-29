@@ -1,11 +1,10 @@
-#include "file_dialog_load.h"
-#include "system/application.h"
+#include "file_dialog_load.hpp"
+#include "system/application.hpp"
 
 #include <raylib.h>
 #include <iostream>
 
 using namespace UI;
-
 
 void FileDialogLoad::draw(){
     pressButton(ButtonPressed::NONE);
@@ -41,7 +40,7 @@ void FileDialogLoad::fetchUserInput(){
             openSelectedFile();
             doubleLeftClickCD_ = std::nullopt;
         }else{
-            doubleLeftClickCD_ = .5f;
+            doubleLeftClickCD_ = .3f;
         }
     }
     

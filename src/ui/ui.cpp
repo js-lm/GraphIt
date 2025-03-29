@@ -1,8 +1,9 @@
-#include "ui.h"
-#include "toolbar/toolbar.h"
-#include "file_dialog_load/file_dialog_load.h"
-#include "settings_menu/settings_menu.h"
-#include "color_panel/color_panel.h"
+#include "ui.hpp"
+#include "toolbar/toolbar.hpp"
+#include "file_dialog_load/file_dialog_load.hpp"
+#include "settings_menu/settings_menu.hpp"
+#include "color_panel/color_panel.hpp"
+#include "file_dialog_save/file_dialog_save.hpp"
 
 #include <raylib.h>
 #include <raygui.h>
@@ -60,15 +61,12 @@ void Center::openPanel(Panel::ID id){
     case Panel::ID::TOOLBAR:
         openedPanels_.push_back(std::make_unique<UI::Toolbar>());
         break;
-    // case Panel::ID::SAVE:
-    //     openedPanels_.push_back(std::make_unique<UI::Toolbar>());
-    //     break;
+    case Panel::ID::SAVE:
+        openedPanels_.push_back(std::make_unique<UI::FileDialogSave>());
+        break;
     case Panel::ID::LOAD:
         openedPanels_.push_back(std::make_unique<UI::FileDialogLoad>());
         break;
-    // case Panel::ID::CONFIRM_REPLACE:
-    //     openedPanels_.push_back(std::make_unique<UI::Toolbar>());
-    //     break;
     case Panel::ID::SETTINGS:
         openedPanels_.push_back(std::make_unique<UI::SettingsMenu>());
         break;

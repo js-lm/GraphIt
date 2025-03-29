@@ -2491,11 +2491,14 @@ int GuiDropdownBox(Rectangle bounds, const char *text, int *active, bool editMod
 int GuiTextBox(Rectangle bounds, char *text, int textSize, bool editMode)
 {
     #if !defined(RAYGUI_TEXTBOX_AUTO_CURSOR_COOLDOWN)
-        #define RAYGUI_TEXTBOX_AUTO_CURSOR_COOLDOWN  30        // Frames to wait for autocursor movement
+        #define RAYGUI_TEXTBOX_AUTO_CURSOR_COOLDOWN  0.5f        // Time in seconds to wait before auto-cursor movement
     #endif
     #if !defined(RAYGUI_TEXTBOX_AUTO_CURSOR_DELAY)
-        #define RAYGUI_TEXTBOX_AUTO_CURSOR_DELAY      2        // Frames delay for autocursor movement
+        #define RAYGUI_TEXTBOX_AUTO_CURSOR_DELAY     0.03f       // Time in seconds between auto-cursor movements
     #endif
+
+    static float autoCursorTime = 0.0f;
+    static bool keyWasPressed = false;
 
     int result = 0;
     GuiState state = guiState;
@@ -2528,10 +2531,6 @@ int GuiTextBox(Rectangle bounds, char *text, int textSize, bool editMode)
     mouseCursor.x = -1;
     mouseCursor.width = 1;
 
-    // Blink-cursor frame counter
-    //if (!autoCursorMode) blinkCursorFrameCounter++;
-    //else blinkCursorFrameCounter = 0;
-
     // Update control
     //--------------------------------------------------------------------
     // WARNING: Text editing is only supported under certain conditions:
@@ -2545,12 +2544,48 @@ int GuiTextBox(Rectangle bounds, char *text, int textSize, bool editMode)
 
         if (editMode)
         {
-            // GLOBAL: Auto-cursor movement logic
-            // NOTE: Keystrokes are handled repeatedly when button is held down for some time
-            if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_UP) || IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_BACKSPACE) || IsKeyDown(KEY_DELETE)) autoCursorCounter++;
-            else autoCursorCounter = 0;
+            // GLOBAL: Auto-cursor movement logic with time-based approach
+            bool keyIsDown = IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_RIGHT) || 
+                             IsKeyDown(KEY_UP) || IsKeyDown(KEY_DOWN) || 
+                             IsKeyDown(KEY_BACKSPACE) || IsKeyDown(KEY_DELETE);
+            
+            if (keyIsDown)
+            {
+                if (!keyWasPressed)
+                {
+                    // First press, reset timer
+                    autoCursorTime = 0.0f;
+                    keyWasPressed = true;
+                }
+                else
+                {
+                    // Key is being held down, accumulate time
+                    autoCursorTime += GetFrameTime();
+                }
+            }
+            else
+            {
+                // Reset when keys are released
+                autoCursorTime = 0.0f;
+                keyWasPressed = false;
+            }
 
-            bool autoCursorShouldTrigger = (autoCursorCounter > RAYGUI_TEXTBOX_AUTO_CURSOR_COOLDOWN) && ((autoCursorCounter % RAYGUI_TEXTBOX_AUTO_CURSOR_DELAY) == 0);
+            // Determine if auto-cursor should trigger based on time thresholds
+            bool autoCursorShouldTrigger = false;
+            if (autoCursorTime > RAYGUI_TEXTBOX_AUTO_CURSOR_COOLDOWN)
+            {
+                // Calculate how many repeat events we should have triggered by now
+                float timeAfterCooldown = autoCursorTime - RAYGUI_TEXTBOX_AUTO_CURSOR_COOLDOWN;
+                float repeatCount = timeAfterCooldown / RAYGUI_TEXTBOX_AUTO_CURSOR_DELAY;
+                
+                // We trigger on the frame where we cross an integer threshold
+                static float lastRepeatCount = 0;
+                if (floor(repeatCount) > floor(lastRepeatCount))
+                {
+                    autoCursorShouldTrigger = true;
+                }
+                lastRepeatCount = repeatCount;
+            }
 
             state = STATE_PRESSED;
 
@@ -2856,7 +2891,8 @@ int GuiTextBox(Rectangle bounds, char *text, int textSize, bool editMode)
                 (!CheckCollisionPointRec(mousePosition, bounds) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)))
             {
                 textBoxCursorIndex = 0;     // GLOBAL: Reset the shared cursor index
-                autoCursorCounter = 0;      // GLOBAL: Reset counter for repeated keystrokes
+                autoCursorTime = 0.0f;      // Reset the accumulated time
+                keyWasPressed = false;      // Reset key state
                 result = 1;
             }
         }
@@ -2869,7 +2905,8 @@ int GuiTextBox(Rectangle bounds, char *text, int textSize, bool editMode)
                 if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
                 {
                     textBoxCursorIndex = textLength;   // GLOBAL: Place cursor index to the end of current text
-                    autoCursorCounter = 0;             // GLOBAL: Reset counter for repeated keystrokes
+                    autoCursorTime = 0.0f;             // Reset the accumulated time
+                    keyWasPressed = false;             // Reset key state
                     result = 1;
                 }
             }
@@ -2907,6 +2944,7 @@ int GuiTextBox(Rectangle bounds, char *text, int textSize, bool editMode)
 
     return result;      // Mouse button pressed: result = 1
 }
+
 
 /*
 // Text Box control with multiple lines and word-wrap

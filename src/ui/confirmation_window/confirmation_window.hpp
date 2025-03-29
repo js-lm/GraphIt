@@ -1,22 +1,21 @@
 #pragma once
 
-#include "../panel.h"
+#include "../panel.hpp"
 
 namespace UI{
 
-class FileDialogSave : public Panel{
+class Confirm : public Panel{
 public:
     enum class ButtonPressed{
         NONE,
 
+        YES,
+        NO
     };
 
 public:
-    FileDialogSave(){
-        id_ = ID::SAVE;
-        mainPanelBounds_ = {0, 0, 0, 0};
-    };
-    ~FileDialogSave() = default;
+    Confirm() = default;
+    ~Confirm() = default;
 
     void draw() override;
 

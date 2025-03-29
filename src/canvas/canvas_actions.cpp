@@ -1,14 +1,14 @@
-#include "canvas.h"
-#include "system/application.h"
-#include "graph/graph.h"
-#include "actions_center/actions_center.h"
-#include "actions_center/graph_action/general.h"
-#include "actions_center/graph_action/bulk_removal.h"
-#include "actions_center/graph_action/dye.h"
-#include "actions_center/graph_action/reweigh.h"
-#include "lib/magic_enum.hpp"
-#include "system/terminal_prefix.h"
-#include "ui/ui.h"
+#include "canvas.hpp"
+#include "system/application.hpp"
+#include "graph/graph.hpp"
+#include "actions_center/actions_center.hpp"
+#include "actions_center/graph_action/general.hpp"
+#include "actions_center/graph_action/bulk_removal.hpp"
+#include "actions_center/graph_action/dye.hpp"
+#include "actions_center/graph_action/reweigh.hpp"
+#include "magic_enum.hpp"
+#include "system/terminal_prefix.hpp"
+#include "ui/ui.hpp"
 
 #include <optional>
 #include <iostream>
@@ -26,7 +26,6 @@ bool Canvas::isCanvasMouseButtonPressed(int key) const{
 }
 
 void Canvas::updateMouseActions(){
-    // if(mode_ != Mode::SELECT) updateCamera();
     updateCamera();
 
     switch(mode_){

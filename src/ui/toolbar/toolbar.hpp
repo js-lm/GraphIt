@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../panel.h"
-#include "canvas/canvas.h"
+#include "../panel.hpp"
+#include "canvas/canvas.hpp"
 
 namespace UI{
 

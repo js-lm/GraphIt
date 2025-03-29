@@ -1,8 +1,8 @@
-#include "canvas.h"
-#include "system/application.h"
-#include "graph/graph.h"
-#include "lib/magic_enum.hpp"
-#include "system/terminal_prefix.h"
+#include "canvas.hpp"
+#include "system/application.hpp"
+#include "graph/graph.hpp"
+#include "magic_enum.hpp"
+#include "system/terminal_prefix.hpp"
 
 #include <raylib.h>
 #include <iostream>
@@ -17,6 +17,11 @@ void Canvas::resetCamera(){
     canvasCamera_.rotation = 0.0f;
     canvasCamera_.zoom = 1.0f;
     zoomFactorTemp_ = 1.0f;
+}
+
+void Canvas::setCameraZoom(float zoom){ 
+    canvasCamera_.zoom = zoom;
+    zoomFactorTemp_ = zoom;
 }
 
 void Canvas::drawGrid() const{
@@ -93,7 +98,7 @@ void Canvas::drawZoomProgressBar() const{
     );
 
     char zoomLabel[32];
-    std::snprintf(zoomLabel, 32, "#42#Zoom: %.2f", canvasCamera_.zoom);
+    std::snprintf(zoomLabel, 32, "#42#Zoom: x%.2f", canvasCamera_.zoom);
 
     GuiLabel(
         {

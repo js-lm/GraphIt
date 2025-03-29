@@ -1,5 +1,5 @@
-#include "settings_menu.h"
-#include "system/application.h"
+#include "settings_menu.hpp"
+#include "system/application.hpp"
 
 using namespace UI;
 

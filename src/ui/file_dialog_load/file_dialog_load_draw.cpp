@@ -1,5 +1,5 @@
-#include "file_dialog_load.h"
-#include "system/application.h"
+#include "file_dialog_load.hpp"
+#include "system/application.hpp"
 
 #include <raylib.h>
 #include <raygui.h>
@@ -79,7 +79,17 @@ void FileDialogLoad::drawScrollPanel(){
         &itemIndexTemp
     );
 
-    if(itemIndexTemp != -1 && !listViewString_.empty()) itemIndex_ = itemIndexTemp;
+    if(itemIndexTemp != -1 && !listViewString_.empty()){
+        itemIndex_ = itemIndexTemp;
+        
+        if(itemIndex_ 
+        && itemIndex_.value() < static_cast<int>(filesList_.size())
+        && fs::is_regular_file(filesList_[itemIndex_.value()])
+        ){
+            selectedFile_ = filesList_[itemIndex_.value()];
+            synNames();
+        }
+    }
 
     // std::cout << "listViewScrollIndex_: " << listViewScrollIndex_
     //           << "\nitemIndex_" << itemIndex_ << std::endl;
