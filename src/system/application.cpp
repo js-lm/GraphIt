@@ -6,6 +6,7 @@
 #include "canvas/canvas.hpp"
 #include "system/terminal_prefix.hpp"
 #include "io/io.hpp"
+#include "icon/icon.h"
 
 #define RAYGUI_IMPLEMENTATION
 #include <raygui.h>
@@ -33,9 +34,6 @@ Application::~Application(){
 void Application::init(){
     printInitMessage(GRAPHIT_VERSION_STRING);
 
-    initSettings();
-    initFlags();
-
     const int screenWidth{1000};
     const int screenHeight{720};
 
@@ -43,15 +41,18 @@ void Application::init(){
 
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(screenWidth, screenHeight, "GraphIt! v" GRAPHIT_VERSION_STRING);
-    printInitMessage();
 
     SetTargetFPS(300);
     SetExitKey(KEY_NULL);
     SetWindowMinSize(screenWidth, screenHeight);
-    SetWindowMaxSize(screenWidth * 10, screenHeight * 10);  
+    SetWindowMaxSize(screenWidth * 10, screenHeight * 10);
+
+    SetWindowIcon(Image((void*)ICON_DATA, ICON_WIDTH, ICON_HEIGHT, 1, ICON_FORMAT));
 
     handleWindowResizeEvent(); // since the window was created after the ui
     canvas_->resetCamera();
+
+    printInitMessage();
 }
 
 int Application::run(){

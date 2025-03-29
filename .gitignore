@@ -2,7 +2,6 @@
 *.dsym
 main
 build
-*.png
 .DS_Store
 *.grt
 saves

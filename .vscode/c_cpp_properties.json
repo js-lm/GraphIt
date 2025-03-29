@@ -4,7 +4,10 @@
             "name": "Win32",
             "includePath": [
                 "C:/raylib/raylib/src/**",
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/src/**",
+                "${workspaceFolder}/include/**",
+                "${workspaceFolder}/external/**",
+                "${workspaceFolder}/resources/**"
             ],
             "defines": [
                 "_DEBUG",
@@ -13,16 +16,18 @@
                 "GRAPHICS_API_OPENGL_33",
                 "PLATFORM_DESKTOP"
             ],
-            "compilerPath": "C:/raylib/w64devkit/bin/gcc.exe",
-            "cStandard": "c99",
-            "cppStandard": "c++14",
+            "compilerPath": "C:/raylib/w64devkit/bin/g++.exe",
+            "cStandard": "c11",
+            "cppStandard": "c++20",
             "intelliSenseMode": "gcc-x64",
-            "configurationProvider": "ms-vscode.makefile-tools"
+            "configurationProvider": "ms-vscode.cmake-tools"
         },
         {
             "name": "Mac",
             "includePath": [
-                "${workspaceFolder}/**",
+                "${workspaceFolder}/src/**",
+                "${workspaceFolder}/include/**",
+                "${workspaceFolder}/external/**",
                 "/opt/homebrew/include"
             ],
             "defines": [
@@ -33,18 +38,20 @@
                 "PLATFORM_DESKTOP"
             ],
             "macFrameworkPath": [
-                "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks"
+                "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks"
             ],
-            "compilerPath": "/usr/bin/clang",
+            "compilerPath": "/usr/bin/clang++",
             "cStandard": "c11",
-            "cppStandard": "c++14",
+            "cppStandard": "c++20",
             "intelliSenseMode": "clang-x64"
         },
         {
             "name": "Linux",
             "includePath": [
-                "/home/linuxbrew/.linuxbrew/include",
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/src/**",
+                "${workspaceFolder}/include/**",
+                "${workspaceFolder}/external/**",
+                "/home/linuxbrew/.linuxbrew/include"
             ],
             "defines": [
                 "_DEBUG",
@@ -54,7 +61,7 @@
                 "PLATFORM_DESKTOP"
             ],
             "cStandard": "c11",
-            "cppStandard": "c++14",
+            "cppStandard": "c++20",
             "intelliSenseMode": "gcc-x64"
         }
     ],

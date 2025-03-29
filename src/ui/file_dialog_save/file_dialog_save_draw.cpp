@@ -1,5 +1,4 @@
 #include "file_dialog_save.hpp"
-#include "system/application.hpp"
 
 #include <raylib.h>
 #include <raygui.h>

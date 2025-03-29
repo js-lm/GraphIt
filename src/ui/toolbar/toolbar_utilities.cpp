@@ -3,6 +3,7 @@
 #include "actions_center/actions_center.hpp"
 #include "graph/graph.hpp"
 #include "io/io.hpp"
+#include "system/settings.hpp"
 
 #include <iomanip>
 #include <ctime>
@@ -15,7 +16,7 @@ using namespace UI;
 
 void Toolbar::switchMode(Canvas::Mode mode){
     Application::instance().canvas().switchMode(mode);
-    Application::setValue<Setting, int>(Setting::TOOLBAR_CURRENT_SELECTED_TOOL, static_cast<int>(mode));
+    appSettings.toolbarCurrentSelectedTool = static_cast<int>(mode);
 }
 
 void Toolbar::createNewFile(){
@@ -51,8 +52,8 @@ void Toolbar::openSettingMenu(){
 }
 
 void Toolbar::deleteSelected(){ 
-    bool isSelectingVertex{Application::getValue<Setting, bool>(Setting::TOOLBAR_IS_SELECTING_VERTEX)};
-    bool isSelectingEdge{Application::getValue<Setting, bool>(Setting::TOOLBAR_IS_SELECTING_EDGE)};
+    bool isSelectingVertex{appSettings.toolbarIsSelectingVertex};
+    bool isSelectingEdge{appSettings.toolbarIsSelectingEdge};
 
     if(isSelectingVertex && isSelectingEdge){
         Application::instance().canvas().doBulkDelete();
@@ -64,8 +65,8 @@ void Toolbar::deleteSelected(){
 }
 
 void Toolbar::dyeSelected(){ 
-    bool isSelectingVertex{Application::getValue<Setting, bool>(Setting::TOOLBAR_IS_SELECTING_VERTEX)};
-    bool isSelectingEdge{Application::getValue<Setting, bool>(Setting::TOOLBAR_IS_SELECTING_EDGE)};
+    bool isSelectingVertex{appSettings.toolbarIsSelectingVertex};
+    bool isSelectingEdge{appSettings.toolbarIsSelectingEdge};
 
     if(isSelectingVertex && isSelectingEdge){
         Application::instance().canvas().doDye();
@@ -82,19 +83,19 @@ void Toolbar::resetCamera(){
 }
 
 void Toolbar::changePenColor(){
-    Application::setValue<Setting, int>(Setting::COLOR_PANEL_CALL_FROM, 1);
+    appSettings.colorPanelCallFrom = 1;
     Application::instance().ui().openPanel(Panel::ID::COLOR);
     switchMode(Canvas::Mode::PEN);
 }
 
 void Toolbar::changeLinkColor(){
-    Application::setValue<Setting, int>(Setting::COLOR_PANEL_CALL_FROM, 2);
+    appSettings.colorPanelCallFrom = 2;
     Application::instance().ui().openPanel(Panel::ID::COLOR);
     switchMode(Canvas::Mode::LINK);
 }
 
 void Toolbar::changeDyeColor(){
-    Application::setValue<Setting, int>(Setting::COLOR_PANEL_CALL_FROM, 3);
+    appSettings.colorPanelCallFrom = 3;
     Application::instance().ui().openPanel(Panel::ID::COLOR);
 }
 

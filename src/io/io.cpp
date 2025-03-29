@@ -4,6 +4,7 @@
 #include "system/version.hpp"
 #include "system/terminal_prefix.hpp"
 #include "canvas/canvas.hpp"
+#include "system/settings.hpp"
 
 #include <iostream>
 #include <unordered_map>
@@ -21,10 +22,8 @@ Normalized::SaveData Serializer::normalizeData(){
     normalizedGraph.cameraSettings.position = canvas.getCameraPosition();
     normalizedGraph.cameraSettings.zoom = canvas.getCameraZoom();
 
-    normalizedGraph.graphSettings.isDirected 
-        = Application::instance().getValue<Setting, bool>(Setting::GRAPH_IS_DIRECTED);
-    normalizedGraph.graphSettings.isWeighted
-        = Application::instance().getValue<Setting, bool>(Setting::GRAPH_IS_WEIGHTED);
+    normalizedGraph.graphSettings.isDirected = appSettings.graphIsDirected;
+    normalizedGraph.graphSettings.isWeighted = appSettings.graphIsWeighted;
     
     // index: new ids
     // element: original ids
@@ -106,7 +105,7 @@ bool Serializer::save(const std::string &name){
                        << "}__|" << "\n";
     }
 
-    int weightPrecision{Application::instance().getValue<Setting, int>(Setting::GRAPH_WEIGHT_PRECISION)};
+    int weightPrecision{appSettings.graphWeightPrecision};
 
     for(const auto &edge : graph.edges){
         saveFile << "StartID:" << edge.startID << "__"

@@ -2,107 +2,78 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build debug",
-            "type": "process",
-            "command": "make",
+            "label": "CMake: configure",
+            "type": "shell",
+            "command": "cmake",
             "args": [
-                "PLATFORM=PLATFORM_DESKTOP",
-                "BUILD_MODE=DEBUG"
+                "-B",
+                "build",
+                "-DCMAKE_BUILD_TYPE=Debug"
             ],
-            "windows": {
-                "command": "C:/raylib/w64devkit/bin/mingw32-make.exe",
-                "args": [
-                    "RAYLIB_PATH=C:/raylib/raylib",
-                    "PROJECT_NAME=${fileBasenameNoExtension}",
-                    "BUILD_MODE=DEBUG"
-                ]
+            "options": {
+                "cwd": "${workspaceFolder}"
             },
-            "osx": {
-                "command": "make",
-                "args": [
-                    "RAYLIB_PATH=/path/to/your/raylib",
-                    "PROJECT_NAME=${fileBasenameNoExtension}",
-                    "BUILD_MODE=DEBUG"
-                ]
-            },
-            "linux": {
-                "command": "make",
-                "args": [
-                    "RAYLIB_PATH=/home/linuxbrew/.linuxbrew/include",
-                    "DESTDIR=/home/linuxbrew/.linuxbrew",
-                    "RAYLIB_LIBTYPE=SHARED",
-                    "EXAMPLE_RUNTIME_PATH=/home/linuxbrew/.linuxbrew/lib",
-                    "PROJECT_NAME=${fileBasenameNoExtension}",
-                    "BUILD_MODE=DEBUG"
-                ]
-            },
-            "group": "build",
-            "problemMatcher": [
-                "$gcc"
-            ]
+            "problemMatcher": []
         },
         {
-            "label": "build release",
-            "type": "process",
-            "command": "make",
+            "label": "CMake: build",
+            "type": "shell",
+            "command": "cmake",
             "args": [
-                "PLATFORM=PLATFORM_DESKTOP",
-                "BUILD_MODE=RELEASE"
+                "--build",
+                "build",
+                "--config",
+                "Debug",
+                "--parallel"
             ],
-            "windows": {
-                "command": "C:/raylib/w64devkit/bin/mingw32-make.exe",
-                "args": [
-                    "RAYLIB_PATH=C:/raylib/raylib",
-                    "PROJECT_NAME=${fileBasenameNoExtension}"
-                ]
+            "options": {
+                "cwd": "${workspaceFolder}"
             },
-            "osx": {
-                "command": "make",
-                "args": [
-                    "RAYLIB_PATH=/path/to/your/raylib",
-                    "PROJECT_NAME=${fileBasenameNoExtension}"
-                ]
-            },
-            "linux": {
-                "command": "make",
-                "args": [
-                    "RAYLIB_PATH=/home/linuxbrew/.linuxbrew/include",
-                    "DESTDIR=/home/linuxbrew/.linuxbrew",
-                    "RAYLIB_LIBTYPE=SHARED",
-                    "EXAMPLE_RUNTIME_PATH=/home/linuxbrew/.linuxbrew/lib",
-                    "PROJECT_NAME=${fileBasenameNoExtension}"
-                ]
-            },
-            "problemMatcher": [
-                "$gcc"
+            "dependsOn": [
+                "CMake: configure"
             ],
+            "problemMatcher": "$gcc",
             "group": {
                 "kind": "build",
                 "isDefault": false
             }
         },
         {
-            "type": "cppbuild",
-            "label": "C/C++: gcc.exe build active file",
-            "command": "C:/raylib/w64devkit/bin/gcc.exe",
+            "label": "CMake: configure release",
+            "type": "shell",
+            "command": "cmake",
             "args": [
-                "-fdiagnostics-color=always",
-                "-g",
-                "${file}",
-                "-o",
-                "${fileDirname}\\${fileBasenameNoExtension}.exe"
+                "-B",
+                "build",
+                "-DCMAKE_BUILD_TYPE=Release"
             ],
             "options": {
-                "cwd": "C:/raylib/w64devkit/bin"
+                "cwd": "${workspaceFolder}"
             },
-            "problemMatcher": [
-                "$gcc"
+            "problemMatcher": []
+        },
+        {
+            "label": "CMake: build release",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "build",
+                "--config",
+                "Release",
+                "--parallel"
             ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "dependsOn": [
+                "CMake: configure release"
+            ],
+            "problemMatcher": "$gcc",
             "group": {
                 "kind": "build",
-                "isDefault": true
-            },
-            "detail": "Task generated by Debugger."
+                "isDefault": false
+            }
         }
     ]
 }

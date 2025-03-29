@@ -1,19 +1,15 @@
 #include "color_panel.hpp"
-#include "system/application.hpp"
+#include "system/settings.hpp"
 
 using namespace UI;
 
 void ColorPanel::save(){
-    // TODO: don't use int
-    int destination{Application::getValue<Setting, int>(Setting::COLOR_PANEL_CALL_FROM)};
-    Setting tool;
-    switch(destination){
-    case 1: tool = Setting::COLOR_DEBUG_PEN;   break;
-    case 2: tool = Setting::COLOR_DEBUG_LINK;  break;
-    case 3: tool = Setting::COLOR_DEBUG_DYE;   break;
+    switch(appSettings.colorPanelCallFrom){
+    case 1: appSettings.colorDebugPen = newColor_;   break;
+    case 2: appSettings.colorDebugLink = newColor_;  break;
+    case 3: appSettings.colorDebugDye = newColor_;   break;
     case 0: default: break;
     };
-    Application::setValue<Setting, Color>(tool, newColor_);
     cancel();
 }
 

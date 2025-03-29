@@ -57,7 +57,7 @@ void FileDialogLoad::synNames(){
 
 void FileDialogLoad::resetPath(){
     if(fs::exists(fs::current_path() / "Saves")
-    || fs::create_directory(fs::current_path() / "Saves")
+    // || fs::create_directory(fs::current_path() / "Saves")
     ){
         currentPath_ = fs::current_path() / "Saves";
     }else{

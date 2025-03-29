@@ -1,5 +1,4 @@
 #include "settings_menu.hpp"
-#include "system/application.hpp"
 
 using namespace UI;
 

@@ -1,5 +1,4 @@
 #include "color_panel.hpp"
-#include "system/application.hpp"
 
 #include <raylib.h>
 #include <raygui.h>

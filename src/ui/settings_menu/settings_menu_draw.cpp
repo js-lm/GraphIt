@@ -1,5 +1,5 @@
 #include "settings_menu.hpp"
-#include "system/application.hpp"
+#include "system/settings.hpp"
 
 #include <raylib.h>
 #include <raygui.h>
@@ -39,10 +39,10 @@ void SettingsMenu::drawMainWindow(){
 void SettingsMenu::drawGeneralGraphSettings(){
     const Vector2 &anchor{graphSettingAnchor_};
 
-    bool isDirected{Application::getValue<Setting, bool>(Setting::GRAPH_IS_DIRECTED)};
-    bool isWeighted{Application::getValue<Setting, bool>(Setting::GRAPH_IS_WEIGHTED)};
-    int precision{Application::getValue<Setting, int>(Setting::GRAPH_WEIGHT_PRECISION)};
-    bool isLabeled{Application::getValue<Setting, bool>(Setting::GRAPH_IS_LABELED)};
+    bool &isDirected{appSettings.graphIsDirected};
+    bool &isWeighted{appSettings.graphIsWeighted};
+    int &precision{appSettings.graphWeightPrecision};
+    bool &isLabeled{appSettings.graphIsLabeled};
 
     GuiGroupBox({anchor.x + 0, anchor.y + 0, 392, 128}, "Graph Settings");
 
@@ -62,16 +62,13 @@ void SettingsMenu::drawGeneralGraphSettings(){
         pressButton(BP::GRAPH_RESET_LABEL);
     }
 
-    Application::setValue<Setting, bool>(Setting::GRAPH_IS_DIRECTED, isDirected);
-    Application::setValue<Setting, bool>(Setting::GRAPH_IS_WEIGHTED, isWeighted);
-    Application::setValue<Setting, int>(Setting::GRAPH_WEIGHT_PRECISION, Clamp(precision, 0, 5));
-    Application::setValue<Setting, bool>(Setting::GRAPH_IS_LABELED, isLabeled);
+    precision = Clamp(precision, 0, 5);
 }
 
 void SettingsMenu::drawGeneralColorPreferences(){
     const Vector2 &anchor{colorPreferencesAnchor_};
 
-    Color colorPickerValue{Application::getValue<Setting, Color>(Setting::COLOR_PREFERENCE_PICKER)};
+    Color &colorPickerValue{appSettings.colorPreferencePicker};
 
     GuiGroupBox({anchor.x + 0, anchor.y + 0, 352, 272}, "Color Preferences");
     GuiColorPicker({anchor.x + 216, anchor.y + 32, 96, 96}, nullptr, &colorPickerValue);
@@ -164,16 +161,13 @@ void SettingsMenu::drawGeneralColorPreferences(){
     if(GuiButton({anchor.x + 288, anchor.y + 216, 24, 24}, nullptr)){
         pressButton(BP::COLOR_PRESET_12);
     }
-
-    Application::setValue<Setting, Color>(Setting::COLOR_PREFERENCE_PICKER, colorPickerValue);
 }
 
 void SettingsMenu::drawGeneralVertexEdgeSettings(){
     const Vector2 &anchor{vertexEdgeSettingsAnchor_};
 
-    float radius{Application::getValue<Setting, float>(Setting::GRAPH_VERTEX_RADIUS)};
-    float thickness{Application::getValue<Setting, float>(Setting::GRAPH_EDGE_THICKNESS)};
-    // TODO: should I move these outside?
+    float &radius{appSettings.graphVertexRadius};
+    float &thickness{appSettings.graphEdgeThickness};
     const float minRadius{5.0f};
     const float maxRadius{50.0f};
     const float minThickness{2.5f};
@@ -198,18 +192,17 @@ void SettingsMenu::drawGeneralVertexEdgeSettings(){
         edgeThicknessValueBoxTempValue_ = thickness;
     }
 
-    Application::setValue<Setting, float>(Setting::GRAPH_VERTEX_RADIUS, Clamp(radius, minRadius, maxRadius));
-    Application::setValue<Setting, float>(Setting::GRAPH_EDGE_THICKNESS, Clamp(thickness, minThickness, radius));
+    radius = Clamp(radius, minRadius, maxRadius);
+    thickness = Clamp(thickness, minThickness, radius);
 }
 
 void SettingsMenu::drawGeneralGridSetting(){
     const Vector2 &anchor{gridSettingsAnchor_};
 
-    int cellSize{Application::getValue<Setting, int>(Setting::GRID_CELL_SIZE)};
-    int subdivisionSize{Application::getValue<Setting, int>(Setting::GRID_SUBDIVISION_SIZE)};
+    int &cellSize{appSettings.gridCellSize};
+    int &subdivisionSize{appSettings.gridSubdivisionSize};
     float cellSizeFLOAT{static_cast<float>(cellSize)};
     float subdivisionSizeFLOAT{static_cast<float>(subdivisionSize)};
-    // TODO: should I move these outside?
     const int minCellSize{8};
     const int maxCellSize{48};
     const int minSubdivisionSize{3};
@@ -237,6 +230,6 @@ void SettingsMenu::drawGeneralGridSetting(){
         subdivisionSizeValueBoxTempValue_ = subdivisionSize;
     }
 
-    Application::setValue<Setting, int>(Setting::GRID_CELL_SIZE, Clamp(cellSize, minCellSize, maxCellSize));
-    Application::setValue<Setting, int>(Setting::GRID_SUBDIVISION_SIZE, Clamp(subdivisionSize, minSubdivisionSize, maxSubdivisionSize));
+    cellSize = Clamp(cellSize, minCellSize, maxCellSize);
+    subdivisionSize = Clamp(subdivisionSize, minSubdivisionSize, maxSubdivisionSize);
 }

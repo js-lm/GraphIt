@@ -1,5 +1,5 @@
 #include "toolbar.hpp"
-#include "system/application.hpp"
+#include "system/settings.hpp"
 
 #include <raylib.h>
 #include <raygui.h>
@@ -12,8 +12,8 @@ using BP = Toolbar::ButtonPressed;
 void Toolbar::drawIoBar(){
     const Vector2 &anchor{ioAnchor_};
 
-    bool canUndo{Application::getValue<Flag, bool>(Flag::TOOLBAR_CAN_UNDO)};
-    bool canRedo{Application::getValue<Flag, bool>(Flag::TOOLBAR_CAN_REDO)};
+    bool canUndo{appFlags.toolbarCanUndo};
+    bool canRedo{appFlags.toolbarCanRedo};
     
     GuiGroupBox({anchor.x, anchor.y, 216, 40}, nullptr);
 
@@ -49,26 +49,23 @@ void Toolbar::drawIoBar(){
 void Toolbar::drawGridSettingsBar(){
     const Vector2 &anchor{gridSettingsAnchor_};
 
-    bool showGrid{Application::getValue<Setting, bool>(Setting::GRID_SHOW)};
-    bool snapToGrid{Application::getValue<Setting, bool>(Setting::GRID_IS_SNAP_TO_GRID)};
+    bool &showGrid{appSettings.gridShow};
+    bool &snapToGrid{appSettings.gridIsSnapToGrid};
     
     GuiGroupBox({anchor.x + 0, anchor.y + 0, 264, 40}, nullptr);
     GuiLabel({anchor.x + 16, anchor.y + 8, 32, 24}, "View:");
 
     GuiToggle({anchor.x + 48, anchor.y + 8, 88, 24}, "#097#Show Grid", &showGrid);
     GuiToggle({anchor.x + 140, anchor.y + 8, 104, 24}, "#050#Snap To Grid", &snapToGrid);
-
-    Application::setValue<Setting, bool>(Setting::GRID_SHOW, showGrid);
-    Application::setValue<Setting, bool>(Setting::GRID_IS_SNAP_TO_GRID, snapToGrid);
 }
 
 void Toolbar::drawAlgorithmBar(){
     const Vector2 &anchor{algorithmAnchor_};
 
-    int algorithmDropdownOption{Application::getValue<Setting, int>(Setting::ALGORITHM_DROPDOWN_OPTION)};
-    bool autoForward{Application::getValue<Setting, bool>(Setting::ALGORITHM_IS_AUTO_FORWARD)};
-    bool isFocusMode{Application::getValue<Flag, bool>(Flag::ALGORITHM_FOCUS_MODE)};
-    bool isRunning{Application::getValue<Flag, bool>(Flag::ALGORITHM_IS_RUNNING)};
+    int &algorithmDropdownOption{appSettings.algorithmDropdownOption};
+    bool &autoForward{appSettings.algorithmIsAutoForward};
+    bool &isFocusMode{appFlags.algorithmFocusMode};
+    bool &isRunning{appFlags.algorithmIsRunning};
     
     GuiGroupBox({anchor.x + 0, anchor.y + 0, 520, 40}, nullptr);
     GuiLabel({anchor.x + 16, anchor.y + 8, 64, 24}, "Algorithms: ");
@@ -107,19 +104,14 @@ void Toolbar::drawAlgorithmBar(){
     if(GuiButton({anchor.x + 480, anchor.y + 8, 24, 24}, "#142#")){
         pressButton(BP::OPEN_SETTING_MENU);
     }
-
-    Application::setValue<Setting, int>(Setting::ALGORITHM_DROPDOWN_OPTION, algorithmDropdownOption);
-    Application::setValue<Setting, bool>(Setting::ALGORITHM_IS_AUTO_FORWARD, autoForward);
-    Application::setValue<Flag, bool>(Flag::ALGORITHM_FOCUS_MODE, isFocusMode);
-    Application::setValue<Flag, bool>(Flag::ALGORITHM_IS_RUNNING, isRunning);
 }
 
 void Toolbar::drawConstructionBar(){
     const Vector2 &anchor{constructionAnchor_};
 
-    int currentSelectedTool{Application::getValue<Setting, int>(Setting::TOOLBAR_CURRENT_SELECTED_TOOL)};
-    Color penColor{Application::getValue<Setting, Color>(Setting::COLOR_DEBUG_PEN)};
-    Color linkColor{Application::getValue<Setting, Color>(Setting::COLOR_DEBUG_LINK)};
+    int &currentSelectedTool{appSettings.toolbarCurrentSelectedTool};
+    Color &penColor{appSettings.colorDebugPen};
+    Color &linkColor{appSettings.colorDebugLink};
     Color selectedColor{GetColor(GuiGetStyle(DEFAULT, BORDER_COLOR_NORMAL))};
 
     auto drawHighlighting{
@@ -169,10 +161,10 @@ void Toolbar::drawConstructionBar(){
 void Toolbar::drawControlsBar(){
     const Vector2 &anchor{controlAnchor_};
 
-    int currentSelectedTool{Application::getValue<Setting, int>(Setting::TOOLBAR_CURRENT_SELECTED_TOOL)};
-    bool isSelectingVertex{Application::getValue<Setting, bool>(Setting::TOOLBAR_IS_SELECTING_VERTEX)};
-    bool isSelectingEdge{Application::getValue<Setting, bool>(Setting::TOOLBAR_IS_SELECTING_EDGE)};
-    Color dyeColor{Application::getValue<Setting, Color>(Setting::COLOR_DEBUG_DYE)};
+    int &currentSelectedTool{appSettings.toolbarCurrentSelectedTool};
+    bool &isSelectingVertex{appSettings.toolbarIsSelectingVertex};
+    bool &isSelectingEdge{appSettings.toolbarIsSelectingEdge};
+    Color &dyeColor{appSettings.colorDebugDye};
     Color selectedColor{GetColor(GuiGetStyle(DEFAULT, BORDER_COLOR_NORMAL))};
 
     auto drawHighlighting{
@@ -212,9 +204,6 @@ void Toolbar::drawControlsBar(){
     GuiLabel({anchor.x + 384, anchor.y + 8, 50, 24}, "Include:");
     GuiCheckBox({anchor.x + 432, anchor.y + 8, 24, 24}, "Node", &isSelectingVertex);
     GuiCheckBox({anchor.x + 496, anchor.y + 8, 24, 24}, "Edge", &isSelectingEdge);
-
-    Application::setValue<Setting, bool>(Setting::TOOLBAR_IS_SELECTING_VERTEX, isSelectingVertex);
-    Application::setValue<Setting, bool>(Setting::TOOLBAR_IS_SELECTING_EDGE, isSelectingEdge);
 }
 
 void Toolbar::drawHideButton(){

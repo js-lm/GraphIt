@@ -1,6 +1,7 @@
 #include "graph.hpp"
 #include "system/application.hpp"
 #include "canvas/canvas.hpp"
+#include "system/settings.hpp"
 
 #include <raylib.h>
 #include <raymath.h>
@@ -18,7 +19,7 @@ void Graph::drawVertices() const{
     auto &hoveredVertexID{Application::instance().canvas().getHoveredVertexID()};
     auto &selectedVertexIDs{Application::instance().canvas().getSelectedVertexIDs()};
 
-    float vertexRadius{Application::getValue<Setting, float>(Setting::GRAPH_VERTEX_RADIUS)};
+    float vertexRadius{appSettings.graphVertexRadius};
 
     for(const auto &vertex : vertices_){
         if(vertex->isHidden()) continue;
@@ -41,7 +42,7 @@ void Graph::drawEdges() const{
     auto &hoveredEdgeIDs{Application::instance().canvas().getHoveredEdgeIDs()};
     auto &selectedEdgeIDs{Application::instance().canvas().getSelectedEdgeIDs()};
 
-    float edgeThickness{Application::getValue<Setting, float>(Setting::GRAPH_EDGE_THICKNESS)};
+    float edgeThickness{appSettings.graphEdgeThickness};
 
     for(const auto &edge : edges_){
         if(isVertexHidden(edge->startID())
@@ -90,9 +91,9 @@ void Graph::drawEdges() const{
 }
 
 void Graph::drawArrow(const Vector2 &startPoint, const Vector2 &endPoint, float thickness, Color color) const{
-    if(!Application::getValue<Setting, bool>(Setting::GRAPH_IS_DIRECTED)) return;
+    if(!appSettings.graphIsDirected) return;
 
-    float vertexRadius{Application::getValue<Setting, float>(Setting::GRAPH_VERTEX_RADIUS)};
+    float vertexRadius{appSettings.graphVertexRadius};
 
     Vector2 arrowVector{Vector2Subtract(endPoint, startPoint)};
 
@@ -115,11 +116,11 @@ void Graph::drawArrow(const Vector2 &startPoint, const Vector2 &endPoint, float 
 }
 
 void Graph::drawLabels() const{
-    if(!Application::getValue<Setting, bool>(Setting::GRAPH_IS_LABELED)) return;
+    if(!appSettings.graphIsLabeled) return;
 
     auto &hoveredVertexID{Application::instance().canvas().getHoveredVertexID()};
 
-    float vertexRadius{Application::getValue<Setting, float>(Setting::GRAPH_VERTEX_RADIUS)};
+    float vertexRadius{appSettings.graphVertexRadius};
 
     for(const auto &vertex : vertices_){
         if(vertex->isHidden()) continue;
@@ -139,13 +140,13 @@ void Graph::drawLabels() const{
 }
 
 void Graph::drawWeights() const{
-    if(!Application::getValue<Setting, bool>(Setting::GRAPH_IS_WEIGHTED)) return;
+    if(!appSettings.graphIsWeighted) return;
 
     auto &hoveredEdgeIDs{Application::instance().canvas().getHoveredEdgeIDs()};
     auto &selectedEdgeIDs{Application::instance().canvas().getSelectedEdgeIDs()};
 
-    float vertexRadius{Application::getValue<Setting, float>(Setting::GRAPH_VERTEX_RADIUS)};
-    float edgeThickness{Application::getValue<Setting, float>(Setting::GRAPH_EDGE_THICKNESS)};
+    float vertexRadius{appSettings.graphVertexRadius};
+    float edgeThickness{appSettings.graphEdgeThickness};
 
     for(const auto &edge : edges_){
         if(isVertexHidden(edge->startID())
@@ -171,7 +172,7 @@ void Graph::drawWeights() const{
         }
 
         std::stringstream weightLabelStream;
-        weightLabelStream << std::fixed << std::setprecision(Application::getValue<Setting, int>(Setting::GRAPH_WEIGHT_PRECISION)) << edge->weight();
+        weightLabelStream << std::fixed << std::setprecision(appSettings.graphWeightPrecision) << edge->weight();
     
         const std::string &weightLabel{(!weightInputLabel.empty() && isSelected ? weightInputLabel.c_str() : weightLabelStream.str())};
     

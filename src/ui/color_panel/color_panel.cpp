@@ -1,5 +1,5 @@
 #include "color_panel.hpp"
-#include "system/application.hpp"
+#include "system/settings.hpp"
 
 using namespace UI;
 
@@ -10,18 +10,7 @@ ColorPanel::ColorPanel(){
 
     refreshAnchors();
 
-    // TODO: don't use int
-    int destination{Application::getValue<Setting, int>(Setting::COLOR_PANEL_CALL_FROM)};
-    Setting tool;
-    switch(destination){
-    case 1: tool = Setting::COLOR_DEBUG_PEN;   break;
-    case 2: tool = Setting::COLOR_DEBUG_LINK;  break;
-    case 3: tool = Setting::COLOR_DEBUG_DYE;   break;
-    case 0: default: break;
-    };
-    Color color{Application::getValue<Setting, Color>(tool)};
-
-    oldColor_ = newColor_ = color;
+    oldColor_ = newColor_ = appSettings.colorDebugPen;
 };
 
 void ColorPanel::draw(){
