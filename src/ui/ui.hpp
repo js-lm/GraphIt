@@ -4,28 +4,39 @@
 
 #include <vector>
 #include <memory>
+#include <functional>
+#include <string>
 
 namespace UI{
 
-class Center{
-public:
-    Center();
-    ~Center() = default;
+    class Center{
+    public:
+        Center();
+        ~Center() = default;
 
-    void draw();
-    void update();
+        void draw();
+        void update();
 
-public:
-    bool isMouseOnCanvas() const;
-    
-    void updatePanelAnchors();
+    public:
+        bool isMouseOnCanvas() const;
+        
+        void updatePanelAnchors();
 
-public:
-    void openPanel(Panel::ID id);
-    void closeTopPanel();
+    public:
+        void openPanel(Panel::ID id);
+        void closeTopPanel();
 
-private:
-    std::vector<std::unique_ptr<Panel>> openedPanels_;
-};  
+        void askForConfirmation(
+            const std::string &title, 
+            const std::string &message, 
+            const std::string &proceed,
+            const std::string &cancel,
+            std::function<void()> proceedAction,
+            std::function<void()> cancelAction = [](){}
+        );
+
+    private:
+        std::vector<std::unique_ptr<Panel>> openedPanels_;
+    };  
 
 } // namespace UI

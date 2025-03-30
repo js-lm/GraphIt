@@ -88,8 +88,13 @@ elseif(APPLE)
     set_target_properties(${PROJECT_NAME} PROPERTIES
       MACOSX_BUNDLE TRUE
       MACOSX_BUNDLE_BUNDLE_NAME "${PROJECT_NAME}"
-      RESOURCE "${CMAKE_SOURCE_DIR}/resources/icon/icon.icns"
     )
+    # Copy the icon file to the bundle Resources directory
+    set_source_files_properties(
+      "${CMAKE_SOURCE_DIR}/resources/icon/icon.icns" 
+      PROPERTIES MACOSX_PACKAGE_LOCATION "Resources"
+    )
+    target_sources(${PROJECT_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/resources/icon/icon.icns")
   endif()
 endif()
 

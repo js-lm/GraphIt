@@ -25,10 +25,11 @@
         {
             "name": "Mac",
             "includePath": [
+                "/opt/homebrew/include",
                 "${workspaceFolder}/src/**",
                 "${workspaceFolder}/include/**",
                 "${workspaceFolder}/external/**",
-                "/opt/homebrew/include"
+                "${workspaceFolder}/resources/**"
             ],
             "defines": [
                 "_DEBUG",
@@ -48,10 +49,11 @@
         {
             "name": "Linux",
             "includePath": [
+                "/home/linuxbrew/.linuxbrew/include",
                 "${workspaceFolder}/src/**",
                 "${workspaceFolder}/include/**",
                 "${workspaceFolder}/external/**",
-                "/home/linuxbrew/.linuxbrew/include"
+                "${workspaceFolder}/resources/**"
             ],
             "defines": [
                 "_DEBUG",

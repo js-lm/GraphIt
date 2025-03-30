@@ -1,5 +1,5 @@
 #include "system/application.hpp"
 
-int main(){
-    return Application::instance().run();
+int main(int argumentsCount, char* arguments[]){
+    return Application::instance().run(argumentsCount, arguments);
 }

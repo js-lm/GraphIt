@@ -20,8 +20,15 @@ void Toolbar::switchMode(Canvas::Mode mode){
 }
 
 void Toolbar::createNewFile(){
-    // TODO: add confirm prompt
-    Application::instance().graph().clearGraph();
+    Application::instance().ui().askForConfirmation(
+        "#193#Are you sure you want to proceed?",
+        "This will close the current graph and all the unsaved data will be lost. Proceed?",
+        "#147#Proceed",
+        "#159#Back",
+        [](){
+            Application::instance().graph().clearGraph();
+        }
+    );
 }
 
 void Toolbar::loadSavedGraph(){

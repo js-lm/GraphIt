@@ -21,11 +21,20 @@ void FileDialogLoad::cancel(){
 }
 
 void FileDialogLoad::loadSelectedFile(){
-    printFilesystemPrefix();
-    std::cout << "Trying to open " << selectedFile_.string() << std::endl;
-    if(Application::instance().serializer().load(selectedFile_.string())){
-        cancel();
-    }
+    Application::instance().ui().askForConfirmation(
+        "#193#Are you sure you want to proceed?",
+        "This will replace the current graph and all the unsaved data will be lost. Proceed?",
+        "#147#Proceed",
+        "#159#Back",
+        [&](){
+            printFilesystemPrefix();
+            std::cout << "Trying to open " << selectedFile_.string() << std::endl;
+            if(Application::instance().serializer().load(selectedFile_.string())){
+                cancel();
+            }
+        }
+    );
+
 }
 
 void FileDialogLoad::openSelectedFile(){

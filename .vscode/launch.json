@@ -24,7 +24,8 @@
         "miDebuggerPath": "C:/raylib/w64devkit/bin/gdb.exe"
       },
       "osx": {
-        "MIMode": "lldb"
+        "MIMode": "lldb",
+        "program": "${workspaceFolder}/build/GraphIt.app/Contents/MacOS/GraphIt"
       },
       "linux": {
         "miDebuggerPath": "/usr/bin/gdb"
@@ -54,7 +55,8 @@
         "miDebuggerPath": "C:/raylib/w64devkit/bin/gdb.exe"
       },
       "osx": {
-        "MIMode": "lldb"
+        "MIMode": "lldb",
+        "program": "${workspaceFolder}/build/GraphIt.app/Contents/MacOS/GraphIt"
       },
       "linux": {
         "miDebuggerPath": "/usr/bin/gdb"

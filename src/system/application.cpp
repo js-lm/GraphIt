@@ -55,7 +55,8 @@ void Application::init(){
     printInitMessage();
 }
 
-int Application::run(){
+int Application::run(int argumentsCount, char* arguments[]){
+    if(handleArguments(argumentsCount, arguments)) return 0;
     init();
     while(!WindowShouldClose()){
         update();
@@ -104,4 +105,24 @@ void Application::handleWindowResizeEvent(){
         static_cast<float>(GetScreenWidth()), 
         static_cast<float>(GetScreenHeight())
     };
+}
+
+bool Application::handleArguments(int argumentsCount, char* arguments[]){
+    for(int i{1}; i < argumentsCount; i++){
+        std::string argument{arguments[i]};
+        if(argument == "--version"){
+            std::cout << "GraphIt! version " << GRAPHIT_VERSION_STRING << std::endl;
+        }else if(argument == "--help"){
+
+        }else if(argument == "--credit"){
+            std::cout << "Author: js-lm\n"
+                      << "Release: https://github.com/js-lm/GraphIt"
+                      << std::endl;
+        }else{
+            std::cout << "Unknown argument '" << argument 
+                      << "'. Use '--help' for usage instructions." << std::endl;;
+        }
+    }
+
+    return argumentsCount > 1;
 }

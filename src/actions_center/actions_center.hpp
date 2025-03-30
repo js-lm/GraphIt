@@ -50,19 +50,19 @@ private:
 
 namespace Action{
     
-// the bottom action
-class DUMMY : public ActionBaseClass{
-public:
-    DUMMY(){ 
-        shouldBeRecorded_ = true;
-        identifier_ = ID::DUMMY;
+    // the bottom action
+    class DUMMY : public ActionBaseClass{
+    public:
+        DUMMY(){ 
+            shouldBeRecorded_ = true;
+            identifier_ = ID::DUMMY;
+        };
+        ~DUMMY() = default;
+
+        void execute() override{};
+
+        void undo() override{};
+        void redo() override{};
     };
-    ~DUMMY() = default;
-
-    void execute() override{};
-
-    void undo() override{};
-    void redo() override{};
-};
 
 } // namespace Action

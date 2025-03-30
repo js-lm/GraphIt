@@ -4,6 +4,7 @@
 #include "settings_menu/settings_menu.hpp"
 #include "color_panel/color_panel.hpp"
 #include "file_dialog_save/file_dialog_save.hpp"
+#include "confirmation_dialog/confirmation_dialog.hpp"
 
 #include <raylib.h>
 #include <raygui.h>
@@ -82,4 +83,17 @@ void Center::closeTopPanel(){
     if(openedPanels_.size() > 1){
         openedPanels_.pop_back();
     }
+}
+
+void Center::askForConfirmation(
+    const std::string &title, 
+    const std::string &message, 
+    const std::string &proceed,
+    const std::string &cancel,
+    std::function<void()> proceedAction,
+    std::function<void()> cancelAction
+){
+    openedPanels_.push_back(std::make_unique<UI::ConfirmationDialog>(
+        title, message, proceed, cancel, proceedAction, cancelAction
+    ));
 }
