@@ -23,7 +23,12 @@ protected:
         DYE_VERTEX,
         DYE_EDGE,
         DYE,
-        REWEIGH
+        REWEIGH,
+
+        // algorithm
+        VISIT_VERTEX,
+        SWITCH_CURRENT_VERTEX,
+        DRAW_TEMP_EDGE,
     };
 
 public:

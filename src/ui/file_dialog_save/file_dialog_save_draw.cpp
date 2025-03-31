@@ -9,7 +9,9 @@
 using namespace UI;
 
 void FileDialogSave::drawPanel(){
-    shouldClosePanel_ = GuiWindowBox({windowAnchor_.x + 0, windowAnchor_.y + 0, 472, 96}, "#002#Save To");
+    if(GuiWindowBox({windowAnchor_.x + 0, windowAnchor_.y + 0, 472, 96}, "#002#Save To")){
+        shouldClosePanel_ = true;
+    }
 
     GuiLabel({windowAnchor_.x + 16, windowAnchor_.y + 32, 48, 24}, "Save to:");
 

@@ -13,6 +13,6 @@ void ConfirmationDialog::drawPanel(){
     GuiLabel({windowAnchor_.x, windowAnchor_.y + 32, textSize_.x + 16, 24}, message_.c_str());
     GuiSetStyle(LABEL, TEXT_ALIGNMENT, originalTextAlignment);
     
-    proceedPressed_ = GuiButton({windowAnchor_.x + buttonGap_, windowAnchor_.y + 64, 120, 24}, proceed_.c_str()); 
-    cancelPressed_ = GuiButton({windowAnchor_.x + 2 * buttonGap_ + 120, windowAnchor_.y + 64, 120, 24}, cancel_.c_str()); 
+    cancelPressed_ = GuiButton({windowAnchor_.x + buttonGap_, windowAnchor_.y + 64, 120, 24}, cancel_.c_str()); 
+    proceedPressed_ = GuiButton({windowAnchor_.x + 2 * buttonGap_ + 120, windowAnchor_.y + 64, 120, 24}, proceed_.c_str()); 
 }

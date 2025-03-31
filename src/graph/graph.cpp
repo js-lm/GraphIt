@@ -2,6 +2,7 @@
 #include "system/settings.hpp"
 
 #include <raylib.h>
+#include <algorithm>
 
 void Graph::hideVertex(VertexID id){
     if(!isValidID(id)) return;
@@ -110,26 +111,30 @@ bool Graph::areNeighbors(VertexID startID, VertexID endID){
     return false;
 }
 
-std::unordered_set<Graph::VertexID> Graph::getNeighbors(VertexID id) const{
-    std::unordered_set<VertexID> neighbors;
+std::vector<std::pair<Graph::VertexID, float>> Graph::retrieveAdjacentVertices(VertexID id) const{
+    if(isVertexHidden(id)) throw;
 
-    if(isVertexHidden(id)) return neighbors;
+    std::vector<std::pair<Graph::VertexID, float>> adjacentVertices;
 
     for(const auto &edge : edges_){
         if(edge->startID() == id && !isVertexHidden(edge->endID())){
-            neighbors.insert(edge->endID());
+            adjacentVertices.emplace_back(std::make_pair(edge->endID(), edge->weight()));
         }
     }
 
     if(!appSettings.graphIsDirected){
         for(const auto &edge : edges_){
             if(edge->endID() == id && !isVertexHidden(edge->startID())){
-                neighbors.insert(edge->startID());
+                adjacentVertices.emplace_back(std::make_pair(edge->startID(), edge->weight()));
             }
         }
     }
 
-    return neighbors;
+    std::sort(adjacentVertices.begin(), adjacentVertices.end(), [](const auto &a, const auto &b) {
+        return a.first < b.first;
+    });
+
+    return adjacentVertices;
 }
 
 std::optional<Graph::VertexID> Graph::findVertex(Vector2 point, std::optional<float> radius){

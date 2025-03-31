@@ -7,6 +7,7 @@
 #include "system/terminal_prefix.hpp"
 #include "io/io.hpp"
 #include "icon/icon.h"
+#include "algorithm/algorithm_center.hpp"
 
 #define RAYGUI_IMPLEMENTATION
 #include <raygui.h>
@@ -72,6 +73,7 @@ void Application::update(){
     ui_->update();
     canvas_->update();
     actionsCenter_->update();
+    algorithm_->update();
 
     if(IsWindowResized()) handleWindowResizeEvent();
 }

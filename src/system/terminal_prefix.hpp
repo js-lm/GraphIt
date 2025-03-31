@@ -82,3 +82,11 @@ inline void printFilesystemPrefix(){ // Blue
         std::cout << "[Filesystem] ";
     }
 }
+
+inline void printAlgorithmPrefix(){ // Cyan
+    if(TERMINAL_PRINT_WITH_COLOR){
+        std::cout << "\x1b[46;30m" << "[Algorithm]" << TERMINAL_RESET << " ";
+    }else{
+        std::cout << "[Algorithm] ";
+    }
+}

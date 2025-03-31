@@ -1,6 +1,7 @@
 #include "actions_center.hpp"
 #include "action_base_class.hpp"
 #include "system/terminal_prefix.hpp"
+#include "system/settings.hpp"
 
 #include <iostream>
 
@@ -35,6 +36,8 @@ void ActionsCenter::moveActionsFromQueueToStack(){
 
     actionsToExecute_.clear();
     currentActionIndex_ = actionsStack_.size() - 1;
+    
+    updateUndoFlags();
 }
 
 void ActionsCenter::undo(){ 
@@ -45,6 +48,7 @@ void ActionsCenter::undo(){
     printCurrentIndex();
     std::cout << std::endl;
     action->undo();
+    updateUndoFlags();
 }
 
 void ActionsCenter::redo(){ 
@@ -55,6 +59,12 @@ void ActionsCenter::redo(){
     printCurrentIndex();
     std::cout << std::endl;
     action->redo();
+    updateUndoFlags();
+}
+
+void ActionsCenter::updateUndoFlags(){
+    appFlags.toolbarCanUndo = canUndo();
+    appFlags.toolbarCanRedo = canRedo();
 }
 
 void ActionsCenter::printCurrentIndex() const{
@@ -66,4 +76,6 @@ void ActionsCenter::clearHistory(){
     currentActionIndex_ = 0;
     actionsToExecute_.clear();
     actionsStack_.emplace_back(std::make_unique<Action::DUMMY>());
+    appFlags.toolbarCanRedo = false;
+    appFlags.toolbarCanUndo = false;
 }

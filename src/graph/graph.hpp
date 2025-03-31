@@ -47,7 +47,7 @@ public:
     Color getVertexColor(VertexID id){ return vertices_[id]->color();}
 
     bool areNeighbors(VertexID startID, VertexID endID);
-    std::unordered_set<VertexID> getNeighbors(VertexID id) const;
+    std::vector<std::pair<VertexID, float>> retrieveAdjacentVertices(VertexID id) const;
 
     std::string getLabel(VertexID id) const;
 

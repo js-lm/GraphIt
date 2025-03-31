@@ -20,7 +20,7 @@ public:
     ActionsCenter();
     ~ActionsCenter() = default;
 
-    void addAction(UniqueAction&& action){ actionsToExecute_.emplace_back(std::move(action));};
+    void addAction(UniqueAction &&action){ actionsToExecute_.emplace_back(std::move(action));}
 
     void update();
 
@@ -30,9 +30,22 @@ public:
     bool canUndo() const{ return currentActionIndex_ > 0;}
     bool canRedo() const{ return currentActionIndex_ + 1 < actionsStack_.size();}
 
-    const StackIndex getStackIndex() const{ return {currentActionIndex_, actionsStack_.size()};}
+    void updateUndoFlags();
+
+    StackIndex getStackIndex() const{ return {currentActionIndex_, actionsStack_.size()};}
 
     void clearHistory();
+
+public:
+    void initAlgorithm();
+    void algorithmDo(UniqueAction &&action);
+    void previousStep();
+    void nextStep();
+    bool canStepBackward() const{ return currentStepIndex_ > 0;}
+    bool canStepForward() const{ return currentStepIndex_ + 1 < algorithmStepsStack_.size();}
+    StackIndex getStepIndex() const{ return {currentStepIndex_, algorithmStepsStack_.size()};}
+    void exitAlgorithm();
+    void backToFirstStep();
 
 private:
     void moveActionsFromQueueToStack();
@@ -46,6 +59,10 @@ private:
 
     // newly added actions to execute in this frame
     std::vector<UniqueAction> actionsToExecute_;
+
+    // algorithm steps
+    std::vector<UniqueAction> algorithmStepsStack_;
+    size_t currentStepIndex_{0};
 };
 
 namespace Action{

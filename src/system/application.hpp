@@ -1,12 +1,14 @@
 #pragma once
 
 #include "ui/ui.hpp"
+// #include "algorithm/algorithm_center.hpp"
 
 struct Color;
 class Graph;
 class ActionsCenter;
 class Canvas;
 class Serializer;
+class AlgorithmCenter;
 
 struct Rectangle;
 
@@ -28,6 +30,7 @@ public:
     UI::Center &ui(){ return *ui_;}
     Canvas &canvas(){ return *canvas_;}
     Serializer &serializer(){ return *serializer_;}
+    AlgorithmCenter &algorithm(){ return *algorithm_;}
 
 private:
     Application();
@@ -48,6 +51,7 @@ private:
     UI::Center *ui_;
     Canvas *canvas_;
     Serializer *serializer_;
+    AlgorithmCenter *algorithm_;
 
     // handleWindowResizeEvent()
     Rectangle previousWindowRectangle_;

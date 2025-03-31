@@ -4,6 +4,7 @@
 #include "graph/graph.hpp"
 #include "io/io.hpp"
 #include "system/settings.hpp"
+#include "algorithm/algorithm_center.hpp"
 
 #include <iomanip>
 #include <ctime>
@@ -108,17 +109,17 @@ void Toolbar::changeDyeColor(){
 
 
 void Toolbar::enterAlgorithmMode(){
-
+    Application::instance().algorithm().run();
 }
 
 void Toolbar::exitAlgorithmMode(){
-
+    Application::instance().algorithm().exit();
 }
 
 void Toolbar::goToPreviousStep(){
-
+    Application::instance().algorithm().previousStep();
 }
 
 void Toolbar::goToNextStep(){
-
+    Application::instance().algorithm().nextStep();
 }

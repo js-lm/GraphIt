@@ -23,30 +23,31 @@ struct AppSettings {
     Color colorPreferencePicker{137, 207, 240, 255};
 
     // Vertex colors
-    Color colorVertexStart{GREEN};
-    Color colorVertexEnd{RED};
-    Color colorVertexVisited{BLUE};
-    Color colorVertexUnvisited{LIGHTGRAY};
-    Color colorVertexCurrent{YELLOW};
-    Color colorVertexSpecial{PURPLE};
+    Color colorVertexStart{180, 223, 255, 255}; // light blue
+    Color colorVertexEnd{180, 223, 255, 255}; // same as above
+    Color colorVertexVisited{79, 176, 159, 255}; // green
+    Color colorVertexUnvisited{134, 161, 219, 255}; // blue
+    Color colorVertexCurrent{255, 8, 74, 255}; // red
+    Color colorVertexPivot{255, 163, 191, 255}; // pink
 
     // Edge colors
-    Color colorEdgeVisited{BLUE};
-    Color colorEdgeUnvisited{LIGHTGRAY};
-    Color colorEdgeCurrent{YELLOW};
-    Color colorEdgePath{GREEN};
-    Color colorEdgeBlocked{RED};
-    Color colorEdgeSpecial{PURPLE};
+    Color colorEdgeVisited{136, 216, 176, 255}; // mint
+    Color colorEdgeUnvisited{255, 238, 173, 255}; // rice?
+    Color colorEdgeCurrent{255, 111, 105, 255}; // dark orange
+    Color colorEdgePath{BLACK};
+    Color colorEdgeBlocked{BLACK};
+    Color colorEdgeSpecial{BLACK};
 
     // Debug colors
-    Color colorDebugPen{DARKGRAY};
-    Color colorDebugLink{GRAY};
-    Color colorDebugDye{MAROON};
+    Color colorDebugPen{colorVertexUnvisited};
+    Color colorDebugLink{colorEdgeUnvisited};
+    Color colorDebugDye{colorVertexCurrent};
     int colorPanelCallFrom{0}; // none:0 pen:1 link:2 dye:3
 
     // Algorithm settings
     bool algorithmIsAutoForward{true};
     int algorithmDropdownOption{0};
+    float autoForwardSecondPerStep{.25f};
 
     // Toolbar
     int toolbarCurrentSelectedTool{0}; // SelectedTool
