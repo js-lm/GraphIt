@@ -24,7 +24,8 @@ Normalized::SaveData Serializer::normalizeData(){
 
     normalizedGraph.graphSettings.isDirected = appSettings.graphIsDirected;
     normalizedGraph.graphSettings.isWeighted = appSettings.graphIsWeighted;
-    
+    normalizedGraph.graphSettings.isLabeled = appSettings.graphIsLabeled;
+
     // index: new ids
     // element: original ids
     const auto &vertexIDs{graph.getAllValidVertexIDs()};
@@ -55,22 +56,22 @@ Normalized::SaveData Serializer::normalizeData(){
 }
 
 bool Serializer::save(const std::string &name){
+    auto graph{normalizeData()};
+
+    if(graph.vertices.size() + graph.edges.size() == 0){
+        printErrorPrefix();
+        std::cerr << "Nothing to save" << std::endl;
+        throw std::runtime_error("Graph is empty");
+    }
+
     const std::string filename{name.ends_with(".grt") ? name : name + ".grt"};
 
     std::ofstream saveFile{filename};
     if(!saveFile.is_open()){
         printErrorPrefix();
         std::cerr << "Unable to create " << filename << std::endl;
-        return false;
+        throw std::runtime_error("Unable to open file" + name);
     }     
-
-    auto graph{normalizeData()};
-
-    if(graph.vertices.size() + graph.edges.size() == 0){
-        printErrorPrefix();
-        std::cerr << "Nothing to save" << std::endl;
-        return false;
-    }
 
     time_t rawTime{std::time(nullptr)};
     auto timeInfo{*std::localtime(&rawTime)};
@@ -87,7 +88,9 @@ bool Serializer::save(const std::string &name){
     // graph settings - line 4
     // Directed:0__Weighted:0__|
     saveFile << "Directed:" << graph.graphSettings.isDirected 
-           << "__Weighted:" << graph.graphSettings.isWeighted << "__|\n";
+           << "__Weighted:" << graph.graphSettings.isWeighted 
+           << "__Labeled:" << graph.graphSettings.isLabeled 
+           << "__|\n";
 
     // vertex and edge count - line 5
     // V:0__E:0__|
@@ -194,6 +197,10 @@ bool Serializer::load(const std::string &filename){
     }
 
     Application::instance().graph().loadNewGraph(saveData);
+
+    appSettings.graphIsDirected = saveData.graphSettings.isDirected;
+    appSettings.graphIsWeighted = saveData.graphSettings.isWeighted;
+    appSettings.graphIsLabeled = saveData.graphSettings.isLabeled;
 
     Canvas &canvas{Application::instance().canvas()};
     canvas.setCameraPosition(saveData.cameraSettings.position);

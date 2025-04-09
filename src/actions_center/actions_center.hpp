@@ -43,6 +43,7 @@ public:
     void nextStep();
     bool canStepBackward() const{ return currentStepIndex_ > 0;}
     bool canStepForward() const{ return currentStepIndex_ + 1 < algorithmStepsStack_.size();}
+    void updateStepsAvailability();
     StackIndex getStepIndex() const{ return {currentStepIndex_, algorithmStepsStack_.size()};}
     void exitAlgorithm();
     void backToFirstStep();
@@ -63,6 +64,7 @@ private:
     // algorithm steps
     std::vector<UniqueAction> algorithmStepsStack_;
     size_t currentStepIndex_{0};
+    int previousMode_;
 };
 
 namespace Action{

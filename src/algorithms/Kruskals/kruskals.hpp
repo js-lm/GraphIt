@@ -1,6 +1,6 @@
 #pragma once
 
-#include "algorithm/algorithm.hpp"
+#include "algorithms/algorithm.hpp"
 
 #include <utility>
 #include <unordered_set>
@@ -9,17 +9,15 @@
 
 struct Color;
 
+// TODO: use inheritance
 namespace Algorithm{
 
-    class BFS{
+    class Kruskals{
     public:
-        BFS(VertexID startVertex) : startVertex_(startVertex){ run();}
-        ~BFS() = default;
+        Kruskals(VertexID startVertex) : startVertex_(startVertex){ run();}
+        ~Kruskals() = default;
 
         void run();
-
-    private:
-        
 
     private:
         std::vector<AdjacentVertex> retrieveAdjacentVertices(VertexID id);

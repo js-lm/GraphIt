@@ -1,4 +1,4 @@
-#include "bfs.hpp"
+#include "kruskals.hpp"
 #include "system/application.hpp"
 #include "actions_center/actions_center.hpp"
 #include "system/settings.hpp"
@@ -13,27 +13,11 @@
 
 using namespace Algorithm;
 
-void BFS::run(){
-    previousVertex_ = startVertex_;
-    visit(startVertex_);
+void Kruskals::run(){
 
-    while(!bfsQueue_.empty()){
-        switchCurrentVertex();
-        std::vector<AdjacentVertex> adjacentVertices{retrieveAdjacentVertices(pivotVertex_)};
-
-        for(const auto &adjacentVertex : adjacentVertices){
-            if(!hasVisited(adjacentVertex.id)){
-                visit(adjacentVertex.id);
-            }
-
-            std::cout << "id:" << adjacentVertex.id
-                      << " weight:" << adjacentVertex.weight
-                      << std::endl;
-        }
-    }
 }
 
-void BFS::visit(VertexID id){
+void Kruskals::visit(VertexID id){
     visitedVertices_.emplace_back(id);
     bfsQueue_.push(id);
 
@@ -50,11 +34,11 @@ void BFS::visit(VertexID id){
     );
 }
 
-bool BFS::hasVisited(VertexID id){
+bool Kruskals::hasVisited(VertexID id){
     return std::find(visitedVertices_.begin(), visitedVertices_.end(), id) != visitedVertices_.end();
 }
 
-void BFS::switchCurrentVertex(){
+void Kruskals::switchCurrentVertex(){
     pivotVertex_ = bfsQueue_.front();
     bfsQueue_.pop();
 
@@ -69,7 +53,7 @@ void BFS::switchCurrentVertex(){
     previousVertex_ = pivotVertex_;
 }
 
-std::vector<AdjacentVertex> BFS::retrieveAdjacentVertices(VertexID id){
+std::vector<AdjacentVertex> Kruskals::retrieveAdjacentVertices(VertexID id){
     auto retrievedAdjacentVertices{Application::instance().graph().retrieveAdjacentVertices(id)};
     std::vector<AdjacentVertex> adjacentVertices;
     for(const auto &vertex : retrievedAdjacentVertices){

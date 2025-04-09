@@ -7,7 +7,7 @@
 #include "system/terminal_prefix.hpp"
 #include "io/io.hpp"
 #include "icon/icon.h"
-#include "algorithm/algorithm_center.hpp"
+#include "algorithms/algorithm_center.hpp"
 
 #define RAYGUI_IMPLEMENTATION
 #include <raygui.h>
@@ -40,6 +40,7 @@ void Application::init(){
 
     previousWindowRectangle_ = {screenWidth, screenHeight};
 
+    // SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_WINDOW_HIGHDPI);
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(screenWidth, screenHeight, "GraphIt! v" GRAPHIT_VERSION_STRING);
 

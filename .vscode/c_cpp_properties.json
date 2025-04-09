@@ -49,7 +49,7 @@
         {
             "name": "Linux",
             "includePath": [
-                "/home/linuxbrew/.linuxbrew/include",
+                "${workspaceFolder}/build/_deps/raylib-src/src/**",
                 "${workspaceFolder}/src/**",
                 "${workspaceFolder}/include/**",
                 "${workspaceFolder}/external/**",

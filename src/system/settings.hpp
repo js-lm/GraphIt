@@ -32,7 +32,7 @@ struct AppSettings {
 
     // Edge colors
     Color colorEdgeVisited{136, 216, 176, 255}; // mint
-    Color colorEdgeUnvisited{255, 238, 173, 255}; // rice?
+    Color colorEdgeUnvisited{255, 238, 173, 255}; // beige
     Color colorEdgeCurrent{255, 111, 105, 255}; // dark orange
     Color colorEdgePath{BLACK};
     Color colorEdgeBlocked{BLACK};
@@ -63,6 +63,8 @@ struct AppFlags{
     // Algorithm
     bool algorithmFocusMode{false};
     bool algorithmIsRunning{false};
+    bool algorithmCanStepForward{false};
+    bool algorithmCanStepBackward{false};
 };
 
 extern AppSettings appSettings;

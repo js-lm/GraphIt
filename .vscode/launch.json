@@ -24,10 +24,11 @@
         "miDebuggerPath": "C:/raylib/w64devkit/bin/gdb.exe"
       },
       "osx": {
-        "MIMode": "lldb",
-        "program": "${workspaceFolder}/build/GraphIt.app/Contents/MacOS/GraphIt"
+        "program": "${workspaceFolder}/build/GraphIt.app/Contents/MacOS/GraphIt",
+        "MIMode": "lldb"
       },
       "linux": {
+        "program": "${workspaceFolder}/build/bin/GraphIt",
         "miDebuggerPath": "/usr/bin/gdb"
       },
       "preLaunchTask": "CMake: build"
@@ -55,10 +56,11 @@
         "miDebuggerPath": "C:/raylib/w64devkit/bin/gdb.exe"
       },
       "osx": {
-        "MIMode": "lldb",
-        "program": "${workspaceFolder}/build/GraphIt.app/Contents/MacOS/GraphIt"
+        "program": "${workspaceFolder}/build/GraphIt.app/Contents/MacOS/GraphIt",
+        "MIMode": "lldb"
       },
       "linux": {
+        "program": "${workspaceFolder}/build/bin/GraphIt",
         "miDebuggerPath": "/usr/bin/gdb"
       },
       "preLaunchTask": "CMake: build release"

@@ -1,4 +1,5 @@
 #include "toolbar.hpp"
+#include "system/settings.hpp"
 
 #include <raygui.h>
 
@@ -14,11 +15,16 @@ void Toolbar::draw(){
 
     pressButton(ButtonPressed::NONE);
 
+    drawAlgorithmBar();
+
+    if(appFlags.algorithmFocusMode) GuiDisable();
+
     drawConstructionBar();
     drawControlsBar();
     drawIoBar();
     drawGridSettingsBar();
-    drawAlgorithmBar();
+
+    if(appFlags.algorithmFocusMode) GuiEnable();
 
     if(algorithmDropdownBoxEditMode_) GuiUnlock();
 }

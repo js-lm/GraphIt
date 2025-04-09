@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ui/ui.hpp"
-// #include "algorithm/algorithm_center.hpp"
+// #include "algorithms/algorithm_center.hpp"
 
 struct Color;
 class Graph;

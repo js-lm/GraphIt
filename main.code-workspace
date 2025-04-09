@@ -104,7 +104,11 @@
 			"expected": "cpp",
 			"ranges": "cpp",
 			"stdfloat": "cpp",
-			"filesystem": "cpp"
+			"filesystem": "cpp",
+			"csignal": "cpp",
+			"strstream": "cpp",
+			"cfenv": "cpp",
+			"typeindex": "cpp"
 		},
 		"git.autoRepositoryDetection": false,
 		"git.enabled": true,

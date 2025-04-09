@@ -1,9 +1,13 @@
 #include "actions_center.hpp"
 #include "system/terminal_prefix.hpp"
 #include "system/settings.hpp"
+#include "system/application.hpp"
+#include "canvas/canvas.hpp"
 
 void ActionsCenter::initAlgorithm(){
     exitAlgorithm();
+    previousMode_ = appSettings.toolbarCurrentSelectedTool;
+    Application::instance().canvas().switchMode(Canvas::Mode::PAN);
     appFlags.algorithmFocusMode = true;
     algorithmStepsStack_.emplace_back(std::make_unique<Action::DUMMY>());
 }
@@ -26,6 +30,7 @@ void ActionsCenter::previousStep(){
               << algorithmStepsStack_.size() - 1 << "] " 
               << step->getName() << std::endl;
     step->undo();
+    updateStepsAvailability();
 }
 
 void ActionsCenter::nextStep(){
@@ -36,6 +41,15 @@ void ActionsCenter::nextStep(){
               << algorithmStepsStack_.size() - 1 << "] " 
               << step->getName() << std::endl;
     step->redo();
+    updateStepsAvailability();
+    if(!canStepForward()){
+        appFlags.algorithmIsRunning = false;
+    }
+}
+
+void ActionsCenter::updateStepsAvailability(){
+    appFlags.algorithmCanStepBackward = canStepBackward();
+    appFlags.algorithmCanStepForward = canStepForward();
 }
 
 void ActionsCenter::exitAlgorithm(){
@@ -45,13 +59,13 @@ void ActionsCenter::exitAlgorithm(){
     }
     currentStepIndex_ = 0;
     appFlags.algorithmFocusMode = false;
+    appFlags.algorithmCanStepBackward = true;
+    appFlags.algorithmCanStepForward = true;
+    Application::instance().canvas().switchMode(static_cast<Canvas::Mode>(previousMode_));
 }
 
 void ActionsCenter::backToFirstStep(){
-    printAlgorithmPrefix();
-    std::cout << "Back to fist step" << std::endl;
     while(canStepBackward()){
-        previousStep();
-        std::cout << "stepping backward" << std::endl;
+        algorithmStepsStack_[currentStepIndex_--]->undo();
     }
 }

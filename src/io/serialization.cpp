@@ -70,12 +70,12 @@ Normalized::CameraSettings Serializer::parseCameraSettings(const std::string &da
 
 Normalized::GraphSettings Serializer::parseGraphSettings(const std::string &data){
     auto dataFormat{getDataFormat(
-        {"Directed:", "__Weighted:", "__|"}
+        {"Directed:", "__Weighted:", "__Labeled:", "__|"}
     )};
 
     auto parsedData{parseData(data, dataFormat)};
 
-    if(parsedData.size() != 2){
+    if(parsedData.size() != 3){
         throw std::runtime_error("Data Corrupted: Mismatch Graph Settings Data");
     }
 
@@ -84,6 +84,7 @@ Normalized::GraphSettings Serializer::parseGraphSettings(const std::string &data
     try{
         graphSettings.isDirected = parsedData[0] == "1";
         graphSettings.isWeighted = parsedData[1] == "1";
+        graphSettings.isLabeled = parsedData[2] == "1";
     }catch(const std::exception &error){
         std::stringstream message;
         message << "Data Corrupted: Abnormal Graph Settings Data ("

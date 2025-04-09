@@ -4,7 +4,7 @@
 #include "graph/graph.hpp"
 #include "io/io.hpp"
 #include "system/settings.hpp"
-#include "algorithm/algorithm_center.hpp"
+#include "algorithms/algorithm_center.hpp"
 
 #include <iomanip>
 #include <ctime>
@@ -118,8 +118,10 @@ void Toolbar::exitAlgorithmMode(){
 
 void Toolbar::goToPreviousStep(){
     Application::instance().algorithm().previousStep();
+    appFlags.algorithmIsRunning = false;
 }
 
 void Toolbar::goToNextStep(){
     Application::instance().algorithm().nextStep();
+    appFlags.algorithmIsRunning = false;
 }

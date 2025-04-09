@@ -18,6 +18,7 @@ namespace Normalized{
     struct GraphSettings{
         bool isDirected;
         bool isWeighted;
+        bool isLabeled;
     };
 
     struct Vertex{

@@ -11,9 +11,6 @@ using BP = Toolbar::ButtonPressed;
 
 void Toolbar::drawIoBar(){
     const Vector2 &anchor{ioAnchor_};
-
-    bool canUndo{appFlags.toolbarCanUndo};
-    bool canRedo{appFlags.toolbarCanRedo};
     
     GuiGroupBox({anchor.x, anchor.y, 216, 40}, nullptr);
 
@@ -33,13 +30,13 @@ void Toolbar::drawIoBar(){
         pressButton(BP::SCREENSHOT);
     }
 
-    if(!canUndo) GuiDisable();
+    if(!appFlags.toolbarCanUndo) GuiDisable();
     if(GuiButton({anchor.x + 112, anchor.y + 8, 24, 24}, "#072#")){
         pressButton(BP::UNDO);
     }
     GuiEnable();
 
-    if(!canRedo) GuiDisable();
+    if(!appFlags.toolbarCanRedo) GuiDisable();
     if(GuiButton({anchor.x + 140, anchor.y + 8, 24, 24}, "#073#")){
         pressButton(BP::REDO);
     }
@@ -90,14 +87,18 @@ void Toolbar::drawAlgorithmBar(){
     if(GuiButton({anchor.x + 380, anchor.y + 8, 24, 24}, "#133#")){
         pressButton(BP::EXIT_ALGORITHM);
     }
-        
+    
+    if(!appFlags.algorithmCanStepBackward) GuiDisable();
     if(GuiButton({anchor.x + 256, anchor.y + 8, 24, 24}, "#129#")){
         pressButton(BP::PREVIOUS_STEP);
     }
-        
+    GuiEnable();
+       
+    if(!appFlags.algorithmCanStepForward) GuiDisable();
     if(GuiButton({anchor.x + 352, anchor.y + 8, 24, 24}, "#134#")){
         pressButton(BP::NEXT_STEP);
     }
+    GuiEnable();
         
     GuiToggle({anchor.x + 416, anchor.y + 8, 40, 24}, "Auto", &autoForward);
     

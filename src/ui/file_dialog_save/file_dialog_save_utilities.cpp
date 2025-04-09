@@ -32,8 +32,20 @@ void FileDialogSave::save(){
         printFilesystemPrefix();
         std::cout << "Saving " << finalPathName << std::endl;
 
-        Application::instance().serializer().save(finalPathName.string());
+        try{
+            shouldClosePanel_ = Application::instance().serializer().save(finalPathName.string());
+        }catch(const std::runtime_error &error){
+            Application::instance().ui().askForConfirmation(
+                "Warning",
+                error.what(),
+                "#147#Ok",
+                "",
+                [](){}
+            );
 
+            // TODO: There should also be warning boxes
+        }
+        
     }else{
         printErrorPrefix();
         std::cerr << "Unable to open " << saveTo_.string() << std::endl;
