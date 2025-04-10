@@ -2,7 +2,7 @@
 #include "system/application.hpp"
 #include "actions_center/actions_center.hpp"
 
-std::vector<Graph::VertexID> Graph::getAllValidVertexIDs() const{
+std::vector<Graph::VertexID> Graph::getAllNonHiddenVertexIDs() const{
     std::vector<VertexID> ids;
     for(const auto &vertex : vertices_){
         if(!vertex->isHidden()){
@@ -12,7 +12,7 @@ std::vector<Graph::VertexID> Graph::getAllValidVertexIDs() const{
     return ids;
 }
 
-std::vector<Normalized::Edge> Graph::getAllValidEdges() const{
+std::vector<Normalized::Edge> Graph::getAllNonHiddenEdges() const{
     std::vector<Normalized::Edge> ids;
     for(const auto &edge : edges_){
         if(!vertices_[edge->startID()]->isHidden()

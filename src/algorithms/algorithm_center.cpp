@@ -3,6 +3,7 @@
 #include "BFS/bfs.hpp"
 #include "system/application.hpp"
 #include "actions_center/actions_center.hpp"
+#include "Kruskal/kruskal.hpp"
 
 #include <raylib.h>
 #include <iostream>
@@ -42,7 +43,8 @@ void AlgorithmCenter::run(){
     appFlags.algorithmIsRunning = true;
     appFlags.algorithmFocusMode = true;
     Application::instance().actionCenter().initAlgorithm();
-    Algorithm::BFS bfs(0);
+    // Algorithm::BFS bfs(0);
+    Algorithm::Kruskal kruskal;
     Application::instance().actionCenter().backToFirstStep();
     // std::cout << "run() exits" << std::endl;
 }

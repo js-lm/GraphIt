@@ -59,8 +59,8 @@ public:
     std::vector<EdgeID> findEdge(Rectangle area);
 
 public: // for IO
-    std::vector<VertexID> getAllValidVertexIDs() const;
-    std::vector<Normalized::Edge> getAllValidEdges() const;
+    std::vector<VertexID> getAllNonHiddenVertexIDs() const;
+    std::vector<Normalized::Edge> getAllNonHiddenEdges() const;
 
     void loadNewGraph(const Normalized::SaveData &saveData);
     void clearGraph();

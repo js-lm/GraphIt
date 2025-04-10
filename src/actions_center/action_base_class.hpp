@@ -28,7 +28,7 @@ protected:
         // algorithm
         VISIT_VERTEX,
         SWITCH_CURRENT_VERTEX,
-        DRAW_TEMP_EDGE,
+        KRUSKAL,
     };
 
 public:

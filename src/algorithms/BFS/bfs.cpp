@@ -6,6 +6,7 @@
 #include "graph/graph.hpp"
 #include "actions_center/algorithm/visit_vertex.hpp"
 #include "actions_center/algorithm/switch_current_vertex.hpp"
+#include "system/terminal_prefix.hpp"
 
 #include <iostream>
 #include <raylib.h>
@@ -14,6 +15,9 @@
 using namespace Algorithm;
 
 void BFS::run(){
+    printAlgorithmPrefix();
+    std::cout << "BFS" << std::endl;
+
     previousVertex_ = startVertex_;
     visit(startVertex_);
 
@@ -26,7 +30,7 @@ void BFS::run(){
                 visit(adjacentVertex.id);
             }
 
-            std::cout << "\t\t> id:" << adjacentVertex.id
+            std::cout << " > id:" << adjacentVertex.id
                       << " weight:" << adjacentVertex.weight
                       << std::endl;
         }

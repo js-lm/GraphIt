@@ -28,7 +28,7 @@ Normalized::SaveData Serializer::normalizeData(){
 
     // index: new ids
     // element: original ids
-    const auto &vertexIDs{graph.getAllValidVertexIDs()};
+    const auto &vertexIDs{graph.getAllNonHiddenVertexIDs()};
     std::unordered_map<size_t, size_t> originalIDs;
 
     for(size_t i{0}; i < vertexIDs.size(); i++){
@@ -43,7 +43,7 @@ Normalized::SaveData Serializer::normalizeData(){
         normalizedGraph.vertices.emplace_back(normalizedVertex);
     }
 
-    std::vector<Normalized::Edge> edges{graph.getAllValidEdges()};
+    std::vector<Normalized::Edge> edges{graph.getAllNonHiddenEdges()};
 
     for(auto &edge : edges){
         edge.startID = originalIDs[edge.startID];

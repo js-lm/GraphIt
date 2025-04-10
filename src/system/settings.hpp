@@ -35,7 +35,7 @@ struct AppSettings {
     Color colorEdgeUnvisited{255, 238, 173, 255}; // beige
     Color colorEdgeCurrent{255, 111, 105, 255}; // dark orange
     Color colorEdgePath{BLACK};
-    Color colorEdgeBlocked{BLACK};
+    Color colorEdgeBlocked{139, 88, 80, 255}; // brown
     Color colorEdgeSpecial{BLACK};
 
     // Debug colors

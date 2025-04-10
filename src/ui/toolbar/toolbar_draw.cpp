@@ -69,7 +69,7 @@ void Toolbar::drawAlgorithmBar(){
     
     if(GuiDropdownBox(
         {anchor.x + 80, anchor.y + 8, 168, 24}, 
-        "Greedy Best-first Search;Prim's Algorithm; BFS", 
+        "Greedy Best-first Search;Prim's Algorithm;BFS;Kruskal's Algorithm", 
         &algorithmDropdownOption, 
         algorithmDropdownBoxEditMode_
     )){

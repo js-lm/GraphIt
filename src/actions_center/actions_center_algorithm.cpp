@@ -13,12 +13,10 @@ void ActionsCenter::initAlgorithm(){
 }
 
 void ActionsCenter::algorithmDo(UniqueAction &&action){
-    std::cout << "\t> Step [" << currentStepIndex_ << "] " 
+    std::cout << "Step [" << currentStepIndex_ << "] " 
               << action->getName() << std::endl;
     action->execute();
-    if(action->shouldSave()){
-        algorithmStepsStack_.emplace_back(std::move(action));
-    }
+    algorithmStepsStack_.emplace_back(std::move(action));
     currentStepIndex_ = algorithmStepsStack_.size() - 1;
 }
 
