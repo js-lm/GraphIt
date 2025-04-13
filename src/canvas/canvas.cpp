@@ -23,5 +23,7 @@ void Canvas::draw() const{
         drawMouse();
     } EndMode2D();
 
+    drawMouseLabel();
+
     drawZoomProgressBar();
 }

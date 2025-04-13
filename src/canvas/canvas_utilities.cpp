@@ -126,6 +126,18 @@ void Canvas::drawMouse() const{
     }
 }
 
+void Canvas::drawMouseLabel() const{
+    GuiLabel(
+        {
+            GetMouseX() + 20.0f, 
+            GetMouseY() - 15.0f, 
+            999.0f, 
+            20.0f
+        }, 
+        appStates.cursorString.c_str()
+    );
+}
+
 void Canvas::updateCursor() const{
     if(hoveredVertexID_ || hoveredEdgeIDs_){
         SetMouseCursor(MOUSE_CURSOR_POINTING_HAND);
@@ -194,6 +206,7 @@ Vector2 Canvas::getMousePositionInCanvas(bool snap) const{
     auto position{GetScreenToWorld2D(GetMousePosition(), canvasCamera_)};
     return snap ? snapVector(position) : position;
 }
+
 Vector2 Canvas::snapVector(Vector2 vector) const{
     int cellSize{appSettings.gridCellSize};
     vector.x = std::round(vector.x / cellSize) * cellSize;

@@ -95,6 +95,8 @@ private:
 
     void updateHoveredItem();
 
+    void drawMouseLabel() const;
+
 private:
     bool isMouseOnCanvas() const;
     bool isCanvasMouseButtonPressed(int key) const;

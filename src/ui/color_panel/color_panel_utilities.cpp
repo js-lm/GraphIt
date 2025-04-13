@@ -4,7 +4,7 @@
 using namespace UI;
 
 void ColorPanel::save(){
-    switch(appSettings.colorPanelCallFrom){
+    switch(appStates.colorPanelCallFrom){
     case 1: appSettings.colorDebugPen = newColor_;   break;
     case 2: appSettings.colorDebugLink = newColor_;  break;
     case 3: appSettings.colorDebugDye = newColor_;   break;

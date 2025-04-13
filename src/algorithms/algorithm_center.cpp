@@ -4,12 +4,18 @@
 #include "system/application.hpp"
 #include "actions_center/actions_center.hpp"
 #include "Kruskal/kruskal.hpp"
+#include "system/application.hpp"
+#include "graph/graph.hpp"
+#include "canvas/canvas.hpp"
 
 #include <raylib.h>
 #include <iostream>
 #include <cmath>
 
-// using namespace Algorithm;
+AlgorithmCenter::AlgorithmCenter()
+    : hasExecuted_(false)
+    , autoClock_(0.0f)
+{}
 
 void AlgorithmCenter::update(){
     if(!appFlags.algorithmFocusMode 
@@ -19,39 +25,73 @@ void AlgorithmCenter::update(){
         return;
     }
 
-    // I don't know why but the program freezes when it's not static
-    static float autoClock{0.0f};
-    
-    // std::cout << "update() called- autoForwardSecondPerStep " << appSettings.autoForwardSecondPerStep << std::endl;
-    
-    float frameTime{GetFrameTime()};
-    // std::cout << "GetFrameTime() " << frameTime << std::endl;
-    
-    if(autoClock >= appSettings.autoForwardSecondPerStep){
-        autoClock = 0.0f;
-        // std::cout << "autoClock reset" << std::endl;
-        nextStep();
+    if(!hasExecuted_){
+        switch(appStates.algorithmDropdownOption){
+        case 0: // BFS
+        case 1:{ // Prim's
+            setStartVertex(); 
+            if(startVertex_) executeAlgorithm();
+            startVertex_ = std::nullopt;
+            break;
+        }
+        
+        default: executeAlgorithm(); break;
+        }
     }else{
-        autoClock += frameTime;
-        // std::cout << "autoClock + frameTime " << std::endl;
+        replayAlgorithm();
     }
-    
-    // std::cout << "update() exits" << std::endl;
 }
 
 void AlgorithmCenter::run(){
     appFlags.algorithmIsRunning = true;
     appFlags.algorithmFocusMode = true;
     Application::instance().actionCenter().initAlgorithm();
-    // Algorithm::BFS bfs(0);
-    Algorithm::Kruskal kruskal;
+}
+
+void AlgorithmCenter::setStartVertex(){
+    hoveredVertex_ = Application::instance().graph().findVertex(
+        Application::instance().canvas().getMousePositionInCanvas(), 
+        appSettings.graphVertexRadius * 1.5f
+    );
+
+    if(hoveredVertex_ && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+        startVertex_ = hoveredVertex_;
+    }
+
+    appStates.cursorString = "Please Select A Vertex To Start";
+}
+
+void AlgorithmCenter::executeAlgorithm(){
+    switch(appStates.algorithmDropdownOption){
+    case 0:{ Algorithm::BFS bfs(startVertex_); break;}
+    case 1:{ break;}
+    case 2:{ Algorithm::Kruskal kruskal; break;}
+    default: break;
+    }
+    hasExecuted_ = true;
     Application::instance().actionCenter().backToFirstStep();
-    // std::cout << "run() exits" << std::endl;
+
+    appStates.cursorString.clear();
+}
+
+void AlgorithmCenter::replayAlgorithm(){
+    // I don't know why but the program freezes when it's not static
+    // static float autoClock{0.0f};
+    // Because you didn't declare the class in Application dumb ass
+    
+    if(autoClock_ >= appSettings.autoForwardSecondPerStep){
+        autoClock_ = 0.0f;
+        nextStep();
+    }else{
+        autoClock_ += GetFrameTime();
+    }
 }
 
 void AlgorithmCenter::exit(){
     appFlags.algorithmIsRunning = false;
     appFlags.algorithmFocusMode = false;
+    hasExecuted_ = false;
+    autoClock_ = 0.0f;
     Application::instance().actionCenter().exitAlgorithm();
 }
 

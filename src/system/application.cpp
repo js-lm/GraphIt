@@ -22,6 +22,7 @@ Application::Application()
     , ui_(new UI::Center())
     , canvas_(new Canvas())
     , serializer_(new Serializer())
+    , algorithm_(new AlgorithmCenter())
 {}
 
 Application::~Application(){
@@ -30,6 +31,7 @@ Application::~Application(){
     delete ui_;
     delete canvas_;
     delete serializer_;
+    delete algorithm_;
 }
 
 void Application::init(){

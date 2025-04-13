@@ -59,7 +59,7 @@ void Toolbar::drawGridSettingsBar(){
 void Toolbar::drawAlgorithmBar(){
     const Vector2 &anchor{algorithmAnchor_};
 
-    int &algorithmDropdownOption{appSettings.algorithmDropdownOption};
+    int &algorithmDropdownOption{appStates.algorithmDropdownOption};
     bool &autoForward{appSettings.algorithmIsAutoForward};
     bool &isFocusMode{appFlags.algorithmFocusMode};
     bool &isRunning{appFlags.algorithmIsRunning};
@@ -69,7 +69,7 @@ void Toolbar::drawAlgorithmBar(){
     
     if(GuiDropdownBox(
         {anchor.x + 80, anchor.y + 8, 168, 24}, 
-        "Greedy Best-first Search;Prim's Algorithm;BFS;Kruskal's Algorithm", 
+        "BFS;Prim's Algorithm;Kruskal's Algorithm", 
         &algorithmDropdownOption, 
         algorithmDropdownBoxEditMode_
     )){
@@ -110,7 +110,7 @@ void Toolbar::drawAlgorithmBar(){
 void Toolbar::drawConstructionBar(){
     const Vector2 &anchor{constructionAnchor_};
 
-    int &currentSelectedTool{appSettings.toolbarCurrentSelectedTool};
+    int &currentSelectedTool{appStates.toolbarCurrentSelectedTool};
     Color &penColor{appSettings.colorDebugPen};
     Color &linkColor{appSettings.colorDebugLink};
     Color selectedColor{GetColor(GuiGetStyle(DEFAULT, BORDER_COLOR_NORMAL))};
@@ -162,9 +162,9 @@ void Toolbar::drawConstructionBar(){
 void Toolbar::drawControlsBar(){
     const Vector2 &anchor{controlAnchor_};
 
-    int &currentSelectedTool{appSettings.toolbarCurrentSelectedTool};
-    bool &isSelectingVertex{appSettings.toolbarIsSelectingVertex};
-    bool &isSelectingEdge{appSettings.toolbarIsSelectingEdge};
+    int &currentSelectedTool{appStates.toolbarCurrentSelectedTool};
+    bool &isSelectingVertex{appFlags.toolbarIsSelectingVertex};
+    bool &isSelectingEdge{appFlags.toolbarIsSelectingEdge};
     Color &dyeColor{appSettings.colorDebugDye};
     Color selectedColor{GetColor(GuiGetStyle(DEFAULT, BORDER_COLOR_NORMAL))};
 

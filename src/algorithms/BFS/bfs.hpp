@@ -13,13 +13,10 @@ namespace Algorithm{
 
     class BFS{
     public:
-        BFS(VertexID startVertex) : startVertex_(startVertex){ run();}
+        BFS(std::optional<VertexID> startVertex);
         ~BFS() = default;
 
         void run();
-
-    private:
-        
 
     private:
         std::vector<AdjacentVertex> retrieveAdjacentVertices(VertexID id);
@@ -29,10 +26,8 @@ namespace Algorithm{
 
         void switchCurrentVertex();
 
-        // void drawTemporaryPathIndicator(bool isVisiting = false);
-
     private:
-        VertexID startVertex_; // well, start vertex
+        std::optional<VertexID> startVertex_; // well, start vertex
         VertexID previousVertex_; // previous pivot vertex
         VertexID pivotVertex_; // or more like the top vertex
         // current vertex/edge means the one that is being highlighted/visited.

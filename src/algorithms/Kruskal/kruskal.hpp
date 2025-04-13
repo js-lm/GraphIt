@@ -19,6 +19,8 @@ namespace Algorithm{
         ~Kruskal() = default;
 
     private:
+        void run();
+
         void initializeGraphAndMaps();
 
         VertexID getParent(VertexID id);

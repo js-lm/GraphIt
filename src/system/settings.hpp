@@ -1,8 +1,9 @@
 #pragma once
 
 #include <raylib.h>
+#include <string>
 
-struct AppSettings {
+struct AppSettings{
     // Graph settings
     bool graphIsDirected{true};
     bool graphIsWeighted{true};
@@ -42,23 +43,18 @@ struct AppSettings {
     Color colorDebugPen{colorVertexUnvisited};
     Color colorDebugLink{colorEdgeUnvisited};
     Color colorDebugDye{colorVertexCurrent};
-    int colorPanelCallFrom{0}; // none:0 pen:1 link:2 dye:3
 
     // Algorithm settings
     bool algorithmIsAutoForward{true};
-    int algorithmDropdownOption{0};
     float autoForwardSecondPerStep{.25f};
-
-    // Toolbar
-    int toolbarCurrentSelectedTool{0}; // SelectedTool
-    bool toolbarIsSelectingVertex{true};
-    bool toolbarIsSelectingEdge{true};
 };
 
 struct AppFlags{
     // Toolbar - general
     bool toolbarCanUndo{false};
     bool toolbarCanRedo{false};
+    bool toolbarIsSelectingVertex{true};
+    bool toolbarIsSelectingEdge{true};
 
     // Algorithm
     bool algorithmFocusMode{false};
@@ -67,5 +63,20 @@ struct AppFlags{
     bool algorithmCanStepBackward{false};
 };
 
+struct AppStates{
+    // Toolbar
+    int toolbarCurrentSelectedTool{0}; // SelectedTool
+
+    // Debug colors
+    int colorPanelCallFrom{0}; // none:0 pen:1 link:2 dye:3
+
+    // Algorithm settings
+    int algorithmDropdownOption{0};
+
+    // Cursor Hover String
+    std::string cursorString;
+};
+
 extern AppSettings appSettings;
 extern AppFlags appFlags;
+extern AppStates appStates;

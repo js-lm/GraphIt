@@ -17,7 +17,7 @@ using namespace UI;
 
 void Toolbar::switchMode(Canvas::Mode mode){
     Application::instance().canvas().switchMode(mode);
-    appSettings.toolbarCurrentSelectedTool = static_cast<int>(mode);
+    appStates.toolbarCurrentSelectedTool = static_cast<int>(mode);
 }
 
 void Toolbar::createNewFile(){
@@ -60,8 +60,8 @@ void Toolbar::openSettingMenu(){
 }
 
 void Toolbar::deleteSelected(){ 
-    bool isSelectingVertex{appSettings.toolbarIsSelectingVertex};
-    bool isSelectingEdge{appSettings.toolbarIsSelectingEdge};
+    bool isSelectingVertex{appFlags.toolbarIsSelectingVertex};
+    bool isSelectingEdge{appFlags.toolbarIsSelectingEdge};
 
     if(isSelectingVertex && isSelectingEdge){
         Application::instance().canvas().doBulkDelete();
@@ -73,8 +73,8 @@ void Toolbar::deleteSelected(){
 }
 
 void Toolbar::dyeSelected(){ 
-    bool isSelectingVertex{appSettings.toolbarIsSelectingVertex};
-    bool isSelectingEdge{appSettings.toolbarIsSelectingEdge};
+    bool isSelectingVertex{appFlags.toolbarIsSelectingVertex};
+    bool isSelectingEdge{appFlags.toolbarIsSelectingEdge};
 
     if(isSelectingVertex && isSelectingEdge){
         Application::instance().canvas().doDye();
@@ -91,19 +91,19 @@ void Toolbar::resetCamera(){
 }
 
 void Toolbar::changePenColor(){
-    appSettings.colorPanelCallFrom = 1;
+    appStates.colorPanelCallFrom = 1;
     Application::instance().ui().openPanel(Panel::ID::COLOR);
     switchMode(Canvas::Mode::PEN);
 }
 
 void Toolbar::changeLinkColor(){
-    appSettings.colorPanelCallFrom = 2;
+    appStates.colorPanelCallFrom = 2;
     Application::instance().ui().openPanel(Panel::ID::COLOR);
     switchMode(Canvas::Mode::LINK);
 }
 
 void Toolbar::changeDyeColor(){
-    appSettings.colorPanelCallFrom = 3;
+    appStates.colorPanelCallFrom = 3;
     Application::instance().ui().openPanel(Panel::ID::COLOR);
 }
 

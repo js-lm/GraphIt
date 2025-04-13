@@ -2,3 +2,4 @@
 
 AppSettings appSettings;
 AppFlags appFlags;
+AppStates appStates;

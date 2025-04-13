@@ -2,25 +2,32 @@
 
 #include <optional>
 
-// namespace Algorithm{
-
 class AlgorithmCenter{
 public:
-    AlgorithmCenter() = default;
+    using VertexID = size_t;
+
+public:
+    AlgorithmCenter();
     ~AlgorithmCenter() = default;
 
     void update();
 
     void run();
-    // void pause();
-    // void resume();
     void exit();
     void previousStep();
     void nextStep();
 
 private:
-    // std::optional<float> autoClock_;
-    // float autoClock_{0.0f};
-};
+    void executeAlgorithm();
+    void replayAlgorithm();
 
-// } // namespace Algorithm
+private:
+    void setStartVertex();
+
+private:
+    std::optional<VertexID> startVertex_;
+    std::optional<VertexID> hoveredVertex_;
+
+    bool hasExecuted_;
+    float autoClock_;
+};

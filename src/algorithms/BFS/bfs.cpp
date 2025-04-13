@@ -14,12 +14,19 @@
 
 using namespace Algorithm;
 
+BFS::BFS(std::optional<VertexID> startVertex)
+    : startVertex_(startVertex)
+{
+    appSettings.graphIsWeighted = false;
+    if(startVertex_) run();
+}
+
 void BFS::run(){
     printAlgorithmPrefix();
     std::cout << "BFS" << std::endl;
 
-    previousVertex_ = startVertex_;
-    visit(startVertex_);
+    previousVertex_ = startVertex_.value();
+    visit(startVertex_.value());
 
     while(!bfsQueue_.empty()){
         switchCurrentVertex();

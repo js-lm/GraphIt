@@ -24,7 +24,7 @@ namespace UI{
         virtual void update(){}
 
         // only handle inputs from the top panel
-        virtual void handleInput();
+        void handleInput();
 
         const Rectangle getMainPanelBounds() const{ return mainPanelBounds_;}
 

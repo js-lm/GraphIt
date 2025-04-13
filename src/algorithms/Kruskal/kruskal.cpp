@@ -1,12 +1,12 @@
 #include "kruskal.hpp"
 #include "system/application.hpp"
 #include "graph/graph.hpp"
-#include "system/application.hpp"
 #include "actions_center/actions_center.hpp"
 #include "actions_center/graph_action/dye.hpp"
 #include "system/settings.hpp"
 #include "system/terminal_prefix.hpp"
 #include "actions_center/algorithm/kruskal_add_edge.hpp"
+#include "algorithms/algorithm_center.hpp"
 
 #include <algorithm>
 #include <utility>
@@ -15,6 +15,12 @@
 using namespace Algorithm;
 
 Kruskal::Kruskal(){
+    appSettings.graphIsWeighted = true;
+    appSettings.graphIsDirected = false;
+    run();
+}
+
+void Kruskal::run(){
     printAlgorithmPrefix();
     std::cout << "Kruskal's Algorithm" << std::endl;
 
@@ -47,7 +53,7 @@ Kruskal::Kruskal(){
         if(!isCurrentEdgeRejected){
             std::cout << " > Combining (" 
                       << edge.startID << ", " << edge.endID << ") -> Roots (" 
-                      << getParent(edge.startID) << ", " << getParent(edge.endID) << ")" 
+                      << getParent(edge.startID) << ")" 
                       << std::endl;
         }
     }

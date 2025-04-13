@@ -6,7 +6,7 @@
 
 void ActionsCenter::initAlgorithm(){
     exitAlgorithm();
-    previousMode_ = appSettings.toolbarCurrentSelectedTool;
+    previousMode_ = appStates.toolbarCurrentSelectedTool;
     Application::instance().canvas().switchMode(Canvas::Mode::PAN);
     appFlags.algorithmFocusMode = true;
     algorithmStepsStack_.emplace_back(std::make_unique<Action::DUMMY>());

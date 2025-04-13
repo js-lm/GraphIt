@@ -15,16 +15,14 @@ void Toolbar::draw(){
 
     pressButton(ButtonPressed::NONE);
 
-    drawAlgorithmBar();
-
     if(appFlags.algorithmFocusMode) GuiDisable();
-
     drawConstructionBar();
     drawControlsBar();
     drawIoBar();
     drawGridSettingsBar();
-
     if(appFlags.algorithmFocusMode) GuiEnable();
+
+    drawAlgorithmBar();
 
     if(algorithmDropdownBoxEditMode_) GuiUnlock();
 }

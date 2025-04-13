@@ -1,4 +1,5 @@
 #include "panel.hpp"
+#include "system/settings.hpp"
 
 #include <raylib.h>
 
@@ -12,7 +13,9 @@ using namespace UI;
 
 void Panel::handleInput(){
     handleButtonPress();
-    handleKeyboardShortcuts();
+    if(!appFlags.algorithmFocusMode){
+        handleKeyboardShortcuts();
+    }
 }
 
 void Panel::handleKeyboardShortcuts(){
