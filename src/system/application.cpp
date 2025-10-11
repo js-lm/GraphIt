@@ -59,7 +59,7 @@ void Application::init(){
     printInitMessage();
 }
 
-int Application::run(int argumentsCount, char* arguments[]){
+int Application::run(int argumentsCount, char *arguments[]){
     if(handleArguments(argumentsCount, arguments)) return 0;
     init();
     while(!WindowShouldClose()){
@@ -112,7 +112,7 @@ void Application::handleWindowResizeEvent(){
     };
 }
 
-bool Application::handleArguments(int argumentsCount, char* arguments[]){
+bool Application::handleArguments(int argumentsCount, char *arguments[]){
     for(int i{1}; i < argumentsCount; i++){
         std::string argument{arguments[i]};
         if(argument == "--version"){

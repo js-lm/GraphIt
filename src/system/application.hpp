@@ -14,7 +14,7 @@ struct Rectangle;
 
 class Application{
 public:
-    int run(int argumentsCount, char* arguments[]);
+    int run(int argumentsCount, char *arguments[]);
     
 public:
     static Application &instance(){
@@ -37,7 +37,7 @@ private:
     ~Application();
 
 private:
-    bool handleArguments(int argc, char *argv[]);
+    bool handleArguments(int argumentsCount, char *arguments[]);
     void init();
 
     void update();

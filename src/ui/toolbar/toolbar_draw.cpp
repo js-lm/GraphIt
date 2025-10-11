@@ -69,7 +69,7 @@ void Toolbar::drawAlgorithmBar(){
     
     if(GuiDropdownBox(
         {anchor.x + 80, anchor.y + 8, 168, 24}, 
-        "BFS;Prim's Algorithm;Kruskal's Algorithm", 
+        "BFS;Prim's Algorithm;Kruskal's Algorithm;Dijkstra's Algorithm", 
         &algorithmDropdownOption, 
         algorithmDropdownBoxEditMode_
     )){

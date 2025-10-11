@@ -4,6 +4,7 @@
 #include "system/application.hpp"
 #include "actions_center/actions_center.hpp"
 #include "Kruskal/kruskal.hpp"
+#include "Dijkstra/dijkstra.hpp"
 #include "system/application.hpp"
 #include "graph/graph.hpp"
 #include "canvas/canvas.hpp"
@@ -28,7 +29,8 @@ void AlgorithmCenter::update(){
     if(!hasExecuted_){
         switch(appStates.algorithmDropdownOption){
         case 0: // BFS
-        case 1:{ // Prim's
+        case 1: // Prim's
+        case 3:{ // Dijkstra's
             setStartVertex(); 
             if(startVertex_) executeAlgorithm();
             startVertex_ = std::nullopt;
@@ -66,6 +68,7 @@ void AlgorithmCenter::executeAlgorithm(){
     case 0:{ Algorithm::BFS bfs(startVertex_); break;}
     case 1:{ break;}
     case 2:{ Algorithm::Kruskal kruskal; break;}
+    case 3:{ Algorithm::Dijkstra dijkstra(startVertex_); break;}
     default: break;
     }
     hasExecuted_ = true;
