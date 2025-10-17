@@ -20,7 +20,7 @@ Application::Application()
     : graph_(new Graph())
     , actionsCenter_(new ActionsCenter())
     , ui_(new UI::Center())
-    , canvas_(new Canvas())
+    , canvas_(nullptr)
     , serializer_(new Serializer())
     , algorithm_(new AlgorithmCenter())
 {}
@@ -42,8 +42,7 @@ void Application::init(){
 
     previousWindowRectangle_ = {screenWidth, screenHeight};
 
-    // SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_WINDOW_HIGHDPI);
-    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_WINDOW_HIGHDPI);
     InitWindow(screenWidth, screenHeight, "GraphIt! v" GRAPHIT_VERSION_STRING);
 
     SetTargetFPS(300);
@@ -53,8 +52,13 @@ void Application::init(){
 
     SetWindowIcon(Image((void*)ICON_DATA, ICON_WIDTH, ICON_HEIGHT, 1, ICON_FORMAT));
 
+    dpiScaling_ = GetWindowScaleDPI().x;
+    canvas_ = new Canvas{dpiScaling_};
     handleWindowResizeEvent(); // since the window was created after the ui
     canvas_->resetCamera();
+
+    // std::cout << "DPI: " << GetWindowScaleDPI().x << " " << GetWindowScaleDPI().y << std::endl;
+    // SetMouseScale(1.0f / GetWindowScaleDPI().x, 1.0f / GetWindowScaleDPI().y);
 
     printInitMessage();
 }
@@ -89,6 +93,12 @@ void Application::draw(){
 }
 
 void Application::handleWindowResizeEvent(){
+    float newDpiScaling{GetWindowScaleDPI().x};
+    if(newDpiScaling != dpiScaling_){
+        dpiScaling_ = newDpiScaling;
+        canvas_->setDpiScaling(dpiScaling_);
+    }
+
     ui_->updatePanelAnchors();
 
     Vector2 delta{

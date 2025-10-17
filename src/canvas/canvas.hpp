@@ -40,7 +40,7 @@ public:
     };
 
 public:
-    Canvas();
+    Canvas(float dpiScaling = 1.0f);
     ~Canvas() = default;
 
     void draw() const;
@@ -78,6 +78,7 @@ public:
     const float getCameraZoom(){ return canvasCamera_.zoom;}
     void setCameraPosition(Vector2 position){ canvasCamera_.target = position;}
     void setCameraZoom(float zoom);
+    void setDpiScaling(float dpiScaling){ dpiScaling_ = dpiScaling;}
 
     const std::string &getWeightInputLabel() const{ return weightInputString_;}
 
@@ -132,6 +133,8 @@ private:
     Camera2D canvasCamera_;
 
     Mode mode_;
+
+    float dpiScaling_;
 
     std::optional<VertexID> hoveredVertexID_;
     std::optional<EdgeID> hoveredEdgeIDs_;

@@ -55,4 +55,6 @@ private:
 
     // handleWindowResizeEvent()
     Rectangle previousWindowRectangle_;
+
+    float dpiScaling_{1.0f};
 };

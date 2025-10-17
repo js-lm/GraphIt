@@ -106,7 +106,11 @@ bool Toolbar::updateCommandShiftKeys(int key){
 }
 
 void Toolbar::refreshAnchors(){
-    float horizontalOffset{(GetScreenWidth() - 1000) / 2.0f};
+
+    Vector2 dpiScale{GetWindowScaleDPI()};
+    float physicalScreenWidth{static_cast<float>(GetRenderWidth())};
+    float logicalPanelWidth{1000.0f};
+    float horizontalOffset{(physicalScreenWidth - logicalPanelWidth * dpiScale.x) / (2.0f * dpiScale.x)};
 
     mainPanelBounds_ = {horizontalOffset, 0, 1000, 80};
 

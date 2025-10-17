@@ -33,9 +33,13 @@ void ConfirmationDialog::handleButtonPress(){
 }
 
 void ConfirmationDialog::refreshAnchors(){
+    Vector2 dpiScale{GetWindowScaleDPI()};
+    float physicalScreenWidth{static_cast<float>(GetRenderWidth())};
+    float physicalScreenHeight{static_cast<float>(GetRenderHeight())};
+    
     mainPanelBounds_ = {
-        (GetScreenWidth() - (textSize_.x + 8)) / 2.0f,  
-        (GetScreenHeight() - 104) / 2.0f,
+        (physicalScreenWidth - (textSize_.x + 8) * dpiScale.x) / (2.0f * dpiScale.x),  
+        (physicalScreenHeight - 104 * dpiScale.y) / (2.0f * dpiScale.y),
         textSize_.x + 16,
         96
     };

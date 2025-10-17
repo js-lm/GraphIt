@@ -38,9 +38,15 @@ void ColorPanel::handleButtonPress(){
 }
 
 void ColorPanel::refreshAnchors(){
+    Vector2 dpiScale{GetWindowScaleDPI()};
+    float physicalScreenWidth{static_cast<float>(GetRenderWidth())};
+    float physicalScreenHeight{static_cast<float>(GetRenderHeight())};
+    float logicalWidth{336.0f};
+    float logicalHeight{208.0f};
+    
     panelAnchor_ = {
-        (GetScreenWidth() - 336) / 2.0f, 
-        (GetScreenHeight() - 208) / 2.0f
+        (physicalScreenWidth - logicalWidth * dpiScale.x) / (2.0f * dpiScale.x), 
+        (physicalScreenHeight - logicalHeight * dpiScale.y) / (2.0f * dpiScale.y)
     };
     
     mainPanelBounds_ = {

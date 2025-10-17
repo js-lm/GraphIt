@@ -15,9 +15,15 @@ void FileDialogSave::handleButtonPress(){
 }
 
 void FileDialogSave::refreshAnchors(){
+    Vector2 dpiScale{GetWindowScaleDPI()};
+    float physicalScreenWidth{static_cast<float>(GetRenderWidth())};
+    float physicalScreenHeight{static_cast<float>(GetRenderHeight())};
+    float logicalDialogWidth{472.0f};
+    float logicalDialogHeight{96.0f};
+    
     windowAnchor_ = {
-        (GetScreenWidth() - 472) / 2.0f, 
-        (GetScreenHeight() - 96) / 2.0f
+        (physicalScreenWidth - logicalDialogWidth * dpiScale.x) / (2.0f * dpiScale.x),
+        (physicalScreenHeight - logicalDialogHeight * dpiScale.y) / (2.0f * dpiScale.y)
     };
  
     mainPanelBounds_ = {

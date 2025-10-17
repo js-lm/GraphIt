@@ -4,8 +4,9 @@
 
 #include <raylib.h>
 
-Canvas::Canvas()
+Canvas::Canvas(float dpiScaling)
     : mode_(Mode::VIEW)
+    , dpiScaling_{dpiScaling}
     , pivotPoint_({0, 0})
     , vertexOriginalPosition_({0, 0})
 {}

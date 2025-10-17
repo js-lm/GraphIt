@@ -31,8 +31,8 @@ void Canvas::drawGrid() const{
     auto canvasPosition{canvasCamera_.target};
     int cellSize{appSettings.gridCellSize};
     int lineInterval{appSettings.gridSubdivisionSize};
-    int screenHeight{static_cast<int>(GetScreenHeight() / canvasCamera_.zoom)};
-    int screenWeight{static_cast<int>(GetScreenWidth() / canvasCamera_.zoom)};
+    int screenHeight{static_cast<int>(GetScreenHeight() * dpiScaling_ / canvasCamera_.zoom)};
+    int screenWeight{static_cast<int>(GetScreenWidth() * dpiScaling_ / canvasCamera_.zoom)};
     float lineThickness{1.0f / canvasCamera_.zoom};
 
     int leftMostVerticalLine{static_cast<int>(canvasPosition.x - static_cast<int>(canvasPosition.x) % cellSize)};
@@ -203,7 +203,7 @@ void Canvas::drawMove() const{
 }
 
 Vector2 Canvas::getMousePositionInCanvas(bool snap) const{
-    auto position{GetScreenToWorld2D(GetMousePosition(), canvasCamera_)};
+    auto position{GetScreenToWorld2D(GetMousePosition() * dpiScaling_, canvasCamera_)};
     return snap ? snapVector(position) : position;
 }
 

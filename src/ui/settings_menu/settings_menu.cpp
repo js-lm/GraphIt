@@ -62,9 +62,15 @@ void SettingsMenu::handleButtonPress(){
 }
 
 void SettingsMenu::refreshAnchors(){
+    Vector2 dpiScale{GetWindowScaleDPI()};
+    float physicalScreenWidth{static_cast<float>(GetRenderWidth())};
+    float physicalScreenHeight{static_cast<float>(GetRenderHeight())};
+    float logicalWidth{688.0f};
+    float logicalHeight{480.0f};
+    
     Vector2 anchor{
-        (GetScreenWidth() - 688) / 2.0f, 
-        (GetScreenHeight() - 480) / 2.0f
+        (physicalScreenWidth - logicalWidth * dpiScale.x) / (2.0f * dpiScale.x), 
+        (physicalScreenHeight - logicalHeight * dpiScale.y) / (2.0f * dpiScale.y)
     };
     
     settingWindowAnchor_ = anchor;

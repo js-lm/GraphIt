@@ -56,9 +56,15 @@ void FileDialogLoad::fetchUserInput(){
 }
 
 void FileDialogLoad::refreshAnchors(){
+    Vector2 dpiScale{GetWindowScaleDPI()};
+    float physicalScreenWidth{static_cast<float>(GetRenderWidth())};
+    float physicalScreenHeight{static_cast<float>(GetRenderHeight())};
+    float logicalDialogWidth{480.0f};
+    float logicalDialogHeight{300.0f};
+    
     Vector2 anchor{
-        (GetScreenWidth() - 480) / 2.0f, 
-        (GetScreenHeight() - 300) / 2.0f
+        (physicalScreenWidth - logicalDialogWidth * dpiScale.x) / (2.0f * dpiScale.x),
+        (physicalScreenHeight - logicalDialogHeight * dpiScale.y) / (2.0f * dpiScale.y)
     };
     
     windowAnchor_ = anchor;
